@@ -50,19 +50,9 @@ class InMemoryTicketRepository implements TicketRepository
         $ticket->projectID = $projectID;
         $ticket->typeID = $typeID;
         $ticket->description = $description;
-
-        $ticketState = new TicketState();
-        $ticketState->id = self::$ticketStateRepository->getNextID();
-        $ticketState->statusID = $statusID;
-        $ticketState->authorUserID = $authorUserID;
-        $ticketState->allocatedUserID = $allocatedUserID;
-        $ticketState->priority = $priority;
-        $ticketState->dueDate = $dueDate;
-        $ticketState->comments = $comments;
-        self::$ticketStateRepository->objects[$ticketState->id]= $ticketState;
-
-        $ticket->addState($ticketState);
         self::$objects[$ticket->id]= $ticket;
+
+        self::addState($ticket->id, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments);
     }
 
     public static function updateInfos($ticketID, $title, $projectID, $typeID, $description)

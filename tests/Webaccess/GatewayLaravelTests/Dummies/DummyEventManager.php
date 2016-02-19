@@ -2,7 +2,9 @@
 
 namespace Webaccess\GatewayLaravelTests\Dummies;
 
-class DummyEventManager
+use Webaccess\GatewayLaravel\EventManager;
+
+class DummyEventManager implements EventManager
 {
     public function fire($event)
     {
