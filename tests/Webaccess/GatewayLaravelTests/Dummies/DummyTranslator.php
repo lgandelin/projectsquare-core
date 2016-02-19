@@ -1,8 +1,8 @@
 <?php
 
-namespace Webaccess\GatewayLaravelTests;
+namespace Webaccess\GatewayLaravelTests\Dummies;
 
-class InMemoryTranslator
+class DummyTranslator
 {
     public function translate($string)
     {

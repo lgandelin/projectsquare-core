@@ -3,15 +3,23 @@
 namespace Webaccess\GatewayLaravelTests\Repositories;
 
 use Webaccess\GatewayLaravel\Entities\Ticket;
+use Webaccess\GatewayLaravel\Entities\TicketState;
 use Webaccess\GatewayLaravel\Repositories\TicketRepository;
 
 class InMemoryTicketRepository implements TicketRepository
 {
     public static $objects;
+    public static $ticketStateRepository;
 
     public function __construct()
     {
         self::$objects = [];
+        self::$ticketStateRepository = new InMemoryTicketStateRepository();
+    }
+
+    public static function getNextID()
+    {
+        return count(self::$objects) + 1;
     }
 
     public static function getTicket($ticketID, $userID = null)
@@ -42,7 +50,19 @@ class InMemoryTicketRepository implements TicketRepository
         $ticket->projectID = $projectID;
         $ticket->typeID = $typeID;
         $ticket->description = $description;
-        self::$objects[]= $ticket;
+
+        $ticketState = new TicketState();
+        $ticketState->id = self::$ticketStateRepository->getNextID();
+        $ticketState->statusID = $statusID;
+        $ticketState->authorUserID = $authorUserID;
+        $ticketState->allocatedUserID = $allocatedUserID;
+        $ticketState->priority = $priority;
+        $ticketState->dueDate = $dueDate;
+        $ticketState->comments = $comments;
+        self::$ticketStateRepository->objects[$ticketState->id]= $ticketState;
+
+        $ticket->addState($ticketState);
+        self::$objects[$ticket->id]= $ticket;
     }
 
     public static function updateInfos($ticketID, $title, $projectID, $typeID, $description)
@@ -52,12 +72,26 @@ class InMemoryTicketRepository implements TicketRepository
 
     public static function updateTicket($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
     {
-        // TODO: Implement updateTicket() method.
+        self::addState($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments);
+
+        return self::getTicket($ticketID);
     }
 
     public static function addState($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
     {
-        // TODO: Implement addState() method.
+        $ticket = self::getTicket($ticketID);
+
+        $ticketState = new TicketState();
+        $ticketState->id = self::$ticketStateRepository->getNextID();
+        $ticketState->statusID = $statusID;
+        $ticketState->authorUserID = $authorUserID;
+        $ticketState->allocatedUserID = $allocatedUserID;
+        $ticketState->priority = $priority;
+        $ticketState->dueDate = $dueDate;
+        $ticketState->comments = $comments;
+        self::$ticketStateRepository->objects[$ticketState->id]= $ticketState;
+
+        $ticket->addState($ticketState);
     }
 
     public static function deleteTicket($ticketID)
@@ -69,10 +103,4 @@ class InMemoryTicketRepository implements TicketRepository
     {
         // TODO: Implement isUserAllowedToSeeTicket() method.
     }
-
-    private static function getNextID()
-    {
-        return count(self::$objects);
-    }
-
 }
