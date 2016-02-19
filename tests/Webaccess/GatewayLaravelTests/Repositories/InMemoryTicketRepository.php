@@ -2,18 +2,26 @@
 
 namespace Webaccess\GatewayLaravelTests\Repositories;
 
+use Webaccess\GatewayLaravel\Entities\Ticket;
 use Webaccess\GatewayLaravel\Repositories\TicketRepository;
 
 class InMemoryTicketRepository implements TicketRepository
 {
+    public static $objects;
+
+    public function __construct()
+    {
+        self::$objects = [];
+    }
+
     public static function getTicket($ticketID, $userID = null)
     {
-        // TODO: Implement getTicket() method.
+        return self::$objects[$ticketID];
     }
 
     public static function getTicketWithStates($ticketID)
     {
-        // TODO: Implement getTicketWithStates() method.
+        return self::$objects[$ticketID];
     }
 
     public static function getTicketStatesPaginatedList($ticket, $limit)
@@ -28,7 +36,13 @@ class InMemoryTicketRepository implements TicketRepository
 
     public static function createTicket($title, $projectID, $typeID, $description, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
     {
-        // TODO: Implement createTicket() method.
+        $ticket = new Ticket();
+        $ticket->id = self::getNextID();
+        $ticket->title = $title;
+        $ticket->projectID = $projectID;
+        $ticket->typeID = $typeID;
+        $ticket->description = $description;
+        self::$objects[]= $ticket;
     }
 
     public static function updateInfos($ticketID, $title, $projectID, $typeID, $description)
@@ -54,6 +68,11 @@ class InMemoryTicketRepository implements TicketRepository
     public static function isUserAllowedToSeeTicket($userID, $ticket)
     {
         // TODO: Implement isUserAllowedToSeeTicket() method.
+    }
+
+    private static function getNextID()
+    {
+        return count(self::$objects);
     }
 
 }
