@@ -2,7 +2,9 @@
 
 namespace Webaccess\GatewayLaravelTests\Dummies;
 
-class DummyTranslator
+use Webaccess\GatewayLaravel\Contracts\Translator;
+
+class DummyTranslator implements Translator
 {
     public function translate($string)
     {
