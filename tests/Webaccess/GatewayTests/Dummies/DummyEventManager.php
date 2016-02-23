@@ -1,8 +1,8 @@
 <?php
 
-namespace Webaccess\GatewayLaravelTests\Dummies;
+namespace Webaccess\GatewayTests\Dummies;
 
-use Webaccess\GatewayLaravel\Contracts\EventManager;
+use Webaccess\Gateway\Contracts\EventManager;
 
 class DummyEventManager implements EventManager
 {

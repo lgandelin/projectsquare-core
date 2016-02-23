@@ -1,10 +1,10 @@
 <?php
 
-namespace Webaccess\GatewayLaravelTests\Repositories;
+namespace Webaccess\GatewayTests\Repositories;
 
-use Webaccess\GatewayLaravel\Entities\Ticket;
-use Webaccess\GatewayLaravel\Entities\TicketState;
-use Webaccess\GatewayLaravel\Repositories\TicketRepository;
+use Webaccess\Gateway\Entities\Ticket;
+use Webaccess\Gateway\Entities\TicketState;
+use Webaccess\Gateway\Repositories\TicketRepository;
 
 class InMemoryTicketRepository implements TicketRepository
 {

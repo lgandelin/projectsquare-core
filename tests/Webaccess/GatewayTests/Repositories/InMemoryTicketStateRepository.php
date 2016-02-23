@@ -1,6 +1,6 @@
 <?php
 
-namespace Webaccess\GatewayLaravelTests\Repositories;
+namespace Webaccess\GatewayTests\Repositories;
 
 class InMemoryTicketStateRepository
 {
