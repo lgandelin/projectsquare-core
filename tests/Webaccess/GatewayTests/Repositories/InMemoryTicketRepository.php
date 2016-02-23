@@ -57,12 +57,7 @@ class InMemoryTicketRepository implements TicketRepository
 
         self::addState($ticket->id, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments);
 
-        return $ticket->id;
-    }
-
-    public function updateInfos($ticketID, $title, $projectID, $typeID, $description)
-    {
-        // TODO: Implement updateInfos() method.
+        return self::getTicket($ticket->id);
     }
 
     public function updateTicket($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
@@ -98,7 +93,9 @@ class InMemoryTicketRepository implements TicketRepository
 
     public function persistTicket(Ticket $ticket)
     {
-        $ticket->id = self::getNextID();
+        if (!isset($ticket->id)) {
+            $ticket->id = self::getNextID();
+        }
         $this->objects[$ticket->id]= $ticket;
 
         return $ticket;
