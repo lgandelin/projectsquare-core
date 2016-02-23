@@ -4,15 +4,27 @@ namespace Webaccess\GatewayTests\Repositories;
 
 class InMemoryTicketStateRepository
 {
-    public static $objects;
+    public $objects;
 
     public function __construct()
     {
-        self::$objects = [];
+        $this->objects = [];
     }
 
-    public static function getNextID()
+    public function getNextID()
     {
-        return count(self::$objects) + 1;
+        return count($this->objects) + 1;
+    }
+
+    public function getTicketStates($ticketID)
+    {
+        $result = [];
+        foreach ($this->objects as $ticketState) {
+            if (isset($ticketState->ticketID) && $ticketState->ticketID == $ticketID) {
+                $result[]= $ticketState;
+            }
+        }
+
+        return $result;
     }
 }

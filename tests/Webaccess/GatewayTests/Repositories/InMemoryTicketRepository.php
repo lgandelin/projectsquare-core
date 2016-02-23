@@ -8,41 +8,44 @@ use Webaccess\Gateway\Repositories\TicketRepository;
 
 class InMemoryTicketRepository implements TicketRepository
 {
-    public static $objects;
-    public static $ticketStateRepository;
+    public $objects;
+    public $ticketStateRepository;
 
     public function __construct()
     {
-        self::$objects = [];
-        self::$ticketStateRepository = new InMemoryTicketStateRepository();
+        $this->objects = [];
+        $this->ticketStateRepository = new InMemoryTicketStateRepository();
     }
 
-    public static function getNextID()
+    public function getNextID()
     {
-        return count(self::$objects) + 1;
+        return count($this->objects) + 1;
     }
 
-    public static function getTicket($ticketID, $userID = null)
+    public function getTicket($ticketID, $userID = null)
     {
-        return self::$objects[$ticketID];
+        return $this->objects[$ticketID];
     }
 
-    public static function getTicketWithStates($ticketID)
+    public function getTicketWithStates($ticketID)
     {
-        return self::$objects[$ticketID];
+        $ticket = $this->objects[$ticketID];
+        $ticket->states = $this->ticketStateRepository->getTicketStates($ticketID);
+
+        return $ticket;
     }
 
-    public static function getTicketStatesPaginatedList($ticket, $limit)
+    public function getTicketStatesPaginatedList($ticket, $limit)
     {
         // TODO: Implement getTicketStatesPaginatedList() method.
     }
 
-    public static function getTicketsPaginatedList($userID, $limit, $projectID = null, $allocatedUserID = null, $statusID = null, $typeID = null)
+    public function getTicketsPaginatedList($userID, $limit, $projectID = null, $allocatedUserID = null, $statusID = null, $typeID = null)
     {
         // TODO: Implement getTicketsPaginatedList() method.
     }
 
-    public static function createTicket($title, $projectID, $typeID, $description, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
+    public function createTicket($title, $projectID, $typeID, $description, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
     {
         $ticket = new Ticket();
         $ticket->id = self::getNextID();
@@ -50,47 +53,62 @@ class InMemoryTicketRepository implements TicketRepository
         $ticket->projectID = $projectID;
         $ticket->typeID = $typeID;
         $ticket->description = $description;
-        self::$objects[$ticket->id]= $ticket;
+        $this->objects[$ticket->id]= $ticket;
 
         self::addState($ticket->id, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments);
+
+        return $ticket->id;
     }
 
-    public static function updateInfos($ticketID, $title, $projectID, $typeID, $description)
+    public function updateInfos($ticketID, $title, $projectID, $typeID, $description)
     {
         // TODO: Implement updateInfos() method.
     }
 
-    public static function updateTicket($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
+    public function updateTicket($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
     {
         self::addState($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments);
 
         return self::getTicket($ticketID);
     }
 
-    public static function addState($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
+    public function addState($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
     {
-        $ticket = self::getTicket($ticketID);
-
         $ticketState = new TicketState();
-        $ticketState->id = self::$ticketStateRepository->getNextID();
+        $ticketState->id = $this->ticketStateRepository->getNextID();
+        $ticketState->ticketID = $ticketID;
         $ticketState->statusID = $statusID;
         $ticketState->authorUserID = $authorUserID;
         $ticketState->allocatedUserID = $allocatedUserID;
         $ticketState->priority = $priority;
         $ticketState->dueDate = $dueDate;
         $ticketState->comments = $comments;
-        self::$ticketStateRepository->objects[$ticketState->id]= $ticketState;
-
-        $ticket->addState($ticketState);
+        $this->ticketStateRepository->objects[$ticketState->id]= $ticketState;
     }
 
-    public static function deleteTicket($ticketID)
+    public function deleteTicket($ticketID)
     {
         // TODO: Implement deleteTicket() method.
     }
 
-    public static function isUserAllowedToSeeTicket($userID, $ticket)
+    public function isUserAllowedToSeeTicket($userID, $ticket)
     {
         // TODO: Implement isUserAllowedToSeeTicket() method.
+    }
+
+    public function persistTicket(Ticket $ticket)
+    {
+        $ticket->id = self::getNextID();
+        $this->objects[$ticket->id]= $ticket;
+
+        return $ticket;
+    }
+
+    public function persistTicketState(TicketState $ticketState)
+    {
+        $ticketState->id = $this->ticketStateRepository->getNextID();
+        $this->ticketStateRepository->objects[$ticketState->id]= $ticketState;
+
+        return $ticketState;
     }
 }
