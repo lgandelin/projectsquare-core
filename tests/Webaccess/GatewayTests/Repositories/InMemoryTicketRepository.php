@@ -45,21 +45,6 @@ class InMemoryTicketRepository implements TicketRepository
         // TODO: Implement getTicketsPaginatedList() method.
     }
 
-    public function createTicket($title, $projectID, $typeID, $description, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
-    {
-        $ticket = new Ticket();
-        $ticket->id = self::getNextID();
-        $ticket->title = $title;
-        $ticket->projectID = $projectID;
-        $ticket->typeID = $typeID;
-        $ticket->description = $description;
-        $this->objects[$ticket->id]= $ticket;
-
-        self::addState($ticket->id, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments);
-
-        return self::getTicket($ticket->id);
-    }
-
     public function updateTicket($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
     {
         self::addState($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments);
