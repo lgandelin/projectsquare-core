@@ -9,7 +9,7 @@ use Webaccess\Gateway\Requests\UpdateTicketRequest;
 use Webaccess\GatewayLaravel\Events\TicketUpdatedEvent;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
-class UpdateTicket extends FeatureContext
+class UpdateTicketAcceptanceTest extends FeatureContext
 {
     public function __construct()
     {

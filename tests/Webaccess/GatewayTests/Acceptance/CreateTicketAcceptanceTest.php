@@ -1,19 +1,20 @@
 <?php
 
-use Webaccess\Gateway\Context;
+use Webaccess\Gateway\Events\Events;
 use Webaccess\Gateway\Interactors\Tickets\CreateTicketInteractor;
 use Webaccess\Gateway\Requests\CreateTicketRequest;
 use Webaccess\Gateway\Responses\CreateTicketResponse;
-use Webaccess\GatewayLaravel\Events\TicketCreatedEvent;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
-class CreateTicket extends FeatureContext
+class CreateTicketAcceptanceTest extends FeatureContext
 {
     public function __construct()
     {
         parent::__construct();
 
+        $this->eventDispatcher = Mockery::spy("EventDispatcherInterface");
         $this->repository = new InMemoryTicketRepository();
+        $this->interactor = (new CreateTicketInteractor($this->repository, $this->eventDispatcher));
     }
 
     /**
@@ -21,7 +22,7 @@ class CreateTicket extends FeatureContext
      */
     public function iCreateANewTicket()
     {
-        $this->response = (new CreateTicketInteractor($this->repository))->execute(new CreateTicketRequest([
+        $this->response = $this->interactor->execute(new CreateTicketRequest([
             'title' => 'New ticket',
         ]));
     }
@@ -40,7 +41,10 @@ class CreateTicket extends FeatureContext
      */
     public function iGetNotifiedOfTheTicketCreation()
     {
-        $this->assertInstanceOf(TicketCreatedEvent::class, Context::get('event_manager')->getFiredEvents()[0]);
+        $this->eventDispatcher->shouldHaveReceived("dispatch")->with(
+            Events::CREATE_TICKET,
+            Mockery::type(Webaccess\Gateway\Events\CreateTicketEvent::class)
+        );
     }
 
     /**
