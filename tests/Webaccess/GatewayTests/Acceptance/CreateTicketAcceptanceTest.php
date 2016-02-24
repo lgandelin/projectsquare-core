@@ -1,5 +1,6 @@
 <?php
 
+use Webaccess\Gateway\Context;
 use Webaccess\Gateway\Events\Events;
 use Webaccess\Gateway\Interactors\Tickets\CreateTicketInteractor;
 use Webaccess\Gateway\Requests\CreateTicketRequest;
@@ -12,9 +13,8 @@ class CreateTicketAcceptanceTest extends FeatureContext
     {
         parent::__construct();
 
-        $this->eventDispatcher = Mockery::spy("EventDispatcherInterface");
         $this->repository = new InMemoryTicketRepository();
-        $this->interactor = (new CreateTicketInteractor($this->repository, $this->eventDispatcher));
+        $this->interactor = new CreateTicketInteractor($this->repository);
     }
 
     /**
@@ -41,7 +41,7 @@ class CreateTicketAcceptanceTest extends FeatureContext
      */
     public function iGetNotifiedOfTheTicketCreation()
     {
-        $this->eventDispatcher->shouldHaveReceived("dispatch")->with(
+        Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_TICKET,
             Mockery::type(Webaccess\Gateway\Events\CreateTicketEvent::class)
         );

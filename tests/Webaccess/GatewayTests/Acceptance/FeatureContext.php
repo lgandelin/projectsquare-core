@@ -21,6 +21,6 @@ class FeatureContext extends TestCase implements Context, SnippetAcceptingContex
     public function __construct()
     {
         GatewayContext::set('translator', new DummyTranslator());
-        GatewayContext::set('event_manager', new DummyEventManager());
+        GatewayContext::set('event_dispatcher', Mockery::spy("EventDispatcherInterface"));
     }
 }
