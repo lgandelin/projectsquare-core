@@ -4,8 +4,8 @@ use Webaccess\Gateway\Context;
 use Webaccess\Gateway\Entities\Ticket;
 use Webaccess\Gateway\Entities\TicketState;
 use Webaccess\Gateway\Interactors\TicketInteractor;
-use Webaccess\Gateway\Interactors\UpdateTicketInteractor;
-use Webaccess\Gateway\Requests\TicketUpdateRequest;
+use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInteractor;
+use Webaccess\Gateway\Requests\UpdateTicketRequest;
 use Webaccess\GatewayLaravel\Events\TicketUpdatedEvent;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
@@ -41,7 +41,7 @@ class UpdateTicket extends FeatureContext
      */
     public function iUpdateTheStatusOfThisTicket()
     {
-        $this->response = (new UpdateTicketInteractor($this->repository))->execute(new TicketUpdateRequest([
+        $this->response = (new UpdateTicketInteractor($this->repository))->execute(new UpdateTicketRequest([
             'ticketID' => 1,
             'statusID' => 2,
         ]));
@@ -94,7 +94,7 @@ class UpdateTicket extends FeatureContext
      */
     public function theTicketHasTheFollowingTitle($title)
     {
-        $ticket = $this->ticketInteractor->getTicket(1);
+        $ticket = $this->repository->getTicket(1);
 
         $this->assertEquals($ticket->title, $title);
     }

@@ -1,9 +1,9 @@
 <?php
 
 use Webaccess\Gateway\Context;
-use Webaccess\Gateway\Interactors\CreateTicketInteractor;
-use Webaccess\Gateway\Requests\TicketCreateRequest;
-use Webaccess\Gateway\Responses\TicketCreateResponse;
+use Webaccess\Gateway\Interactors\Tickets\CreateTicketInteractor;
+use Webaccess\Gateway\Requests\CreateTicketRequest;
+use Webaccess\Gateway\Responses\CreateTicketResponse;
 use Webaccess\GatewayLaravel\Events\TicketCreatedEvent;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
@@ -21,7 +21,7 @@ class CreateTicket extends FeatureContext
      */
     public function iCreateANewTicket()
     {
-        $this->response = (new CreateTicketInteractor($this->repository))->execute(new TicketCreateRequest([
+        $this->response = (new CreateTicketInteractor($this->repository))->execute(new CreateTicketRequest([
             'title' => 'New ticket',
         ]));
     }
@@ -49,7 +49,7 @@ class CreateTicket extends FeatureContext
     public function iGetTheTicketBack()
     {
         $ticket = $this->response->ticket;
-        $this->assertInstanceOf(TicketCreateResponse::class, $this->response);
+        $this->assertInstanceOf(CreateTicketResponse::class, $this->response);
         $this->assertEquals('New ticket', $ticket->title);
     }
 }
