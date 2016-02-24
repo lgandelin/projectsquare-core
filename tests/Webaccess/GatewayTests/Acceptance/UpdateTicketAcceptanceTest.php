@@ -98,14 +98,6 @@ class UpdateTicketAcceptanceTest extends FeatureContext
     }
 
     /**
-     * @Then I get the ticket back after the update
-     */
-    public function iGetTheTicketBackAfterTheUpdate()
-    {
-        $this->assertInstanceOf(UpdateTicketInfosResponse::class, $this->response);
-    }
-
-    /**
      * @Then The ticket has the following title : :title
      */
     public function theTicketHasTheFollowingTitle($title)

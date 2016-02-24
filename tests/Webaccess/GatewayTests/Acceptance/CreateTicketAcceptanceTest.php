@@ -47,14 +47,4 @@ class CreateTicketAcceptanceTest extends FeatureContext
             Mockery::type(CreateTicketEvent::class)
         );
     }
-
-    /**
-     * @Then I get the ticket back after the creation
-     */
-    public function iGetTheTicketBackAfterTheCreation()
-    {
-        $ticket = $this->response->ticket;
-        $this->assertInstanceOf(CreateTicketResponse::class, $this->response);
-        $this->assertEquals('New ticket', $ticket->title);
-    }
 }
