@@ -3,10 +3,14 @@
 use Webaccess\Gateway\Context;
 use Webaccess\Gateway\Entities\Ticket;
 use Webaccess\Gateway\Entities\TicketState;
-use Webaccess\Gateway\Interactors\TicketInteractor;
+use Webaccess\Gateway\Events\Events;
+use Webaccess\Gateway\Events\Tickets\UpdateTicketEvent;
+use Webaccess\Gateway\Interactors\Tickets\GetTicketInteractor;
+use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInfosInteractor;
 use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInteractor;
-use Webaccess\Gateway\Requests\UpdateTicketRequest;
-use Webaccess\GatewayLaravel\Events\TicketUpdatedEvent;
+use Webaccess\Gateway\Requests\Tickets\UpdateTicketInfosRequest;
+use Webaccess\Gateway\Requests\Tickets\UpdateTicketRequest;
+use Webaccess\Gateway\Responses\Tickets\UpdateTicketInfosResponse;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
 class UpdateTicketAcceptanceTest extends FeatureContext
@@ -14,9 +18,7 @@ class UpdateTicketAcceptanceTest extends FeatureContext
     public function __construct()
     {
         parent::__construct();
-
         $this->repository = new InMemoryTicketRepository();
-        $this->ticketInteractor = new TicketInteractor($this->repository);
     }
 
     /**
@@ -52,7 +54,7 @@ class UpdateTicketAcceptanceTest extends FeatureContext
      */
     public function aNewStateIsCreatedForThisTicket()
     {
-        $ticket = $this->ticketInteractor->getTicketWithStates(1);
+        $ticket = (new GetTicketInteractor($this->repository))->getTicketWithStates(1);
         $this->assertCount(2, $ticket->states);
     }
 
@@ -61,7 +63,10 @@ class UpdateTicketAcceptanceTest extends FeatureContext
      */
     public function iGetNotifiedOfTheTicketUpdate()
     {
-        $this->assertInstanceOf(TicketUpdatedEvent::class, Context::get('event_manager')->getFiredEvents()[0]);
+        Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
+            Events::UPDATE_TICKET,
+            Mockery::type(UpdateTicketEvent::class)
+        );
     }
 
     /**
@@ -86,7 +91,18 @@ class UpdateTicketAcceptanceTest extends FeatureContext
      */
     public function iChangeTheTitleTo($title)
     {
-        $this->ticketInteractor->updateInfos(1, $title, 1, 1, 5, 'Lorem ipsum dolor sit amet');
+        $this->response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
+            'ticketID' => 1,
+            'title' => $title
+        ]));
+    }
+
+    /**
+     * @Then I get the ticket back after the update
+     */
+    public function iGetTheTicketBackAfterTheUpdate()
+    {
+        $this->assertInstanceOf(UpdateTicketInfosResponse::class, $this->response);
     }
 
     /**

@@ -3,7 +3,6 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Webaccess\Gateway\Context as GatewayContext;
-use Webaccess\GatewayTests\Dummies\DummyEventManager;
 use Webaccess\GatewayTests\Dummies\DummyTranslator;
 
 /**

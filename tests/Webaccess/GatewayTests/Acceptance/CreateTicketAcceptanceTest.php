@@ -2,9 +2,10 @@
 
 use Webaccess\Gateway\Context;
 use Webaccess\Gateway\Events\Events;
+use Webaccess\Gateway\Events\Tickets\CreateTicketEvent;
 use Webaccess\Gateway\Interactors\Tickets\CreateTicketInteractor;
-use Webaccess\Gateway\Requests\CreateTicketRequest;
-use Webaccess\Gateway\Responses\CreateTicketResponse;
+use Webaccess\Gateway\Requests\Tickets\CreateTicketRequest;
+use Webaccess\Gateway\Responses\Tickets\CreateTicketResponse;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
 class CreateTicketAcceptanceTest extends FeatureContext
@@ -43,14 +44,14 @@ class CreateTicketAcceptanceTest extends FeatureContext
     {
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_TICKET,
-            Mockery::type(Webaccess\Gateway\Events\CreateTicketEvent::class)
+            Mockery::type(CreateTicketEvent::class)
         );
     }
 
     /**
-     * @Then I get the ticket back
+     * @Then I get the ticket back after the creation
      */
-    public function iGetTheTicketBack()
+    public function iGetTheTicketBackAfterTheCreation()
     {
         $ticket = $this->response->ticket;
         $this->assertInstanceOf(CreateTicketResponse::class, $this->response);
