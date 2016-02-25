@@ -87,7 +87,7 @@ class InMemoryTicketRepository implements TicketRepository
         }
         $this->objects[$ticket->id]= $ticket;
 
-        return $ticket->id;
+        return $ticket;
     }
 
     public function persistTicketState(TicketState $ticketState)

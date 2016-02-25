@@ -71,13 +71,13 @@ class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
         $ticket->title = $title;
         $ticket->projectID = $projectID;
         $ticket->description = $description;
-        $ticketID = $this->repository->persistTicket($ticket);
+        $ticket = $this->repository->persistTicket($ticket);
 
         $ticketState = new TicketState();
-        $ticketState->ticketID = $ticketID;
+        $ticketState->ticketID = $ticket->id;
         $this->repository->persistTicketState($ticketState);
 
-        return $ticketID;
+        return $ticket->id;
     }
 
     private function createSampleProject()
