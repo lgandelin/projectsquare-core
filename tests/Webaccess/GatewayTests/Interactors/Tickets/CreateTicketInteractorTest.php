@@ -16,6 +16,8 @@ class CreateTicketInteractorTest extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         $this->repository = new InMemoryTicketRepository();
+        $this->projectRepository = new InMemoryProjectRepository();
+        $this->interactor = (new CreateTicketInteractor($this->repository, $this->projectRepository));
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy("EventDispatcherInterface"));
     }
@@ -25,21 +27,32 @@ class CreateTicketInteractorTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateTicketWithoutTitle()
     {
-        $this->response = (new CreateTicketInteractor($this->repository))->execute(new CreateTicketRequest([
+        $this->interactor->execute(new CreateTicketRequest([
             'title' => '',
+        ]));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testCreateTicketWithNonExistingProject()
+    {
+        $this->interactor->execute(new CreateTicketRequest([
+            'title' => 'Sample ticket',
+            'projectID' => 1
         ]));
     }
 
     public function testCreateTicket()
     {
         $projectID = $this->createSampleProject();
-        $this->response = (new CreateTicketInteractor($this->repository))->execute(new CreateTicketRequest([
+        $response = $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
             'projectID' => $projectID,
             'statusID' => 2,
             'dueDate' => new \DateTime('2016-02-30')
         ]));
-        $this->assertInstanceOf(CreateTicketResponse::class, $this->response);
+        $this->assertInstanceOf(CreateTicketResponse::class, $response);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_TICKET,
@@ -52,19 +65,6 @@ class CreateTicketInteractorTest extends PHPUnit_Framework_TestCase
         $project = new Project();
         $project->name = 'Sample Project';
 
-        return (new InMemoryProjectRepository())->persistProject($project);
+        return $this->projectRepository->persistProject($project);
     }
 }
-
-/*
- *  public $title;
-    public $projectID;
-    public $typeID;
-    public $description;
-    public $statusID;
-    public $authorUserID;
-    public $allocatedUserID;
-    public $priority;
-    public $dueDate;
-    public $comments;
- */

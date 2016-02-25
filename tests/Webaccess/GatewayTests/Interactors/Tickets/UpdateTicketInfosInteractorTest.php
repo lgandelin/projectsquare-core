@@ -18,6 +18,7 @@ class UpdateTicketInfosInteractorTest extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         $this->repository = new InMemoryTicketRepository();
+        $this->interactor = (new UpdateTicketInfosInteractor($this->repository));
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy("EventDispatcherInterface"));
     }
@@ -27,7 +28,7 @@ class UpdateTicketInfosInteractorTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateNonExistingTicket()
     {
-        $this->response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
+        $this->interactor->execute(new UpdateTicketInfosRequest([
             'ticketID' => 1,
             'title' => 'New title'
         ]));
@@ -39,7 +40,7 @@ class UpdateTicketInfosInteractorTest extends PHPUnit_Framework_TestCase
     public function testUpdateTicketWithNonExistingProject()
     {
         $ticketID = $this->createSampleTicket('Sample ticket', 1, 'Lorem ipsum dolor sit amet');
-        $this->response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
+        $this->interactor->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,
             'projectID' => 1
         ]));
@@ -49,7 +50,7 @@ class UpdateTicketInfosInteractorTest extends PHPUnit_Framework_TestCase
     {
         $projectID = $this->createSampleProject();
         $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
-        $response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
+        $response = $this->interactor->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,
             'title' => 'New title'
         ]));
