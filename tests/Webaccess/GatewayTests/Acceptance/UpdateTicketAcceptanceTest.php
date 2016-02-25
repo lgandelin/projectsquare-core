@@ -11,6 +11,7 @@ use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInteractor;
 use Webaccess\Gateway\Requests\Tickets\UpdateTicketInfosRequest;
 use Webaccess\Gateway\Requests\Tickets\UpdateTicketRequest;
 use Webaccess\Gateway\Responses\Tickets\UpdateTicketInfosResponse;
+use Webaccess\Gateway\Responses\Tickets\UpdateTicketResponse;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
 class UpdateTicketAcceptanceTest extends FeatureContext
@@ -47,6 +48,7 @@ class UpdateTicketAcceptanceTest extends FeatureContext
             'ticketID' => 1,
             'statusID' => 2,
         ]));
+        $this->assertInstanceOf(UpdateTicketResponse::class, $this->response);
     }
 
     /**
@@ -105,5 +107,6 @@ class UpdateTicketAcceptanceTest extends FeatureContext
         $ticket = $this->repository->getTicket(1);
 
         $this->assertEquals($ticket->title, $title);
+        $this->assertInstanceOf(UpdateTicketInfosResponse::class, $this->response);
     }
 }

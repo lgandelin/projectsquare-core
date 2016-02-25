@@ -26,6 +26,7 @@ class CreateTicketAcceptanceTest extends FeatureContext
         $this->response = $this->interactor->execute(new CreateTicketRequest([
             'title' => 'New ticket',
         ]));
+        $this->assertInstanceOf(CreateTicketResponse::class, $this->response);
     }
 
     /**
