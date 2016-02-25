@@ -5,15 +5,15 @@ use Webaccess\Gateway\Entities\Project;
 use Webaccess\Gateway\Entities\Ticket;
 use Webaccess\Gateway\Entities\TicketState;
 use Webaccess\Gateway\Events\Events;
-use Webaccess\Gateway\Events\Tickets\UpdateTicketEvent;
-use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInteractor;
-use Webaccess\Gateway\Requests\Tickets\UpdateTicketRequest;
-use Webaccess\Gateway\Responses\Tickets\UpdateTicketResponse;
+use Webaccess\Gateway\Events\Tickets\UpdateTicketInfosEvent;
+use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInfosInteractor;
+use Webaccess\Gateway\Requests\Tickets\UpdateTicketInfosRequest;
+use Webaccess\Gateway\Responses\Tickets\UpdateTicketInfosResponse;
 use Webaccess\GatewayTests\Dummies\DummyTranslator;
 use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
-class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
+class UpdateTicketInfosInteractorTest extends PHPUnit_Framework_TestCase
 {
     public function __construct()
     {
@@ -27,9 +27,21 @@ class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateNonExistingTicket()
     {
-        $this->response = (new UpdateTicketInteractor($this->repository))->execute(new UpdateTicketRequest([
+        $this->response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
             'ticketID' => 1,
             'title' => 'New title'
+        ]));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testUpdateTicketWithNonExistingProject()
+    {
+        $ticketID = $this->createSampleTicket('Sample ticket', 1, 'Lorem ipsum dolor sit amet');
+        $this->response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
+            'ticketID' => $ticketID,
+            'projectID' => 1
         ]));
     }
 
@@ -37,32 +49,19 @@ class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
     {
         $projectID = $this->createSampleProject();
         $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
-        $this->response = (new UpdateTicketInteractor($this->repository))->execute(new UpdateTicketRequest([
+        $response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,
-            'statusID' => 2,
+            'title' => 'New title'
         ]));
-        $this->assertInstanceOf(UpdateTicketResponse::class, $this->response);
+        $this->assertInstanceOf(UpdateTicketInfosResponse::class, $response);
 
-        $ticket = $this->repository->getTicketWithStates($ticketID);
-        $this->assertEquals(2, $ticket->states[1]->statusID);
+        $ticket = $this->repository->getTicket($ticketID);
+        $this->assertEquals('New title', $ticket->title);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
-            Events::UPDATE_TICKET,
-            Mockery::type(UpdateTicketEvent::class)
+            Events::UPDATE_TICKET_INFOS,
+            Mockery::type(UpdateTicketInfosEvent::class)
         );
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testUpdateTicketWithPassedDueDate()
-    {
-        $projectID = $this->createSampleProject();
-        $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
-        $this->response = (new UpdateTicketInteractor($this->repository))->execute(new UpdateTicketRequest([
-            'ticketID' => $ticketID,
-            'dueDate' => new DateTime('2010-01-01')
-        ]));
     }
 
     private function createSampleTicket($title, $projectID, $description)
