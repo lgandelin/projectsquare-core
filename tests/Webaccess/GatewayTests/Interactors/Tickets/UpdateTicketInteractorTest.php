@@ -1,6 +1,7 @@
 <?php
 
 use Webaccess\Gateway\Context;
+use Webaccess\Gateway\Entities\Project;
 use Webaccess\Gateway\Entities\Ticket;
 use Webaccess\Gateway\Entities\TicketState;
 use Webaccess\Gateway\Events\Events;
@@ -8,6 +9,7 @@ use Webaccess\Gateway\Events\Tickets\UpdateTicketInfosEvent;
 use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInfosInteractor;
 use Webaccess\Gateway\Requests\Tickets\UpdateTicketInfosRequest;
 use Webaccess\GatewayTests\Dummies\DummyTranslator;
+use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
 class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
@@ -35,7 +37,7 @@ class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateTicketWithNonExistingProject()
     {
-        $ticketID = $this->createSampleTicket('Sample ticket', null, 'Lorem ipsum dolor sit amet');
+        $ticketID = $this->createSampleTicket('Sample ticket', 1, 'Lorem ipsum dolor sit amet');
         $this->response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,
             'projectID' => 1
@@ -44,7 +46,8 @@ class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
 
     public function testUpdateTicket()
     {
-        $ticketID = $this->createSampleTicket('Sample ticket', null, 'Lorem ipsum dolor sit amet');
+        $projectID = $this->createSampleProject();
+        $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
         $this->response = (new UpdateTicketInfosInteractor($this->repository))->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,
             'title' => 'New title'
@@ -72,5 +75,13 @@ class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
         $this->repository->persistTicketState($ticketState);
 
         return $ticketID;
+    }
+
+    private function createSampleProject()
+    {
+        $project = new Project();
+        $project->name = 'Sample Project';
+
+        return (new InMemoryProjectRepository())->persistProject($project);
     }
 }

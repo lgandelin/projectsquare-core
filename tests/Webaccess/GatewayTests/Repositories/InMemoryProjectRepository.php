@@ -2,8 +2,8 @@
 
 namespace Webaccess\GatewayTests\Repositories;
 
+use Webaccess\Gateway\Entities\Project;
 use Webaccess\Gateway\Repositories\ProjectRepository;
-use Webaccess\GatewayLaravel\Models\Project;
 
 class InMemoryProjectRepository implements ProjectRepository
 {
@@ -43,11 +43,6 @@ class InMemoryProjectRepository implements ProjectRepository
         // TODO: Implement deleteProject() method.
     }
 
-    public function isUserAllowedToSeeProject($userID, $project)
-    {
-        // TODO: Implement isUserAllowedToSeeProject() method.
-    }
-
     public function persistProject(Project $project)
     {
         if (!isset($project->id)) {
@@ -56,5 +51,40 @@ class InMemoryProjectRepository implements ProjectRepository
         $this->objects[$project->id]= $project;
 
         return $project->id;
+    }
+
+    public function getProjects()
+    {
+        // TODO: Implement getProjects() method.
+    }
+
+    public function getUserProjects($userID)
+    {
+        // TODO: Implement getUserProjects() method.
+    }
+
+    public function getProjectWithUsers($projectID)
+    {
+        // TODO: Implement getProjectWithUsers() method.
+    }
+
+    public function createProject($name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status)
+    {
+        // TODO: Implement createProject() method.
+    }
+
+    public function addUserToProject($project, $userID, $roleID)
+    {
+        // TODO: Implement addUserToProject() method.
+    }
+
+    public function isUserInProject($project, $userID)
+    {
+        // TODO: Implement isUserInProject() method.
+    }
+
+    public function removeUserFromProject($project, $userID)
+    {
+        // TODO: Implement removeUserFromProject() method.
     }
 }
