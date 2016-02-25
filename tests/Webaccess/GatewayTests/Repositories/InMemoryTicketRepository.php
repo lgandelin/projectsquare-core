@@ -24,7 +24,11 @@ class InMemoryTicketRepository implements TicketRepository
 
     public function getTicket($ticketID, $userID = null)
     {
-        return $this->objects[$ticketID];
+        if (isset($this->objects[$ticketID])) {
+            return $this->objects[$ticketID];
+        }
+
+        return false;
     }
 
     public function getTicketWithStates($ticketID)
@@ -83,7 +87,7 @@ class InMemoryTicketRepository implements TicketRepository
         }
         $this->objects[$ticket->id]= $ticket;
 
-        return $ticket;
+        return $ticket->id;
     }
 
     public function persistTicketState(TicketState $ticketState)
