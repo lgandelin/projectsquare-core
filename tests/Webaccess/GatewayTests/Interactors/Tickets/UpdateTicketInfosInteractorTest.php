@@ -1,16 +1,12 @@
 <?php
 
 use Webaccess\Gateway\Context;
-use Webaccess\Gateway\Entities\Project;
-use Webaccess\Gateway\Entities\Ticket;
-use Webaccess\Gateway\Entities\TicketState;
 use Webaccess\Gateway\Events\Events;
 use Webaccess\Gateway\Events\Tickets\UpdateTicketInfosEvent;
 use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInfosInteractor;
 use Webaccess\Gateway\Requests\Tickets\UpdateTicketInfosRequest;
 use Webaccess\Gateway\Responses\Tickets\UpdateTicketInfosResponse;
 use Webaccess\GatewayTests\BaseTestCase;
-use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 
 class UpdateTicketInfosInteractorTest extends BaseTestCase
 {

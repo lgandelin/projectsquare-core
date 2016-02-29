@@ -1,9 +1,6 @@
 <?php
 
 use Webaccess\Gateway\Context;
-use Webaccess\Gateway\Entities\Project;
-use Webaccess\Gateway\Entities\Ticket;
-use Webaccess\Gateway\Entities\TicketState;
 use Webaccess\Gateway\Events\Events;
 use Webaccess\Gateway\Events\Tickets\UpdateTicketEvent;
 use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInteractor;

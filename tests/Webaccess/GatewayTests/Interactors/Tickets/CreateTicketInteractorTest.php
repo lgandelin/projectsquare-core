@@ -1,7 +1,6 @@
 <?php
 
 use Webaccess\Gateway\Context;
-use Webaccess\Gateway\Entities\Project;
 use Webaccess\Gateway\Events\Events;
 use Webaccess\Gateway\Events\Tickets\CreateTicketEvent;
 use Webaccess\Gateway\Interactors\Tickets\CreateTicketInteractor;
