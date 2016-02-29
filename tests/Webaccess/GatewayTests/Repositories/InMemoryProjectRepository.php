@@ -7,22 +7,22 @@ use Webaccess\Gateway\Repositories\ProjectRepository;
 
 class InMemoryProjectRepository implements ProjectRepository
 {
-    public static $objects;
+    public $objects;
 
     public function __construct()
     {
-        self::$objects = [];
+        $this->objects = [];
     }
 
     public function getNextID()
     {
-        return count(self::$objects) + 1;
+        return count($this->objects) + 1;
     }
 
     public function getProject($projectID, $userID = null)
     {
-        if (isset(self::$objects[$projectID])) {
-            return self::$objects[$projectID];
+        if (isset($this->objects[$projectID])) {
+            return $this->objects[$projectID];
         }
 
         return false;
@@ -49,7 +49,7 @@ class InMemoryProjectRepository implements ProjectRepository
             $project->id = self::getNextID();
         }
 
-        self::$objects[$project->id]= $project;
+        $this->objects[$project->id]= $project;
 
         return $project->id;
     }

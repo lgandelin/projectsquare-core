@@ -19,7 +19,8 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
     {
         parent::__construct();
         $this->repository = new InMemoryTicketRepository();
-        $this->interactor = (new UpdateTicketInfosInteractor($this->repository));
+        $this->projectRepository = new InMemoryProjectRepository();
+        $this->interactor = (new UpdateTicketInfosInteractor($this->repository, $this->projectRepository));
     }
 
     /**
