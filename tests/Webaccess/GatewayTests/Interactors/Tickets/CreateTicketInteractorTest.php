@@ -8,17 +8,13 @@ use Webaccess\Gateway\Interactors\Tickets\CreateTicketInteractor;
 use Webaccess\Gateway\Requests\Tickets\CreateTicketRequest;
 use Webaccess\Gateway\Responses\Tickets\CreateTicketResponse;
 use Webaccess\GatewayTests\BaseTestCase;
-use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
-use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
 class CreateTicketInteractorTest extends BaseTestCase
 {
     public function __construct()
     {
         parent::__construct();
-        $this->repository = new InMemoryTicketRepository();
-        $this->projectRepository = new InMemoryProjectRepository();
-        $this->interactor = new CreateTicketInteractor($this->repository, $this->projectRepository);
+        $this->interactor = new CreateTicketInteractor($this->ticketRepository, $this->projectRepository);
     }
 
     /**
@@ -53,19 +49,11 @@ class CreateTicketInteractorTest extends BaseTestCase
         ]));
         $this->assertInstanceOf(CreateTicketResponse::class, $response);
 
-        $this->assertCount(1, $this->repository->objects);
+        $this->assertCount(1, $this->ticketRepository->objects);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_TICKET,
             Mockery::type(CreateTicketEvent::class)
         );
-    }
-
-    private function createSampleProject()
-    {
-        $project = new Project();
-        $project->name = 'Sample Project';
-
-        return $this->projectRepository->persistProject($project);
     }
 }

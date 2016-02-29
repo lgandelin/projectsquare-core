@@ -11,9 +11,6 @@ use Webaccess\Gateway\Interactors\Tickets\DeleteTicketInteractor;
 use Webaccess\Gateway\Requests\Tickets\DeleteTicketRequest;
 use Webaccess\Gateway\Responses\Tickets\DeleteTicketResponse;
 use Webaccess\GatewayTests\BaseTestCase;
-use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
-use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
-use Webaccess\GatewayTests\Repositories\InMemoryUserRepository;
 
 class DeleteTicketInteractorTest extends BaseTestCase
 {
@@ -22,10 +19,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->repository = new InMemoryTicketRepository();
-        $this->projectRepository = new InMemoryProjectRepository();
-        $this->userRepository = new InMemoryUserRepository();
-        $this->interactor = new DeleteTicketInteractor($this->repository, $this->projectRepository);
+        $this->interactor = new DeleteTicketInteractor($this->ticketRepository, $this->projectRepository);
     }
 
     /**
@@ -64,42 +58,11 @@ class DeleteTicketInteractorTest extends BaseTestCase
         ]));
         $this->assertInstanceOf(DeleteTicketResponse::class, $response);
 
-        $this->assertCount(0, $this->repository->objects);
+        $this->assertCount(0, $this->ticketRepository->objects);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::DELETE_TICKET,
             Mockery::type(DeleteTicketEvent::class)
         );
-    }
-
-    private function createSampleTicket($title, $projectID, $description)
-    {
-        $ticket = new Ticket();
-        $ticket->title = $title;
-        $ticket->projectID = $projectID;
-        $ticket->description = $description;
-        $ticket = $this->repository->persistTicket($ticket);
-
-        $ticketState = new TicketState();
-        $ticketState->ticketID = $ticket->id;
-        $this->repository->persistTicketState($ticketState);
-
-        return $ticket->id;
-    }
-
-    private function createSampleProject()
-    {
-        $project = new Project();
-        $project->name = 'Sample Project';
-
-        return $this->projectRepository->persistProject($project);
-    }
-
-    private function createSampleUser()
-    {
-        $user = new User();
-        $user->firstName = 'John';
-        $user->lastName = 'Doe';
-        return $this->userRepository->persistUser($user);
     }
 }

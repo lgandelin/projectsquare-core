@@ -11,16 +11,13 @@ use Webaccess\Gateway\Requests\Tickets\UpdateTicketInfosRequest;
 use Webaccess\Gateway\Responses\Tickets\UpdateTicketInfosResponse;
 use Webaccess\GatewayTests\BaseTestCase;
 use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
-use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
 class UpdateTicketInfosInteractorTest extends BaseTestCase
 {
     public function __construct()
     {
         parent::__construct();
-        $this->repository = new InMemoryTicketRepository();
-        $this->projectRepository = new InMemoryProjectRepository();
-        $this->interactor = new UpdateTicketInfosInteractor($this->repository, $this->projectRepository);
+        $this->interactor = new UpdateTicketInfosInteractor($this->ticketRepository, $this->projectRepository);
     }
 
     /**
@@ -56,35 +53,12 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
         ]));
         $this->assertInstanceOf(UpdateTicketInfosResponse::class, $response);
 
-        $ticket = $this->repository->getTicket($ticketID);
+        $ticket = $this->ticketRepository->getTicket($ticketID);
         $this->assertEquals('New title', $ticket->title);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::UPDATE_TICKET_INFOS,
             Mockery::type(UpdateTicketInfosEvent::class)
         );
-    }
-
-    private function createSampleTicket($title, $projectID, $description)
-    {
-        $ticket = new Ticket();
-        $ticket->title = $title;
-        $ticket->projectID = $projectID;
-        $ticket->description = $description;
-        $ticket = $this->repository->persistTicket($ticket);
-
-        $ticketState = new TicketState();
-        $ticketState->ticketID = $ticket->id;
-        $this->repository->persistTicketState($ticketState);
-
-        return $ticket->id;
-    }
-
-    private function createSampleProject()
-    {
-        $project = new Project();
-        $project->name = 'Sample Project';
-
-        return (new InMemoryProjectRepository())->persistProject($project);
     }
 }

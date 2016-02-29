@@ -10,16 +10,13 @@ use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInteractor;
 use Webaccess\Gateway\Requests\Tickets\UpdateTicketRequest;
 use Webaccess\Gateway\Responses\Tickets\UpdateTicketResponse;
 use Webaccess\GatewayTests\BaseTestCase;
-use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
-use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
 class UpdateTicketInteractorTest extends BaseTestCase
 {
     public function __construct()
     {
         parent::__construct();
-        $this->repository = new InMemoryTicketRepository();
-        $this->interactor = new UpdateTicketInteractor($this->repository);
+        $this->interactor = new UpdateTicketInteractor($this->ticketRepository);
     }
 
     /**
@@ -56,35 +53,12 @@ class UpdateTicketInteractorTest extends BaseTestCase
         ]));
         $this->assertInstanceOf(UpdateTicketResponse::class, $this->response);
 
-        $ticket = $this->repository->getTicketWithStates($ticketID);
+        $ticket = $this->ticketRepository->getTicketWithStates($ticketID);
         $this->assertEquals(2, $ticket->states[1]->statusID);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::UPDATE_TICKET,
             Mockery::type(UpdateTicketEvent::class)
         );
-    }
-
-    private function createSampleTicket($title, $projectID, $description)
-    {
-        $ticket = new Ticket();
-        $ticket->title = $title;
-        $ticket->projectID = $projectID;
-        $ticket->description = $description;
-        $ticket = $this->repository->persistTicket($ticket);
-
-        $ticketState = new TicketState();
-        $ticketState->ticketID = $ticket->id;
-        $this->repository->persistTicketState($ticketState);
-
-        return $ticket->id;
-    }
-
-    private function createSampleProject()
-    {
-        $project = new Project();
-        $project->name = 'Sample Project';
-
-        return (new InMemoryProjectRepository())->persistProject($project);
     }
 }
