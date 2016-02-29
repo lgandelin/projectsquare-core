@@ -44,10 +44,10 @@ class CreateTicketInteractorTest extends BaseTestCase
 
     public function testCreateTicket()
     {
-        $projectID = $this->createSampleProject();
+        $project = $this->createSampleProject();
         $response = $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
-            'projectID' => $projectID,
+            'projectID' => $project->id,
             'statusID' => 2,
             'dueDate' => new \DateTime('2016-02-30')
         ]));

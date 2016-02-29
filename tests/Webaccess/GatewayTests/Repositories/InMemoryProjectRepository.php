@@ -19,7 +19,7 @@ class InMemoryProjectRepository implements ProjectRepository
         return count($this->objects) + 1;
     }
 
-    public function getProject($projectID, $userID = null)
+    public function getProject($projectID)
     {
         if (isset($this->objects[$projectID])) {
             return $this->objects[$projectID];
@@ -48,10 +48,11 @@ class InMemoryProjectRepository implements ProjectRepository
         if (!isset($project->id)) {
             $project->id = self::getNextID();
         }
+        $project->users = [];
 
         $this->objects[$project->id]= $project;
 
-        return $project->id;
+        return $project;
     }
 
     public function getProjects()
@@ -74,14 +75,14 @@ class InMemoryProjectRepository implements ProjectRepository
         // TODO: Implement createProject() method.
     }
 
-    public function addUserToProject($project, $userID, $roleID)
+    public function addUserToProject($project, $user, $roleID)
     {
-        // TODO: Implement addUserToProject() method.
+        $project->users[]= $user->id;
     }
 
     public function isUserInProject($project, $userID)
     {
-        // TODO: Implement isUserInProject() method.
+        return in_array($userID, $project->users);
     }
 
     public function removeUserFromProject($project, $userID)

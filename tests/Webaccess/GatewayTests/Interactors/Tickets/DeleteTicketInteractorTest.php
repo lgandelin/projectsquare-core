@@ -4,6 +4,7 @@ use Webaccess\Gateway\Context;
 use Webaccess\Gateway\Entities\Project;
 use Webaccess\Gateway\Entities\Ticket;
 use Webaccess\Gateway\Entities\TicketState;
+use Webaccess\Gateway\Entities\User;
 use Webaccess\Gateway\Events\Events;
 use Webaccess\Gateway\Events\Tickets\DeleteTicketEvent;
 use Webaccess\Gateway\Interactors\Tickets\DeleteTicketInteractor;
@@ -12,15 +13,19 @@ use Webaccess\Gateway\Responses\Tickets\DeleteTicketResponse;
 use Webaccess\GatewayTests\BaseTestCase;
 use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
+use Webaccess\GatewayTests\Repositories\InMemoryUserRepository;
 
 class DeleteTicketInteractorTest extends BaseTestCase
 {
+    public $userRepository;
+
     public function __construct()
     {
         parent::__construct();
         $this->repository = new InMemoryTicketRepository();
         $this->projectRepository = new InMemoryProjectRepository();
-        $this->interactor = new DeleteTicketInteractor($this->repository);
+        $this->userRepository = new InMemoryUserRepository();
+        $this->interactor = new DeleteTicketInteractor($this->repository, $this->projectRepository);
     }
 
     /**
@@ -29,16 +34,33 @@ class DeleteTicketInteractorTest extends BaseTestCase
     public function testDeleteNonExistingTicket()
     {
         $this->interactor->execute(new DeleteTicketRequest([
-            'ticketID' => 1
+            'ticketID' => 1,
+        ]));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testDeleteTicketWithoutPermission()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $this->interactor->execute(new DeleteTicketRequest([
+            'ticketID' => $ticketID,
+            'userID' => $user->id
         ]));
     }
 
     public function testDeleteTicket()
     {
-        $projectID = $this->createSampleProject();
-        $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
         $response = $this->interactor->execute(new DeleteTicketRequest([
-            'ticketID' => $ticketID
+            'ticketID' => $ticketID,
+            'userID' => $user->id
         ]));
         $this->assertInstanceOf(DeleteTicketResponse::class, $response);
 
@@ -71,5 +93,13 @@ class DeleteTicketInteractorTest extends BaseTestCase
         $project->name = 'Sample Project';
 
         return $this->projectRepository->persistProject($project);
+    }
+
+    private function createSampleUser()
+    {
+        $user = new User();
+        $user->firstName = 'John';
+        $user->lastName = 'Doe';
+        return $this->userRepository->persistUser($user);
     }
 }
