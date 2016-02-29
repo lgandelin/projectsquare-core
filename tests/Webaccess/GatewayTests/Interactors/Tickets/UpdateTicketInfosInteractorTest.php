@@ -9,18 +9,17 @@ use Webaccess\Gateway\Events\Tickets\UpdateTicketInfosEvent;
 use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInfosInteractor;
 use Webaccess\Gateway\Requests\Tickets\UpdateTicketInfosRequest;
 use Webaccess\Gateway\Responses\Tickets\UpdateTicketInfosResponse;
-use Webaccess\GatewayTests\Dummies\DummyTranslator;
+use Webaccess\GatewayTests\BaseTestCase;
 use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
-class UpdateTicketInfosInteractorTest extends PHPUnit_Framework_TestCase
+class UpdateTicketInfosInteractorTest extends BaseTestCase
 {
     public function __construct()
     {
+        parent::__construct();
         $this->repository = new InMemoryTicketRepository();
         $this->interactor = (new UpdateTicketInfosInteractor($this->repository));
-        Context::set('translator', new DummyTranslator());
-        Context::set('event_dispatcher', Mockery::spy("EventDispatcherInterface"));
     }
 
     /**

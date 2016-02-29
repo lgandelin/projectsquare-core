@@ -9,18 +9,17 @@ use Webaccess\Gateway\Events\Tickets\UpdateTicketEvent;
 use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInteractor;
 use Webaccess\Gateway\Requests\Tickets\UpdateTicketRequest;
 use Webaccess\Gateway\Responses\Tickets\UpdateTicketResponse;
-use Webaccess\GatewayTests\Dummies\DummyTranslator;
+use Webaccess\GatewayTests\BaseTestCase;
 use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
-class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
+class UpdateTicketInteractorTest extends BaseTestCase
 {
     public function __construct()
     {
+        parent::__construct();
         $this->repository = new InMemoryTicketRepository();
         $this->interactor = (new UpdateTicketInteractor($this->repository));
-        Context::set('translator', new DummyTranslator());
-        Context::set('event_dispatcher', Mockery::spy("EventDispatcherInterface"));
     }
 
     /**
@@ -31,6 +30,19 @@ class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
         $this->response = $this->interactor->execute(new UpdateTicketRequest([
             'ticketID' => 1,
             'title' => 'New title'
+        ]));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testUpdateTicketWithPassedDueDate()
+    {
+        $projectID = $this->createSampleProject();
+        $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
+        $this->response = $this->interactor->execute(new UpdateTicketRequest([
+            'ticketID' => $ticketID,
+            'dueDate' => new DateTime('2010-01-01')
         ]));
     }
 
@@ -51,19 +63,6 @@ class UpdateTicketInteractorTest extends PHPUnit_Framework_TestCase
             Events::UPDATE_TICKET,
             Mockery::type(UpdateTicketEvent::class)
         );
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testUpdateTicketWithPassedDueDate()
-    {
-        $projectID = $this->createSampleProject();
-        $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
-        $this->response = $this->interactor->execute(new UpdateTicketRequest([
-            'ticketID' => $ticketID,
-            'dueDate' => new DateTime('2010-01-01')
-        ]));
     }
 
     private function createSampleTicket($title, $projectID, $description)

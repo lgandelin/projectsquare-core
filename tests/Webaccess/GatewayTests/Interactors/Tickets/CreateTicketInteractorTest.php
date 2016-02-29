@@ -7,19 +7,18 @@ use Webaccess\Gateway\Events\Tickets\CreateTicketEvent;
 use Webaccess\Gateway\Interactors\Tickets\CreateTicketInteractor;
 use Webaccess\Gateway\Requests\Tickets\CreateTicketRequest;
 use Webaccess\Gateway\Responses\Tickets\CreateTicketResponse;
-use Webaccess\GatewayTests\Dummies\DummyTranslator;
+use Webaccess\GatewayTests\BaseTestCase;
 use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
-class CreateTicketInteractorTest extends PHPUnit_Framework_TestCase
+class CreateTicketInteractorTest extends BaseTestCase
 {
     public function __construct()
     {
+        parent::__construct();
         $this->repository = new InMemoryTicketRepository();
         $this->projectRepository = new InMemoryProjectRepository();
         $this->interactor = (new CreateTicketInteractor($this->repository, $this->projectRepository));
-        Context::set('translator', new DummyTranslator());
-        Context::set('event_dispatcher', Mockery::spy("EventDispatcherInterface"));
     }
 
     /**
@@ -54,8 +53,8 @@ class CreateTicketInteractorTest extends PHPUnit_Framework_TestCase
         ]));
         $this->assertInstanceOf(CreateTicketResponse::class, $response);
 
-        //Assert new ticket + new state
-
+        $ticket = $this->repository->getTicketWithStates($response->ticket->id);
+        $this->assertCount(1, $ticket->states);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_TICKET,
