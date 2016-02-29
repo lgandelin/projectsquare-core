@@ -54,6 +54,9 @@ class CreateTicketInteractorTest extends PHPUnit_Framework_TestCase
         ]));
         $this->assertInstanceOf(CreateTicketResponse::class, $response);
 
+        //Assert new ticket + new state
+
+
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_TICKET,
             Mockery::type(CreateTicketEvent::class)
