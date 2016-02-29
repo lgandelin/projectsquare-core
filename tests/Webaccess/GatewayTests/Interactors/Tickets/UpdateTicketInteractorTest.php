@@ -13,7 +13,7 @@ class UpdateTicketInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new UpdateTicketInteractor($this->ticketRepository);
+        $this->interactor = new UpdateTicketInteractor($this->ticketRepository, $this->projectRepository);
     }
 
     /**
@@ -21,9 +21,11 @@ class UpdateTicketInteractorTest extends BaseTestCase
      */
     public function testUpdateNonExistingTicket()
     {
-        $this->response = $this->interactor->execute(new UpdateTicketRequest([
+        $user = $this->createSampleUser();
+        $response = $this->interactor->execute(new UpdateTicketRequest([
             'ticketID' => 1,
-            'title' => 'New title'
+            'title' => 'New title',
+            'requesterUserID' => $user->id
         ]));
     }
 
@@ -32,23 +34,43 @@ class UpdateTicketInteractorTest extends BaseTestCase
      */
     public function testUpdateTicketWithPassedDueDate()
     {
-        $projectID = $this->createSampleProject();
-        $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
-        $this->response = $this->interactor->execute(new UpdateTicketRequest([
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $response = $this->interactor->execute(new UpdateTicketRequest([
             'ticketID' => $ticketID,
-            'dueDate' => new DateTime('2010-01-01')
+            'dueDate' => new DateTime('2010-01-01'),
+            'requesterUserID' => $user->id
+        ]));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testUpdateTicketWithoutPermission()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $ticketID = $this->createSampleTicket('Sample ticket', 1, 'Lorem ipsum dolor sit amet');
+        $this->interactor->execute(new UpdateTicketRequest([
+            'ticketID' => $ticketID,
+            'projectID' => $project->id,
+            'requesterUserID' => $user->id
         ]));
     }
 
     public function testUpdateTicket()
     {
-        $projectID = $this->createSampleProject();
-        $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
-        $this->response = $this->interactor->execute(new UpdateTicketRequest([
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $response = $this->interactor->execute(new UpdateTicketRequest([
             'ticketID' => $ticketID,
             'statusID' => 2,
+            'requesterUserID' => $user->id
         ]));
-        $this->assertInstanceOf(UpdateTicketResponse::class, $this->response);
+        $this->assertInstanceOf(UpdateTicketResponse::class, $response);
 
         $ticket = $this->ticketRepository->getTicketWithStates($ticketID);
         $this->assertEquals(2, $ticket->states[1]->statusID);

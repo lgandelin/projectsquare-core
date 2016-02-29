@@ -82,7 +82,11 @@ class InMemoryProjectRepository implements ProjectRepository
 
     public function isUserInProject($project, $userID)
     {
-        return in_array($userID, $project->users);
+        if (isset($project->users)) {
+            return in_array($userID, $project->users);
+        }
+
+        return false;
     }
 
     public function removeUserFromProject($project, $userID)

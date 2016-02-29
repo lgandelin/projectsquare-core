@@ -38,7 +38,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
         $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
         $this->interactor->execute(new DeleteTicketRequest([
             'ticketID' => $ticketID,
-            'userID' => $user->id
+            'requesterUserID' => $user->id
         ]));
     }
 
@@ -50,7 +50,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
         $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
         $response = $this->interactor->execute(new DeleteTicketRequest([
             'ticketID' => $ticketID,
-            'userID' => $user->id
+            'requesterUserID' => $user->id
         ]));
         $this->assertInstanceOf(DeleteTicketResponse::class, $response);
 
