@@ -9,6 +9,7 @@ use Webaccess\Gateway\Entities\Ticket;
 use Webaccess\Gateway\Entities\TicketState;
 use Webaccess\Gateway\Entities\User;
 use Webaccess\GatewayTests\Dummies\DummyTranslator;
+use Webaccess\GatewayTests\Repositories\InMemoryConversationRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryUserRepository;
@@ -20,6 +21,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->ticketRepository = new InMemoryTicketRepository();
         $this->projectRepository = new InMemoryProjectRepository();
         $this->userRepository = new InMemoryUserRepository();
+        $this->conversationRepository = new InMemoryConversationRepository();
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
     }

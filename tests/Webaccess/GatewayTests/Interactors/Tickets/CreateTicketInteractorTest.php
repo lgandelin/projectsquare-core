@@ -23,6 +23,7 @@ class CreateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
         $this->interactor->execute(new CreateTicketRequest([
             'title' => '',
             'projectID' => $project->id,

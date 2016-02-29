@@ -32,10 +32,12 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
      */
     public function testUpdateTicketWithNonExistingProject()
     {
+        $user = $this->createSampleUser();
         $ticketID = $this->createSampleTicket('Sample ticket', 1, 'Lorem ipsum dolor sit amet');
         $this->interactor->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,
-            'projectID' => 1
+            'projectID' => 1,
+            'requesterUserID' => $user->id
         ]));
     }
 

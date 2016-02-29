@@ -36,6 +36,7 @@ class UpdateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
         $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
         $response = $this->interactor->execute(new UpdateTicketRequest([
             'ticketID' => $ticketID,
