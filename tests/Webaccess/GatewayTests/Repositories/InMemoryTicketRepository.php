@@ -72,7 +72,9 @@ class InMemoryTicketRepository implements TicketRepository
 
     public function deleteTicket($ticketID)
     {
-        // TODO: Implement deleteTicket() method.
+        if (isset($this->objects[$ticketID])) {
+            unset($this->objects[$ticketID]);
+        }
     }
 
     public function isUserAllowedToSeeTicket($userID, $ticket)

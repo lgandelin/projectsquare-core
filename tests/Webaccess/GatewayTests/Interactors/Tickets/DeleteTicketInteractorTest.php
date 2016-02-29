@@ -5,63 +5,48 @@ use Webaccess\Gateway\Entities\Project;
 use Webaccess\Gateway\Entities\Ticket;
 use Webaccess\Gateway\Entities\TicketState;
 use Webaccess\Gateway\Events\Events;
-use Webaccess\Gateway\Events\Tickets\UpdateTicketInfosEvent;
-use Webaccess\Gateway\Interactors\Tickets\UpdateTicketInfosInteractor;
-use Webaccess\Gateway\Requests\Tickets\UpdateTicketInfosRequest;
-use Webaccess\Gateway\Responses\Tickets\UpdateTicketInfosResponse;
+use Webaccess\Gateway\Events\Tickets\DeleteTicketEvent;
+use Webaccess\Gateway\Interactors\Tickets\DeleteTicketInteractor;
+use Webaccess\Gateway\Requests\Tickets\DeleteTicketRequest;
+use Webaccess\Gateway\Responses\Tickets\DeleteTicketResponse;
 use Webaccess\GatewayTests\BaseTestCase;
 use Webaccess\GatewayTests\Repositories\InMemoryProjectRepository;
 use Webaccess\GatewayTests\Repositories\InMemoryTicketRepository;
 
-class UpdateTicketInfosInteractorTest extends BaseTestCase
+class DeleteTicketInteractorTest extends BaseTestCase
 {
     public function __construct()
     {
         parent::__construct();
         $this->repository = new InMemoryTicketRepository();
         $this->projectRepository = new InMemoryProjectRepository();
-        $this->interactor = new UpdateTicketInfosInteractor($this->repository, $this->projectRepository);
+        $this->interactor = new DeleteTicketInteractor($this->repository);
     }
 
     /**
      * @expectedException Exception
      */
-    public function testUpdateNonExistingTicket()
+    public function testDeleteNonExistingTicket()
     {
-        $this->interactor->execute(new UpdateTicketInfosRequest([
-            'ticketID' => 1,
-            'title' => 'New title'
+        $this->interactor->execute(new DeleteTicketRequest([
+            'ticketID' => 1
         ]));
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testUpdateTicketWithNonExistingProject()
-    {
-        $ticketID = $this->createSampleTicket('Sample ticket', 1, 'Lorem ipsum dolor sit amet');
-        $this->interactor->execute(new UpdateTicketInfosRequest([
-            'ticketID' => $ticketID,
-            'projectID' => 1
-        ]));
-    }
-
-    public function testUpdateTicket()
+    public function testDeleteTicket()
     {
         $projectID = $this->createSampleProject();
         $ticketID = $this->createSampleTicket('Sample ticket', $projectID, 'Lorem ipsum dolor sit amet');
-        $response = $this->interactor->execute(new UpdateTicketInfosRequest([
-            'ticketID' => $ticketID,
-            'title' => 'New title'
+        $response = $this->interactor->execute(new DeleteTicketRequest([
+            'ticketID' => $ticketID
         ]));
-        $this->assertInstanceOf(UpdateTicketInfosResponse::class, $response);
+        $this->assertInstanceOf(DeleteTicketResponse::class, $response);
 
-        $ticket = $this->repository->getTicket($ticketID);
-        $this->assertEquals('New title', $ticket->title);
+        $this->assertCount(0, $this->repository->objects);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
-            Events::UPDATE_TICKET_INFOS,
-            Mockery::type(UpdateTicketInfosEvent::class)
+            Events::DELETE_TICKET,
+            Mockery::type(DeleteTicketEvent::class)
         );
     }
 
@@ -85,6 +70,6 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
         $project = new Project();
         $project->name = 'Sample Project';
 
-        return (new InMemoryProjectRepository())->persistProject($project);
+        return $this->projectRepository->persistProject($project);
     }
 }

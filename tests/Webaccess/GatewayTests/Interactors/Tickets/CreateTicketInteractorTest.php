@@ -18,7 +18,7 @@ class CreateTicketInteractorTest extends BaseTestCase
         parent::__construct();
         $this->repository = new InMemoryTicketRepository();
         $this->projectRepository = new InMemoryProjectRepository();
-        $this->interactor = (new CreateTicketInteractor($this->repository, $this->projectRepository));
+        $this->interactor = new CreateTicketInteractor($this->repository, $this->projectRepository);
     }
 
     /**
@@ -53,8 +53,7 @@ class CreateTicketInteractorTest extends BaseTestCase
         ]));
         $this->assertInstanceOf(CreateTicketResponse::class, $response);
 
-        $ticket = $this->repository->getTicketWithStates($response->ticket->id);
-        $this->assertCount(1, $ticket->states);
+        $this->assertCount(1, $this->repository->objects);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_TICKET,
