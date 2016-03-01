@@ -19,17 +19,21 @@ class InMemoryConversationRepository implements ConversationRepository
         return count($this->objects) + 1;
     }
 
-    public static function getConversation($conversationID)
+    public function getConversation($conversationID)
     {
-        // TODO: Implement getConversation() method.
+        if (isset($this->objects[$conversationID])) {
+            return $this->objects[$conversationID];
+        }
+
+        return false;
     }
 
-    public static function getConversations()
+    public function getConversations()
     {
         // TODO: Implement getConversations() method.
     }
 
-    public static function getConversationsPaginatedList($limit)
+    public function getConversationsPaginatedList($limit)
     {
         // TODO: Implement getConversationsPaginatedList() method.
     }
@@ -44,7 +48,7 @@ class InMemoryConversationRepository implements ConversationRepository
         return $conversation;
     }
 
-    public static function deleteConversation($conversationID)
+    public function deleteConversation($conversationID)
     {
         // TODO: Implement deleteConversation() method.
     }

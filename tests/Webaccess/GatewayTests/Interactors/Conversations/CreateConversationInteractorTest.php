@@ -22,7 +22,8 @@ class CreateConversationInteractorTest extends BaseTestCase
     public function testCreateConversationWithNonExistingProject()
     {
         $user = $this->createSampleUser();
-        $response = $this->interactor->execute(new CreateConversationRequest([
+
+        $this->interactor->execute(new CreateConversationRequest([
             'requesterUserID' => $user->id
         ]));
     }
@@ -34,6 +35,7 @@ class CreateConversationInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
+
         $this->interactor->execute(new CreateConversationRequest([
             'title' => 'Sample ticket',
             'projectID' => $project->id,
@@ -46,6 +48,7 @@ class CreateConversationInteractorTest extends BaseTestCase
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
         $this->projectRepository->addUserToProject($project, $user, null);
+
         $response = $this->interactor->execute(new CreateConversationRequest([
             'title' => 'Sample conversation',
             'projectID' => $project->id,
