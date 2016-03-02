@@ -36,6 +36,7 @@ class UpdateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
         $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
         $response = $this->interactor->execute(new UpdateTicketRequest([
             'ticketID' => $ticketID,
@@ -70,11 +71,17 @@ class UpdateTicketInteractorTest extends BaseTestCase
             'statusID' => 2,
             'requesterUserID' => $user->id
         ]));
-        $this->assertInstanceOf(UpdateTicketResponse::class, $response);
 
+        //Check response
+        $this->assertInstanceOf(UpdateTicketResponse::class, $response);
+        $this->assertEquals($ticketID, $response->ticket->id);
+        $this->assertEquals(2, $response->ticketState->statusID);
+
+        //Check update
         $ticket = $this->ticketRepository->getTicketWithStates($ticketID);
         $this->assertEquals(2, $ticket->states[1]->statusID);
 
+        //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::UPDATE_TICKET,
             Mockery::type(UpdateTicketEvent::class)

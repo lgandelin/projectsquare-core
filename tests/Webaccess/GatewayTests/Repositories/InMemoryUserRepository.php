@@ -19,37 +19,41 @@ class InMemoryUserRepository implements UserRepository
         return count($this->objects) + 1;
     }
 
-    public static function getUser($userID)
+    public function getUser($userID)
     {
-        // TODO: Implement getUser() method.
+        if (isset($this->objects[$userID])) {
+            return $this->objects[$userID];
+        }
+
+        return false;
     }
 
-    public static function getUsers()
+    public function getUsers()
     {
         // TODO: Implement getUsers() method.
     }
 
-    public static function getAgencyUsers()
+    public function getAgencyUsers()
     {
         // TODO: Implement getAgencyUsers() method.
     }
 
-    public static function getUsersPaginatedList($limit)
+    public function getUsersPaginatedList($limit)
     {
         // TODO: Implement getUsersPaginatedList() method.
     }
 
-    public static function createUser($firstName, $lastName, $email, $password, $clientID)
+    public function createUser($firstName, $lastName, $email, $password, $clientID)
     {
         // TODO: Implement createUser() method.
     }
 
-    public static function updateUser($userID, $firstName, $lastName, $email, $password, $clientID)
+    public function updateUser($userID, $firstName, $lastName, $email, $password, $clientID)
     {
         // TODO: Implement updateUser() method.
     }
 
-    public static function deleteUser($userID)
+    public function deleteUser($userID)
     {
         // TODO: Implement deleteUser() method.
     }

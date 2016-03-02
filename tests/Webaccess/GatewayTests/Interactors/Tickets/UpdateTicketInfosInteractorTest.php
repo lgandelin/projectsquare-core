@@ -32,10 +32,12 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
      */
     public function testUpdateTicketWithNonExistingProject()
     {
+        $user = $this->createSampleUser();
         $ticketID = $this->createSampleTicket('Sample ticket', 1, 'Lorem ipsum dolor sit amet');
         $this->interactor->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,
-            'projectID' => 1
+            'projectID' => 1,
+            'requesterUserID' => $user->id
         ]));
     }
 
@@ -65,11 +67,17 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
             'title' => 'New title',
             'requesterUserID' => $user->id
         ]));
-        $this->assertInstanceOf(UpdateTicketInfosResponse::class, $response);
 
+        //Check reponse
+        $this->assertInstanceOf(UpdateTicketInfosResponse::class, $response);
+        $this->assertEquals($ticketID, $response->ticket->id);
+        $this->assertEquals('New title', $response->ticket->title);
+
+        //Check update
         $ticket = $this->ticketRepository->getTicket($ticketID);
         $this->assertEquals('New title', $ticket->title);
 
+        //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::UPDATE_TICKET_INFOS,
             Mockery::type(UpdateTicketInfosEvent::class)

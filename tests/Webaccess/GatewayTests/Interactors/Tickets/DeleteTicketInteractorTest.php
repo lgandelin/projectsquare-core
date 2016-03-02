@@ -1,6 +1,7 @@
 <?php
 
 use Webaccess\Gateway\Context;
+use Webaccess\Gateway\Entities\Ticket;
 use Webaccess\Gateway\Events\Events;
 use Webaccess\Gateway\Events\Tickets\DeleteTicketEvent;
 use Webaccess\Gateway\Interactors\Tickets\DeleteTicketInteractor;
@@ -52,10 +53,16 @@ class DeleteTicketInteractorTest extends BaseTestCase
             'ticketID' => $ticketID,
             'requesterUserID' => $user->id
         ]));
-        $this->assertInstanceOf(DeleteTicketResponse::class, $response);
 
+        //Check response
+        $this->assertInstanceOf(DeleteTicketResponse::class, $response);
+        $this->assertInstanceOf(Ticket::class, $response->ticket);
+        $this->assertEquals($ticketID, $response->ticket->id);
+
+        //Check deletion
         $this->assertCount(0, $this->ticketRepository->objects);
 
+        //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::DELETE_TICKET,
             Mockery::type(DeleteTicketEvent::class)
