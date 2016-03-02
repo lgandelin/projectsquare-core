@@ -13,7 +13,7 @@ class CreateMessageInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateMessageInteractor($this->messageRepository, $this->conversationRepository, $this->projectRepository);
+        $this->interactor = new CreateMessageInteractor($this->messageRepository, $this->conversationRepository, $this->userRepository, $this->projectRepository);
     }
 
     /**
@@ -57,10 +57,17 @@ class CreateMessageInteractorTest extends BaseTestCase
             'conversationID' => $conversation->id,
             'requesterUserID' => $user->id
         ]));
-        $this->assertInstanceOf(CreateMessageResponse::class, $response);
 
+        //Check response
+        $this->assertInstanceOf(CreateMessageResponse::class, $response);
+        $this->assertEquals(new \DateTime(), $response->createdAt);
+        $this->assertEquals('John Doe', $response->user->firstName . ' ' . $response->user->lastName);
+        $this->assertEquals(1, $response->count);
+
+        //Check insertion
         $this->assertCount(1, $this->messageRepository->objects);
 
+        //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_MESSAGE,
             Mockery::type(CreateMessageEvent::class)

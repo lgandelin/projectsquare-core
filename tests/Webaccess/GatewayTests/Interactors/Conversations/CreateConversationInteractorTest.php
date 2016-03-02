@@ -13,7 +13,7 @@ class CreateConversationInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateConversationInteractor($this->conversationRepository, $this->messageRepository, $this->projectRepository);
+        $this->interactor = new CreateConversationInteractor($this->conversationRepository, $this->messageRepository, $this->userRepository, $this->projectRepository);
     }
 
     /**
