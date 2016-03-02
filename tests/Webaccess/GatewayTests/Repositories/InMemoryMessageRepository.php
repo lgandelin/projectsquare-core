@@ -48,4 +48,17 @@ class InMemoryMessageRepository implements MessageRepository
     {
         // TODO: Implement deleteMessage() method.
     }
+
+    public function getMessagesByConversation($conversationID)
+    {
+        $result = [];
+
+        foreach ($this->objects as $message) {
+            if ($message->conversationID == $conversationID) {
+                $result[]= $message;
+            }
+        }
+
+        return $result;
+    }
 }

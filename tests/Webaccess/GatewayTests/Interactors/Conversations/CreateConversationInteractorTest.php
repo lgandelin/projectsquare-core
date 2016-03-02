@@ -13,7 +13,7 @@ class CreateConversationInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateConversationInteractor($this->conversationRepository, $this->projectRepository);
+        $this->interactor = new CreateConversationInteractor($this->conversationRepository, $this->messageRepository, $this->projectRepository);
     }
 
     /**
@@ -51,12 +51,20 @@ class CreateConversationInteractorTest extends BaseTestCase
 
         $response = $this->interactor->execute(new CreateConversationRequest([
             'title' => 'Sample conversation',
+            'message' => 'Sample text',
             'projectID' => $project->id,
             'requesterUserID' => $user->id
         ]));
+
+        //Check response
         $this->assertInstanceOf(CreateConversationResponse::class, $response);
+        $this->assertEquals('Sample conversation', $response->conversation->title);
+        $this->assertEquals($project->id, $response->conversation->projectID);
+        $this->assertEquals('Sample text', $response->message->content);
+        $this->assertEquals($response->conversation->id, $response->message->conversationID);
 
         $this->assertCount(1, $this->conversationRepository->objects);
+        $this->assertCount(1, $this->messageRepository->objects);
 
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_CONVERSATION,
