@@ -63,9 +63,11 @@ class CreateConversationInteractorTest extends BaseTestCase
         $this->assertEquals('Sample text', $response->message->content);
         $this->assertEquals($response->conversation->id, $response->message->conversationID);
 
+        //Check insertion
         $this->assertCount(1, $this->conversationRepository->objects);
         $this->assertCount(1, $this->messageRepository->objects);
 
+        //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_CONVERSATION,
             Mockery::type(CreateConversationEvent::class)
