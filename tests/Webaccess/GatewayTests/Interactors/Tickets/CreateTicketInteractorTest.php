@@ -1,6 +1,8 @@
 <?php
 
 use Webaccess\Gateway\Context;
+use Webaccess\Gateway\Entities\Ticket;
+use Webaccess\Gateway\Entities\TicketState;
 use Webaccess\Gateway\Events\Events;
 use Webaccess\Gateway\Events\Tickets\CreateTicketEvent;
 use Webaccess\Gateway\Interactors\Tickets\CreateTicketInteractor;
@@ -70,10 +72,21 @@ class CreateTicketInteractorTest extends BaseTestCase
             'dueDate' => new \DateTime('2016-02-30'),
             'requesterUserID' => $user->id
         ]));
-        $this->assertInstanceOf(CreateTicketResponse::class, $response);
 
+        //Check response
+        $this->assertInstanceOf(CreateTicketResponse::class, $response);
+        $this->assertInstanceOf(Ticket::class, $response->ticket);
+        $this->assertInstanceOf(TicketState::class, $response->ticketState);
+        $this->assertEquals('Sample ticket', $response->ticket->title);
+        $this->assertEquals($project->id, $response->ticket->projectID);
+        $this->assertEquals(2, $response->ticketState->statusID);
+        $this->assertEquals(new \DateTime('2016-02-30'), $response->ticketState->dueDate);
+        $this->assertEquals($user->id, $response->ticketState->authorUserID);
+
+        //Check insertion
         $this->assertCount(1, $this->ticketRepository->objects);
 
+        //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_TICKET,
             Mockery::type(CreateTicketEvent::class)
