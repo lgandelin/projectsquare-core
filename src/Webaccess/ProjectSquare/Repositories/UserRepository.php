@@ -17,4 +17,6 @@ interface UserRepository
     public function updateUser($userID, $firstName, $lastName, $email, $password, $clientID);
 
     public function deleteUser($userID);
+
+    public function setReadFlagMessage($userID, $messageID);
 }

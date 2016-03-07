@@ -31,7 +31,8 @@ class CreateMessageInteractor
     public function execute(CreateMessageRequest $request)
     {
         $this->validate($request);
-        $message = $this->replyMessage($request);
+        $message = $this->createMessage($request);
+        $this->setReadFlagForAllProjectUsers($message);
         $this->dispatchEvent($message);
 
         return new CreateMessageResponse([
@@ -78,7 +79,7 @@ class CreateMessageInteractor
         );
     }
 
-    private function replyMessage(CreateMessageRequest $request)
+    private function createMessage(CreateMessageRequest $request)
     {
         $message = new Message();
         $message->content = $request->content;
@@ -104,5 +105,17 @@ class CreateMessageInteractor
     private function getMessageCount($conversationID)
     {
         return count($this->repository->getMessagesByConversation($conversationID));
+    }
+
+    private function setReadFlagForAllProjectUsers($message)
+    {
+        $conversation = $this->conversationRepository->getConversation($message->conversationID);
+        $projectUsers = $this->projectRepository->getUserProjects($conversation->projectID);
+
+        if (is_array($projectUsers) && sizeof($projectUsers) > 0) {
+            foreach ($projectUsers as $i => $userID) {
+                $this->userRepository->setReadFlagMessage($userID, $message->id);
+            }
+        }
     }
 }

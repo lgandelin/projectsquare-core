@@ -8,7 +8,7 @@ interface ProjectRepository
 
     public function getProjects();
 
-    public function getUserProjects($userID);
+    public function getUserProjects($projectID);
 
     public function getProjectWithUsers($projectID);
 
