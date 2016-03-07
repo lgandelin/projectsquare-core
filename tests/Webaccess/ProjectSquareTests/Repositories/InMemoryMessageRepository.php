@@ -21,7 +21,11 @@ class InMemoryMessageRepository implements MessageRepository
 
     public function getMessage($messageID)
     {
-        // TODO: Implement getMessage() method.
+        if (isset($this->objects[$messageID])) {
+            return $this->objects[$messageID];
+        }
+
+        return false;
     }
 
     public function getMessages()

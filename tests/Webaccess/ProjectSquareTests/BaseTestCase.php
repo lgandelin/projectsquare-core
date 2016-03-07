@@ -5,6 +5,7 @@ namespace Webaccess\ProjectSquareTests;
 use Mockery;
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Conversation;
+use Webaccess\ProjectSquare\Entities\Message;
 use Webaccess\ProjectSquare\Entities\Project;
 use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Entities\TicketState;
@@ -68,5 +69,15 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $conversation->projectID = $projectID;
 
         return $this->conversationRepository->persistConversation($conversation);
+    }
+
+    protected function createSampleMessage($conversationID, $userID)
+    {
+        $message = new Message();
+        $message->content = 'Sample message';
+        $message->conversationID = $conversationID;
+        $message->userID = $userID;
+
+        return $this->messageRepository->persistMessage($message);
     }
 }
