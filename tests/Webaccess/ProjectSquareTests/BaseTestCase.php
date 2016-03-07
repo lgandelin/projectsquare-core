@@ -10,6 +10,8 @@ use Webaccess\ProjectSquare\Entities\Project;
 use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Entities\TicketState;
 use Webaccess\ProjectSquare\Entities\User;
+use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
+use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
 use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryMessageRepository;
@@ -73,11 +75,17 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     protected function createSampleMessage($conversationID, $userID)
     {
-        $message = new Message();
-        $message->content = 'Sample message';
-        $message->conversationID = $conversationID;
-        $message->userID = $userID;
+        $response = (new CreateMessageInteractor(
+            $this->messageRepository,
+            $this->conversationRepository,
+            $this->userRepository,
+            $this->projectRepository
+        ))->execute(new CreateMessageRequest([
+            'content' => 'Sample message',
+            'conversationID' => $conversationID,
+            'requesterUserID' => $userID
+        ]));
 
-        return $this->messageRepository->persistMessage($message);
+        return $this->messageRepository->persistMessage($response->message);
     }
 }

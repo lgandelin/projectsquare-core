@@ -114,7 +114,7 @@ class CreateMessageInteractor
 
         if (is_array($projectUsers) && sizeof($projectUsers) > 0) {
             foreach ($projectUsers as $i => $userID) {
-                $this->userRepository->setReadFlagMessage($userID, $message->id);
+                $this->userRepository->setReadFlagMessage($userID, $message->id, false);
             }
         }
     }

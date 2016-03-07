@@ -76,6 +76,6 @@ class ReadMessageInteractor
     {
         $user = $this->userRepository->getUser($request->requesterUserID);
         $message = $this->repository->getMessage($request->messageID);
-        $this->userRepository->setReadFlagMessage($user->id, $message->id);
+        $this->userRepository->setReadFlagMessage($user->id, $message->id, true);
     }
 }

@@ -74,11 +74,18 @@ class InMemoryUserRepository implements UserRepository
 
     public function getUnreadMessages($userID)
     {
-        return $this->objects[$userID]->unread_messages;
+        $result = [];
+        foreach ($this->objects[$userID]->unread_messages as $messageID => $messageRead) {
+            if (!$messageRead) {
+                $result[]= $messageID;
+            }
+        }
+
+        return $result;
     }
 
-    public function setReadFlagMessage($userID, $messageID)
+    public function setReadFlagMessage($userID, $messageID, $read)
     {
-        $this->objects[$userID]->unread_messages[]= $messageID;
+        $this->objects[$userID]->unread_messages[$messageID] = $read;
     }
 }
