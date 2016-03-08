@@ -10,7 +10,7 @@ class GetUnreadMessagesInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new GetUnreadMessagesCountInteractor($this->messageRepository, $this->conversationRepository, $this->userRepository, $this->projectRepository);
+        $this->interactor = new GetUnreadMessagesCountInteractor($this->userRepository);
     }
 
     /**

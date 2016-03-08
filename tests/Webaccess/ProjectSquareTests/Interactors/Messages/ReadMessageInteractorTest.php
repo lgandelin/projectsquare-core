@@ -1,8 +1,6 @@
 <?php
 
-use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
 use Webaccess\ProjectSquare\Interactors\Messages\ReadMessageInteractor;
-use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
 use Webaccess\ProjectSquare\Requests\Messages\ReadMessageRequest;
 use Webaccess\ProjectSquare\Responses\Messages\ReadMessageResponse;
 use Webaccess\ProjectSquareTests\BaseTestCase;
@@ -82,7 +80,7 @@ class ReadMessageInteractorTest extends BaseTestCase
         $user = $this->createSampleUser();
         $this->projectRepository->addUserToProject($project, $user, null);
         $conversation = $this->createSampleConversation($project->id);
-        $message = $this->createSampleMessage($conversation->id, $user->id);
+        $this->createSampleMessage($conversation->id, $user->id);
 
         $this->assertEquals(1, count($this->userRepository->getUnreadMessages($user->id)));
     }
