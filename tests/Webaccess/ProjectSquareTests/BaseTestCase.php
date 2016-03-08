@@ -5,7 +5,6 @@ namespace Webaccess\ProjectSquareTests;
 use Mockery;
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Conversation;
-use Webaccess\ProjectSquare\Entities\Message;
 use Webaccess\ProjectSquare\Entities\Project;
 use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Entities\TicketState;

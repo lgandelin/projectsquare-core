@@ -71,9 +71,6 @@ class ReadMessageInteractorTest extends BaseTestCase
 
         //Check response
         $this->assertInstanceOf(ReadMessageResponse::class, $response);
-        //$this->assertEquals(new \DateTime(), $response->createdAt);
-        //$this->assertEquals('John Doe', $response->user->firstName . ' ' . $response->user->lastName);
-        //$this->assertEquals(1, $response->count);
 
         //Check unread messages
         $this->assertEquals(0, count($this->userRepository->getUnreadMessages($user->id)));
