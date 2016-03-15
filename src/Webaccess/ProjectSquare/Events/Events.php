@@ -11,4 +11,5 @@ final class Events
     const CREATE_CONVERSATION = 'conversations.create';
     const CREATE_MESSAGE = 'messages.create';
     const CREATE_EVENT = 'events.create';
+    const UPDATE_EVENT = 'events.update';
 }

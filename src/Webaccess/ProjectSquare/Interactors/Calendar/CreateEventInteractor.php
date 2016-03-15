@@ -19,6 +19,7 @@ class CreateEventInteractor
 
     public function execute(CreateEventRequest $request)
     {
+        $this->validateRequest($request);
         $event = $this->createEvent($request);
         $this->dispatchEvent($event);
 
@@ -46,5 +47,10 @@ class CreateEventInteractor
             Events::CREATE_EVENT,
             new CreateEventEvent($event)
         );
+    }
+
+    private function validateRequest($request)
+    {
+        //TODO : validate user
     }
 }
