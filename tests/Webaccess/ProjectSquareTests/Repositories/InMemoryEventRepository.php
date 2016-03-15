@@ -45,6 +45,8 @@ class InMemoryEventRepository implements EventRepository
 
     public function removeEvent($eventID)
     {
-        // TODO: Implement deleteEvent() method.
+        if (isset($this->objects[$eventID])) {
+            unset($this->objects[$eventID]);
+        }
     }
 }
