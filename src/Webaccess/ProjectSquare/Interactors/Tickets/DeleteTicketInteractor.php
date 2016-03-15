@@ -25,7 +25,7 @@ class DeleteTicketInteractor extends GetTicketInteractor
     public function execute(DeleteTicketRequest $request)
     {
         $ticket = $this->getTicket($request->ticketID);
-        $this->validate($request, $ticket);
+        $this->validateRequest($request, $ticket);
         $this->dispatchEvent($ticket);
         $this->deleteTicket($ticket);
 
@@ -34,7 +34,7 @@ class DeleteTicketInteractor extends GetTicketInteractor
         ]);
     }
 
-    private function validate(DeleteTicketRequest $request, Ticket $ticket)
+    private function validateRequest(DeleteTicketRequest $request, Ticket $ticket)
     {
         $this->validateRequesterPermissions($request, $ticket);
     }

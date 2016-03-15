@@ -30,19 +30,20 @@ class CreateMessageInteractor
 
     public function execute(CreateMessageRequest $request)
     {
-        $this->validate($request);
-        $message = $this->replyMessage($request);
+        $this->validateRequest($request);
+        $message = $this->createMessage($request);
+        $this->setReadFlagForProjectUsers($request->requesterUserID, $message);
         $this->dispatchEvent($message);
 
         return new CreateMessageResponse([
             'message' => $message,
             'createdAt' => new \DateTime(),
             'user' => $this->getUserInfo($request->requesterUserID),
-            'count' => $this->getMessageCount($request->conversationID)
+            'count' => $this->getMessageCount($request->conversationID),
         ]);
     }
 
-    private function validate(CreateMessageRequest $request)
+    private function validateRequest(CreateMessageRequest $request)
     {
         $this->validateConversation($request);
         $this->validateRequesterPermissions($request);
@@ -78,7 +79,7 @@ class CreateMessageInteractor
         );
     }
 
-    private function replyMessage(CreateMessageRequest $request)
+    private function createMessage(CreateMessageRequest $request)
     {
         $message = new Message();
         $message->content = $request->content;
@@ -104,5 +105,17 @@ class CreateMessageInteractor
     private function getMessageCount($conversationID)
     {
         return count($this->repository->getMessagesByConversation($conversationID));
+    }
+
+    private function setReadFlagForProjectUsers($authorUserID, Message $message)
+    {
+        $conversation = $this->conversationRepository->getConversation($message->conversationID);
+        $projectUsers = $this->userRepository->getUsersByProject($conversation->projectID);
+
+        foreach ($projectUsers as $i => $user) {
+            if ($user->id != $authorUserID) {
+                $this->userRepository->setReadFlagMessage($user->id, $message->id, false);
+            }
+        }
     }
 }

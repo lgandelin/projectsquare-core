@@ -9,4 +9,5 @@ class User
     public $password;
     public $firstName;
     public $lastName;
+    public $clientID;
 }

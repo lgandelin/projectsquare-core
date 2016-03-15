@@ -28,18 +28,18 @@ class CreateConversationInteractor
 
     public function execute(CreateConversationRequest $request)
     {
-        $this->validate($request);
+        $this->validateRequest($request);
         $conversation = $this->createConversation($request);
         $message = $this->createMessage($request->message, $conversation->id, $request->requesterUserID);
         $this->dispatchEvent($conversation, $message);
 
         return new CreateConversationResponse([
             'conversation' => $conversation,
-            'message' => $message
+            'message' => $message,
         ]);
     }
 
-    private function validate(CreateConversationRequest $request)
+    private function validateRequest(CreateConversationRequest $request)
     {
         $this->validateRequesterPermissions($request);
     }
@@ -72,7 +72,7 @@ class CreateConversationInteractor
         $response = (new CreateMessageInteractor($this->messageRepository, $this->repository, $this->userRepository, $this->projectRepository))->execute(new CreateMessageRequest([
             'content' => $content,
             'conversationID' => $conversationID,
-            'requesterUserID' => $userID
+            'requesterUserID' => $userID,
         ]));
 
         return $response->message;

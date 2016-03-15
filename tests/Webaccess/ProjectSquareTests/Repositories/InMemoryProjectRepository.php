@@ -60,9 +60,13 @@ class InMemoryProjectRepository implements ProjectRepository
         // TODO: Implement getProjects() method.
     }
 
-    public function getUserProjects($userID)
+    public function getUserProjects($projectID)
     {
-        // TODO: Implement getUserProjects() method.
+        if (isset($this->objects[$projectID])) {
+            return $this->objects[$projectID]->users;
+        }
+
+        return [];
     }
 
     public function getProjectWithUsers($projectID)
@@ -78,6 +82,7 @@ class InMemoryProjectRepository implements ProjectRepository
     public function addUserToProject($project, $user, $roleID)
     {
         $project->users[]= $user->id;
+        $user->projects[]= $project->id;
     }
 
     public function isUserInProject($project, $userID)

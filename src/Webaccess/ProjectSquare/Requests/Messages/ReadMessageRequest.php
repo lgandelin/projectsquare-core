@@ -4,9 +4,8 @@ namespace Webaccess\ProjectSquare\Requests\Messages;
 
 use Webaccess\ProjectSquare\Requests\Request;
 
-class CreateMessageRequest extends Request
+class ReadMessageRequest extends Request
 {
-    public $content;
-    public $conversationID;
+    public $messageID;
     public $requesterUserID;
 }
