@@ -10,6 +10,8 @@ interface UserRepository
 
     public function getAgencyUsers();
 
+    public function getUsersByProject($projectID);
+
     public function getUsersPaginatedList($limit);
 
     public function createUser($firstName, $lastName, $email, $password, $clientID);

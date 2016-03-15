@@ -110,12 +110,10 @@ class CreateMessageInteractor
     private function setReadFlagForAllProjectUsers($message)
     {
         $conversation = $this->conversationRepository->getConversation($message->conversationID);
-        $projectUsers = $this->projectRepository->getUserProjects($conversation->projectID);
+        $projectUsers = $this->userRepository->getUsersByProject($conversation->projectID);
 
-        if (is_array($projectUsers) && sizeof($projectUsers) > 0) {
-            foreach ($projectUsers as $i => $userID) {
-                $this->userRepository->setReadFlagMessage($userID, $message->id, false);
-            }
+        foreach ($projectUsers as $i => $user) {
+            $this->userRepository->setReadFlagMessage($user->id, $message->id, false);
         }
     }
 }
