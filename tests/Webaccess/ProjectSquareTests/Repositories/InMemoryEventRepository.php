@@ -3,8 +3,9 @@
 namespace Webaccess\ProjectSquareTests\Repositories;
 
 use Webaccess\ProjectSquare\Entities\Event;
+use Webaccess\ProjectSquare\Repositories\EventRepository;
 
-class InMemoryEventRepository
+class InMemoryEventRepository implements EventRepository
 {
     public $objects;
 

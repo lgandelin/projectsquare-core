@@ -1,6 +1,7 @@
 <?php
 
 use Webaccess\ProjectSquare\Context;
+use Webaccess\ProjectSquare\Events\Calendar\CreateEventEvent;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Interactors\Calendar\CreateEventInteractor;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateEventRequest;
@@ -20,7 +21,7 @@ class CreateEventInteractorTest extends BaseTestCase
         $user = $this->createSampleUser();
 
         $response = $this->interactor->execute(new CreateEventRequest([
-            'name' => 'Sample ticket',
+            'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),
             'endTime' => new \DateTime('2016-03-15 18:30:00'),
             'userID' => $user->id,
@@ -28,7 +29,7 @@ class CreateEventInteractorTest extends BaseTestCase
         ]));
 
         //Check response
-        /*$this->assertInstanceOf(CreateEventResponse::class, $response);
+        $this->assertInstanceOf(CreateEventResponse::class, $response);
         $this->assertEquals('Sample event', $response->event->name);
 
         //Check insertion
@@ -38,6 +39,6 @@ class CreateEventInteractorTest extends BaseTestCase
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
             Events::CREATE_EVENT,
             Mockery::type(CreateEventEvent::class)
-        );*/
+        );
     }
 }
