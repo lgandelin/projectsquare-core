@@ -36,15 +36,17 @@ class GetUnreadMessagesInteractorTest extends BaseTestCase
     public function testGetUnreadMessages1()
     {
         $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $user1 = $this->createSampleUser();
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user1, null);
+        $this->projectRepository->addUserToProject($project, $user2, null);
         $conversation = $this->createSampleConversation($project->id);
 
-        $this->createSampleMessage($conversation->id, $user->id);
-        $this->createSampleMessage($conversation->id, $user->id);
+        $this->createSampleMessage($conversation->id, $user1->id);
+        $this->createSampleMessage($conversation->id, $user1->id);
 
         $response = $this->interactor->execute(new GetUnreadMessagesRequest([
-            'userID' => $user->id
+            'userID' => $user2->id
         ]));
 
         //Check response

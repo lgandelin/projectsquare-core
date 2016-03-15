@@ -54,34 +54,38 @@ class ReadMessageInteractorTest extends BaseTestCase
     public function testReadMessage()
     {
         $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $user1 = $this->createSampleUser();
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user1, null);
+        $this->projectRepository->addUserToProject($project, $user2, null);
         $conversation = $this->createSampleConversation($project->id);
-        $message = $this->createSampleMessage($conversation->id, $user->id);
+        $message = $this->createSampleMessage($conversation->id, $user1->id);
 
         //Check unread messages
-        $this->assertEquals(1, count($this->userRepository->getUnreadMessages($user->id)));
+        $this->assertEquals(1, count($this->userRepository->getUnreadMessages($user2->id)));
 
         $response = $this->interactor->execute(new ReadMessageRequest([
             'messageID' => $message->id,
-            'requesterUserID' => $user->id
+            'requesterUserID' => $user1->id
         ]));
 
         //Check response
         $this->assertInstanceOf(ReadMessageResponse::class, $response);
 
         //Check unread messages
-        $this->assertEquals(0, count($this->userRepository->getUnreadMessages($user->id)));
+        $this->assertEquals(0, count($this->userRepository->getUnreadMessages($user1->id)));
     }
 
     public function testCreateMessageAndCheckReadFlag()
     {
         $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $user1 = $this->createSampleUser();
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user1, null);
+        $this->projectRepository->addUserToProject($project, $user2, null);
         $conversation = $this->createSampleConversation($project->id);
-        $this->createSampleMessage($conversation->id, $user->id);
+        $this->createSampleMessage($conversation->id, $user1->id);
 
-        $this->assertEquals(1, count($this->userRepository->getUnreadMessages($user->id)));
+        $this->assertEquals(1, count($this->userRepository->getUnreadMessages($user2->id)));
     }
 }
