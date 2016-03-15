@@ -38,6 +38,19 @@ class InMemoryUserRepository implements UserRepository
         // TODO: Implement getAgencyUsers() method.
     }
 
+    public function getUsersByProject($projectID)
+    {
+        $result = [];
+
+        foreach ($this->objects as $user) {
+            if (in_array($projectID, $user->projects)) {
+                $result[]= $user;
+            }
+        }
+
+        return $result;
+    }
+
     public function getUsersPaginatedList($limit)
     {
         // TODO: Implement getUsersPaginatedList() method.
@@ -68,6 +81,7 @@ class InMemoryUserRepository implements UserRepository
         if (!isset($this->objects[$user->id]->unread_messages)) {
             $this->objects[$user->id]->unread_messages = [];
         }
+        $user->projects = [];
 
         return $user;
     }

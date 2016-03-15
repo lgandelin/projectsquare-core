@@ -6,5 +6,4 @@ use Webaccess\ProjectSquare\Responses\Response;
 
 class ReadMessageResponse extends Response
 {
-
 }

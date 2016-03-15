@@ -32,14 +32,14 @@ class CreateMessageInteractor
     {
         $this->validateRequest($request);
         $message = $this->createMessage($request);
-        $this->setReadFlagForAllProjectUsers($message);
+        $this->setReadFlagForProjectUsers($request->requesterUserID, $message);
         $this->dispatchEvent($message);
 
         return new CreateMessageResponse([
             'message' => $message,
             'createdAt' => new \DateTime(),
             'user' => $this->getUserInfo($request->requesterUserID),
-            'count' => $this->getMessageCount($request->conversationID)
+            'count' => $this->getMessageCount($request->conversationID),
         ]);
     }
 
@@ -107,13 +107,15 @@ class CreateMessageInteractor
         return count($this->repository->getMessagesByConversation($conversationID));
     }
 
-    private function setReadFlagForAllProjectUsers($message)
+    private function setReadFlagForProjectUsers($authorUserID, Message $message)
     {
         $conversation = $this->conversationRepository->getConversation($message->conversationID);
         $projectUsers = $this->userRepository->getUsersByProject($conversation->projectID);
 
         foreach ($projectUsers as $i => $user) {
-            $this->userRepository->setReadFlagMessage($user->id, $message->id, false);
+            if ($user->id != $authorUserID) {
+                $this->userRepository->setReadFlagMessage($user->id, $message->id, false);
+            }
         }
     }
 }

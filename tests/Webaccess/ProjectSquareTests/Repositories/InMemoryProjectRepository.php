@@ -82,6 +82,7 @@ class InMemoryProjectRepository implements ProjectRepository
     public function addUserToProject($project, $user, $roleID)
     {
         $project->users[]= $user->id;
+        $user->projects[]= $project->id;
     }
 
     public function isUserInProject($project, $userID)

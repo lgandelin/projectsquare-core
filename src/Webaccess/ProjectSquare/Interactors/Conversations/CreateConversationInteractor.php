@@ -35,7 +35,7 @@ class CreateConversationInteractor
 
         return new CreateConversationResponse([
             'conversation' => $conversation,
-            'message' => $message
+            'message' => $message,
         ]);
     }
 
@@ -72,7 +72,7 @@ class CreateConversationInteractor
         $response = (new CreateMessageInteractor($this->messageRepository, $this->repository, $this->userRepository, $this->projectRepository))->execute(new CreateMessageRequest([
             'content' => $content,
             'conversationID' => $conversationID,
-            'requesterUserID' => $userID
+            'requesterUserID' => $userID,
         ]));
 
         return $response->message;

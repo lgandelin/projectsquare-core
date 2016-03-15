@@ -20,7 +20,7 @@ class GetUnreadMessagesInteractor
         $this->validateRequest($request);
 
         return new GetUnreadMessagesResponse([
-            'messages' => $this->repository->getUnreadMessages($request->userID)
+            'messages' => $this->repository->getUnreadMessages($request->userID),
         ]);
     }
 
