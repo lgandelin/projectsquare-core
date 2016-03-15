@@ -25,7 +25,7 @@ class CreateTicketInteractor
 
     public function execute(CreateTicketRequest $request)
     {
-        $this->validate($request);
+        $this->validateRequest($request);
         $ticket = $this->createTicket($request);
         $ticketState = $this->createTicketState($request, $ticket->id);
         $this->dispatchEvent($ticket->id);
@@ -36,7 +36,7 @@ class CreateTicketInteractor
         ]);
     }
 
-    private function validate(CreateTicketRequest $request)
+    private function validateRequest(CreateTicketRequest $request)
     {
         $this->validateProject($request);
         $this->validateTitle($request);

@@ -26,7 +26,7 @@ class UpdateTicketInfosInteractor extends GetTicketInteractor
     public function execute(UpdateTicketInfosRequest $request)
     {
         $ticket = $this->getTicket($request->ticketID);
-        $this->validate($request);
+        $this->validateRequest($request);
         $this->updateTicketInfos($ticket, $request);
         $this->dispatchEvent($ticket);
 
@@ -35,7 +35,7 @@ class UpdateTicketInfosInteractor extends GetTicketInteractor
         ]);
     }
 
-    private function validate(UpdateTicketInfosRequest $request)
+    private function validateRequest(UpdateTicketInfosRequest $request)
     {
         $this->validateProject($request);
         $this->validateTypeID($request);

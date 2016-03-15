@@ -28,7 +28,7 @@ class CreateConversationInteractor
 
     public function execute(CreateConversationRequest $request)
     {
-        $this->validate($request);
+        $this->validateRequest($request);
         $conversation = $this->createConversation($request);
         $message = $this->createMessage($request->message, $conversation->id, $request->requesterUserID);
         $this->dispatchEvent($conversation, $message);
@@ -39,7 +39,7 @@ class CreateConversationInteractor
         ]);
     }
 
-    private function validate(CreateConversationRequest $request)
+    private function validateRequest(CreateConversationRequest $request)
     {
         $this->validateRequesterPermissions($request);
     }

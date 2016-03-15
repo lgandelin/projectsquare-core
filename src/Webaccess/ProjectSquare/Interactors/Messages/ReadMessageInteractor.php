@@ -27,7 +27,7 @@ class ReadMessageInteractor
 
     public function execute(ReadMessageRequest $request)
     {
-        $this->validate($request);
+        $this->validateRequest($request);
         $this->readMessage($request);
 
         return new ReadMessageResponse([
@@ -35,7 +35,7 @@ class ReadMessageInteractor
         ]);
     }
 
-    private function validate(ReadMessageRequest $request)
+    private function validateRequest(ReadMessageRequest $request)
     {
         $this->validateMessage($request);
         $this->validateUser($request);
@@ -59,7 +59,7 @@ class ReadMessageInteractor
     private function validateRequesterPermissions(ReadMessageRequest $request)
     {
         if (!$this->isUserAuthorizedToReadMessage($request)) {
-            throw new \Exception(Context::get('translator')->translate('users.message_view_not_allowed'));
+            throw new \Exception(Context::get('translator')->translate('users.message_read_not_allowed'));
         }
     }
 

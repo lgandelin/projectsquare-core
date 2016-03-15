@@ -30,7 +30,7 @@ class CreateMessageInteractor
 
     public function execute(CreateMessageRequest $request)
     {
-        $this->validate($request);
+        $this->validateRequest($request);
         $message = $this->createMessage($request);
         $this->setReadFlagForAllProjectUsers($message);
         $this->dispatchEvent($message);
@@ -43,7 +43,7 @@ class CreateMessageInteractor
         ]);
     }
 
-    private function validate(CreateMessageRequest $request)
+    private function validateRequest(CreateMessageRequest $request)
     {
         $this->validateConversation($request);
         $this->validateRequesterPermissions($request);

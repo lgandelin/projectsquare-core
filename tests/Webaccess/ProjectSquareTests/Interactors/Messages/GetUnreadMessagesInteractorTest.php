@@ -1,8 +1,8 @@
 <?php
 
-use Webaccess\ProjectSquare\Interactors\Messages\GetUnreadMessagesCountInteractor;
-use Webaccess\ProjectSquare\Requests\Messages\GetUnreadMessagesCountRequest;
-use Webaccess\ProjectSquare\Responses\Messages\GetUnreadMessagesCountResponse;
+use Webaccess\ProjectSquare\Interactors\Messages\GetUnreadMessagesInteractor;
+use Webaccess\ProjectSquare\Requests\Messages\GetUnreadMessagesRequest;
+use Webaccess\ProjectSquare\Responses\Messages\GetUnreadMessagesResponse;
 use Webaccess\ProjectSquareTests\BaseTestCase;
 
 class GetUnreadMessagesInteractorTest extends BaseTestCase
@@ -10,7 +10,7 @@ class GetUnreadMessagesInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new GetUnreadMessagesCountInteractor($this->userRepository);
+        $this->interactor = new GetUnreadMessagesInteractor($this->userRepository);
     }
 
     /**
@@ -18,7 +18,7 @@ class GetUnreadMessagesInteractorTest extends BaseTestCase
      */
     public function testGetUnreadMessagesWithNonExistingUser()
     {
-        $this->interactor->execute(new GetUnreadMessagesCountRequest([
+        $this->interactor->execute(new GetUnreadMessagesRequest([
             'userID' => 1
         ]));
     }
@@ -26,11 +26,11 @@ class GetUnreadMessagesInteractorTest extends BaseTestCase
     public function testGetUnreadMessages0()
     {
         $user = $this->createSampleUser();
-        $response = $this->interactor->execute(new GetUnreadMessagesCountRequest([
+        $response = $this->interactor->execute(new GetUnreadMessagesRequest([
             'userID' => $user->id
         ]));
 
-        $this->assertEquals(0, $response->count);
+        $this->assertEquals(0, count($response->messages));
     }
 
     public function testGetUnreadMessages1()
@@ -43,15 +43,15 @@ class GetUnreadMessagesInteractorTest extends BaseTestCase
         $this->createSampleMessage($conversation->id, $user->id);
         $this->createSampleMessage($conversation->id, $user->id);
 
-        $response = $this->interactor->execute(new GetUnreadMessagesCountRequest([
+        $response = $this->interactor->execute(new GetUnreadMessagesRequest([
             'userID' => $user->id
         ]));
 
         //Check response
-        $this->assertInstanceOf(GetUnreadMessagesCountResponse::class, $response);
+        $this->assertInstanceOf(GetUnreadMessagesResponse::class, $response);
 
         //Check unread messages count
-        $this->assertEquals(2, $response->count);
+        $this->assertEquals(2, count($response->messages));
     }
 
 }
