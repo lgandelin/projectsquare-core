@@ -43,6 +43,7 @@ class InMemoryMessageRepository implements MessageRepository
         if (!isset($message->id)) {
             $message->id = self::getNextID();
         }
+
         $this->objects[$message->id]= $message;
 
         return $message;

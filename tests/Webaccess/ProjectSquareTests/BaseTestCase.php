@@ -13,6 +13,7 @@ use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
 use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
+use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryMessageRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryProjectRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryTicketRepository;
@@ -27,6 +28,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->userRepository = new InMemoryUserRepository();
         $this->conversationRepository = new InMemoryConversationRepository();
         $this->messageRepository = new InMemoryMessageRepository();
+        $this->eventRepository = new InMemoryEventRepository();
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
     }
@@ -85,6 +87,6 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             'requesterUserID' => $userID
         ]));
 
-        return $this->messageRepository->persistMessage($response->message);
+        return $response->message;
     }
 }
