@@ -33,6 +33,18 @@ class InMemoryEventRepository implements EventRepository
         // TODO: Implement getEvents() method.
     }
 
+    public function getEventsByUser($userID)
+    {
+        $result = [];
+        foreach ($this->objects as $event) {
+            if ($event->userID == $userID) {
+                $result[]= $event;
+            }
+        }
+
+        return $result;
+    }
+
     public function persistEvent(Event $event)
     {
         if (!isset($event->id)) {

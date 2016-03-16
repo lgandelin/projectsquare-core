@@ -10,6 +10,8 @@ interface EventRepository
 
     public function getEvents();
 
+    public function getEventsByUser($userID);
+
     public function persistEvent(Event $event);
 
     public function removeEvent($eventID);
