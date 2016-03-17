@@ -31,7 +31,8 @@ class UpdateEventInteractor
 
     private function validateRequest(UpdateEventRequest $request)
     {
-
+        //TODO : validate user
+        //TODO : validate startTime and endTime
     }
 
     private function dispatchEvent(Event $event)
@@ -53,12 +54,12 @@ class UpdateEventInteractor
 
     private function updateEvent(Event $event, UpdateEventRequest $request)
     {
-        $event->name = $request->name;
-        $event->startTime = $request->startTime;
-        $event->endTime = $request->endTime;
-        $event->projectID = $request->projectID;
-        $event->ticketID = $request->ticketID;
-        $event->userID = $request->userID;
+        if ($request->name) $event->name = $request->name;
+        if ($request->startTime) $event->startTime = $request->startTime;
+        if ($request->endTime) $event->endTime = $request->endTime;
+        if ($request->projectID) $event->projectID = $request->projectID;
+        if ($request->ticketID) $event->ticketID = $request->ticketID;
+        if ($request->userID) $event->userID = $request->userID;
 
         $this->repository->persistEvent($event);
     }

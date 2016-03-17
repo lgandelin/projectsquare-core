@@ -52,5 +52,8 @@ class CreateEventInteractor
     private function validateRequest($request)
     {
         //TODO : validate user
+        //TODO : validate startTime and endTime
+        //TODO : if ticket, validate ticket
+        //TODO : if project, validate project
     }
 }

@@ -13,4 +13,5 @@ class UpdateEventRequest extends Request
     public $endTime;
     public $ticketID;
     public $projectID;
+    public $requesterUserID;
 }
