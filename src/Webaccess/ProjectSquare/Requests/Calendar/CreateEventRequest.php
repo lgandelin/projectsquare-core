@@ -12,4 +12,5 @@ class CreateEventRequest extends Request
     public $endTime;
     public $ticketID;
     public $projectID;
+    public $requesterUserID;
 }
