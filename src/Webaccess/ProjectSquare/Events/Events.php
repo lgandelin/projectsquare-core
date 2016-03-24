@@ -10,4 +10,7 @@ final class Events
     const DELETE_TICKET = 'tickets.delete';
     const CREATE_CONVERSATION = 'conversations.create';
     const CREATE_MESSAGE = 'messages.create';
+    const CREATE_EVENT = 'events.create';
+    const UPDATE_EVENT = 'events.update';
+    const DELETE_EVENT = 'events.delete';
 }
