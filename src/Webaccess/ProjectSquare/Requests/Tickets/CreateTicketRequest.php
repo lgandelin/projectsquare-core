@@ -15,6 +15,7 @@ class CreateTicketRequest extends Request
     public $allocatedUserID;
     public $priority;
     public $dueDate;
+    public $estimatedTime;
     public $comments;
     public $requesterUserID;
 }
