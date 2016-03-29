@@ -1,6 +1,6 @@
 <?php
 
-use Webaccess\ProjectSquare\Interactors\Calendar\GetUserEventsInteractor;
+use Webaccess\ProjectSquare\Interactors\Calendar\GetEventsInteractor;
 use Webaccess\ProjectSquare\Requests\Calendar\GetEventsRequest;
 use Webaccess\ProjectSquareTests\BaseTestCase;
 
@@ -9,7 +9,7 @@ class GetEventsInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new GetUserEventsInteractor($this->eventRepository);
+        $this->interactor = new GetEventsInteractor($this->eventRepository);
     }
 
     public function testGetEvents0()

@@ -28,12 +28,7 @@ class InMemoryEventRepository implements EventRepository
         return false;
     }
 
-    public function getEvents()
-    {
-        // TODO: Implement getEvents() method.
-    }
-
-    public function getEventsByUser($userID)
+    public function getEvents($userID, $projectID = null)
     {
         $result = [];
         foreach ($this->objects as $event) {
