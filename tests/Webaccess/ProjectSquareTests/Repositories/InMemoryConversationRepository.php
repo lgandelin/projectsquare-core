@@ -52,4 +52,9 @@ class InMemoryConversationRepository implements ConversationRepository
     {
         // TODO: Implement deleteConversation() method.
     }
+
+    public function getConversationsByProject($projectsID, $limit = null)
+    {
+        // TODO: Implement getConversationsByProject() method.
+    }
 }

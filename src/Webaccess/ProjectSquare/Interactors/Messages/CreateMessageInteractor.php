@@ -6,6 +6,7 @@ use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Message;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Events\Messages\CreateMessageEvent;
+use Webaccess\ProjectSquare\Exceptions\Messages\MessageReplyNotAuthorizedException;
 use Webaccess\ProjectSquare\Repositories\ConversationRepository;
 use Webaccess\ProjectSquare\Repositories\MessageRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
@@ -59,7 +60,7 @@ class CreateMessageInteractor
     private function validateRequesterPermissions(CreateMessageRequest $request)
     {
         if (!$this->isUserAuthorizedToCreateToMessage($request)) {
-            throw new \Exception(Context::get('translator')->translate('users.message_reply_not_allowed'));
+            throw new MessageReplyNotAuthorizedException(Context::get('translator')->translate('users.message_reply_not_allowed'));
         }
     }
 
