@@ -1,6 +1,6 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Responses\Conversations;
+namespace Webaccess\ProjectSquare\Responses\Messages;
 
 use Webaccess\ProjectSquare\Responses\Response;
 

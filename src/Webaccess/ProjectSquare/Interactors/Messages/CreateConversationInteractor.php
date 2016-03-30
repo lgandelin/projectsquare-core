@@ -1,20 +1,19 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Interactors\Conversations;
+namespace Webaccess\ProjectSquare\Interactors\Messages;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Conversation;
 use Webaccess\ProjectSquare\Entities\Message;
-use Webaccess\ProjectSquare\Events\Conversations\CreateConversationEvent;
+use Webaccess\ProjectSquare\Events\Messages\CreateConversationEvent;
 use Webaccess\ProjectSquare\Events\Events;
-use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
 use Webaccess\ProjectSquare\Repositories\ConversationRepository;
 use Webaccess\ProjectSquare\Repositories\MessageRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
-use Webaccess\ProjectSquare\Requests\Conversations\CreateConversationRequest;
+use Webaccess\ProjectSquare\Requests\Messages\CreateConversationRequest;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
-use Webaccess\ProjectSquare\Responses\Conversations\CreateConversationResponse;
+use Webaccess\ProjectSquare\Responses\Messages\CreateConversationResponse;
 
 class CreateConversationInteractor
 {
