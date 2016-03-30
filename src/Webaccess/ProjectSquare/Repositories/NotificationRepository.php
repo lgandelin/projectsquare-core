@@ -8,7 +8,7 @@ interface NotificationRepository
 {
     public function getNotification($notificationID);
 
-    public function getNotifications($userID, $projectID = null);
+    public function getNotifications($userID);
 
     public function persistNotification(Notification $notification);
 
