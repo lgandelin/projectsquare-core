@@ -28,7 +28,7 @@ class InMemoryNotificationRepository implements NotificationRepository
         return false;
     }
 
-    public function getNotifications($userID, $projectID = null)
+    public function getNotifications($userID)
     {
         $result = [];
         foreach ($this->objects as $notification) {
@@ -55,5 +55,17 @@ class InMemoryNotificationRepository implements NotificationRepository
         if (isset($this->objects[$notificationID])) {
             unset($this->objects[$notificationID]);
         }
+    }
+
+    public function getUnreadNotifications($userID)
+    {
+        $result = [];
+        foreach ($this->objects as $notification) {
+            if ($notification->userID == $userID && !$notification->read) {
+                $result[]= $notification;
+            }
+        }
+
+        return $result;
     }
 }

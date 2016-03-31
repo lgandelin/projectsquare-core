@@ -95,7 +95,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $response->message;
     }
 
-    protected function createSampleEvent($userID)
+    protected function createSampleEvent($userID, $requesterUserID = null)
     {
         $response = (new CreateEventInteractor(
             $this->eventRepository,
@@ -105,7 +105,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             'startTime' => new \DateTime('2016-03-15 10:30:00'),
             'endTime' => new \DateTime('2016-03-15 18:30:00'),
             'userID' => $userID,
-            'requesterUserID' => $userID,
+            'requesterUserID' => ($requesterUserID) ? $requesterUserID : $userID,
         ]));
 
         return $response->event;

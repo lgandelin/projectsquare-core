@@ -10,6 +10,8 @@ interface NotificationRepository
 
     public function getNotifications($userID);
 
+    public function getUnreadNotifications($userID);
+
     public function persistNotification(Notification $notification);
 
     public function removeNotification($notificationID);
