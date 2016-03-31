@@ -90,6 +90,7 @@ class UpdateTicketInteractor extends GetTicketInteractor
         $ticketState->allocatedUserID = $request->allocatedUserID;
         $ticketState->priority = $request->priority;
         $ticketState->dueDate = $request->dueDate;
+        $ticketState->estimatedTime = $request->estimatedTime;
         $ticketState->comments = $request->comments;
         $ticketState = $this->repository->persistTicketState($ticketState);
 

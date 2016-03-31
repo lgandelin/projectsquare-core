@@ -1,11 +1,11 @@
 <?php
 
 use Webaccess\ProjectSquare\Context;
-use Webaccess\ProjectSquare\Events\Conversations\CreateConversationEvent;
+use Webaccess\ProjectSquare\Events\Messages\CreateConversationEvent;
 use Webaccess\ProjectSquare\Events\Events;
-use Webaccess\ProjectSquare\Interactors\Conversations\CreateConversationInteractor;
-use Webaccess\ProjectSquare\Requests\Conversations\CreateConversationRequest;
-use Webaccess\ProjectSquare\Responses\Conversations\CreateConversationResponse;
+use Webaccess\ProjectSquare\Interactors\Messages\CreateConversationInteractor;
+use Webaccess\ProjectSquare\Requests\Messages\CreateConversationRequest;
+use Webaccess\ProjectSquare\Responses\Messages\CreateConversationResponse;
 use Webaccess\ProjectSquareTests\BaseTestCase;
 
 class CreateConversationInteractorTest extends BaseTestCase

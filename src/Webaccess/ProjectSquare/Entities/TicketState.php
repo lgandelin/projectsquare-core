@@ -11,5 +11,6 @@ class TicketState
     public $statusID;
     public $priority;
     public $dueDate;
+    public $estimatedTime;
     public $comments;
 }

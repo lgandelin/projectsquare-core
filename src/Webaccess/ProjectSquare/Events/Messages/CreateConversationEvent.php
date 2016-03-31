@@ -1,6 +1,6 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Events\Conversations;
+namespace Webaccess\ProjectSquare\Events\Messages;
 
 use Symfony\Component\EventDispatcher\Event;
 use Webaccess\ProjectSquare\Entities\Conversation;

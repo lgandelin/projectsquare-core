@@ -17,6 +17,7 @@ use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryMessageRepository;
+use Webaccess\ProjectSquareTests\Repositories\InMemoryNotificationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryProjectRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryTicketRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryUserRepository;
@@ -31,6 +32,8 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->conversationRepository = new InMemoryConversationRepository();
         $this->messageRepository = new InMemoryMessageRepository();
         $this->eventRepository = new InMemoryEventRepository();
+        $this->notificationRepository = new InMemoryNotificationRepository();
+
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
     }
@@ -92,16 +95,17 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $response->message;
     }
 
-    protected function createSampleEvent($userID)
+    protected function createSampleEvent($userID, $requesterUserID = null)
     {
         $response = (new CreateEventInteractor(
-            $this->eventRepository
+            $this->eventRepository,
+            $this->notificationRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),
             'endTime' => new \DateTime('2016-03-15 18:30:00'),
             'userID' => $userID,
-            'requesterUserID' => $userID,
+            'requesterUserID' => ($requesterUserID) ? $requesterUserID : $userID,
         ]));
 
         return $response->event;

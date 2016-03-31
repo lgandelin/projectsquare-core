@@ -4,7 +4,8 @@ namespace Webaccess\ProjectSquare\Responses\Messages;
 
 use Webaccess\ProjectSquare\Responses\Response;
 
-class GetUnreadMessagesResponse extends Response
+class CreateConversationResponse extends Response
 {
-    public $messages;
+    public $conversation;
+    public $message;
 }

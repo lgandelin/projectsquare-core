@@ -5,7 +5,7 @@ namespace Webaccess\ProjectSquare\Interactors\Calendar;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Requests\Calendar\GetEventsRequest;
 
-class GetUserEventsInteractor
+class GetEventsInteractor
 {
     protected $repository;
 
@@ -16,6 +16,6 @@ class GetUserEventsInteractor
 
     public function execute(GetEventsRequest $request)
     {
-        return $this->repository->getEventsByUser($request->userID);
+        return $this->repository->getEvents($request->userID, $request->projectID);
     }
 }

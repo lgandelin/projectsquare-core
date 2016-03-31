@@ -9,4 +9,6 @@ interface ConversationRepository
     public function getConversation($conversationID);
 
     public function persistConversation(Conversation $conversation);
+
+    public function getConversationsByProject($projectsID, $limit = null);
 }

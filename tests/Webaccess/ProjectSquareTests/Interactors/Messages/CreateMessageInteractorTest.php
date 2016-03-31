@@ -30,7 +30,7 @@ class CreateMessageInteractorTest extends BaseTestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException Webaccess\ProjectSquare\Exceptions\Messages\MessageReplyNotAuthorizedException
      */
     public function testCreateMessageWithoutPermission()
     {

@@ -13,7 +13,7 @@ class CreateEventInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateEventInteractor($this->eventRepository);
+        $this->interactor = new CreateEventInteractor($this->eventRepository, $this->notificationRepository);
     }
 
     public function testCreateEvent()
@@ -40,5 +40,22 @@ class CreateEventInteractorTest extends BaseTestCase
             Events::CREATE_EVENT,
             Mockery::type(CreateEventEvent::class)
         );
+    }
+
+    public function testCreateEventByAnotherUser()
+    {
+        $user1 = $this->createSampleUser();
+        $user2 = $this->createSampleUser();
+
+        $this->interactor->execute(new CreateEventRequest([
+            'name' => 'Sample event',
+            'startTime' => new \DateTime('2016-03-15 10:30:00'),
+            'endTime' => new \DateTime('2016-03-15 18:30:00'),
+            'userID' => $user1->id,
+            'requesterUserID' => $user2->id,
+        ]));
+
+        $this->assertCount(1, $this->eventRepository->objects);
+        $this->assertCount(1, $this->notificationRepository->objects);
     }
 }

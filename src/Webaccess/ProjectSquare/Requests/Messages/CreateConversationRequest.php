@@ -1,6 +1,6 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Requests\Conversations;
+namespace Webaccess\ProjectSquare\Requests\Messages;
 
 use Webaccess\ProjectSquare\Requests\Request;
 
