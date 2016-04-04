@@ -47,7 +47,7 @@ class CreateEventInteractorTest extends BaseTestCase
         $user1 = $this->createSampleUser();
         $user2 = $this->createSampleUser();
 
-        $this->interactor->execute(new CreateEventRequest([
+        $response = $this->interactor->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),
             'endTime' => new \DateTime('2016-03-15 18:30:00'),
@@ -55,7 +55,19 @@ class CreateEventInteractorTest extends BaseTestCase
             'requesterUserID' => $user2->id,
         ]));
 
+        //Check insertion
         $this->assertCount(1, $this->eventRepository->objects);
+
+        //Check notification
         $this->assertCount(1, $this->notificationRepository->objects);
+        $notification = $this->notificationRepository->objects[1];
+        $this->assertEquals('EVENT_CREATED', $notification->type);
+        $this->assertEquals($response->event->id, $notification->entityID);
+
+        //Check event
+        Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
+            Events::CREATE_EVENT,
+            Mockery::type(CreateEventEvent::class)
+        );
     }
 }

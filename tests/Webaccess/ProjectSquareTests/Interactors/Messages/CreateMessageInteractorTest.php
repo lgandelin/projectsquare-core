@@ -13,7 +13,13 @@ class CreateMessageInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateMessageInteractor($this->messageRepository, $this->conversationRepository, $this->userRepository, $this->projectRepository);
+        $this->interactor = new CreateMessageInteractor(
+            $this->messageRepository,
+            $this->conversationRepository,
+            $this->userRepository,
+            $this->projectRepository,
+            $this->notificationRepository
+        );
     }
 
     /**
@@ -66,6 +72,12 @@ class CreateMessageInteractorTest extends BaseTestCase
 
         //Check insertion
         $this->assertCount(1, $this->messageRepository->objects);
+
+        //Check notification
+        $this->assertCount(1, $this->notificationRepository->objects);
+        $notification = $this->notificationRepository->objects[1];
+        $this->assertEquals('MESSAGE_CREATED', $notification->type);
+        $this->assertEquals($response->message->id, $notification->entityID);
 
         //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(

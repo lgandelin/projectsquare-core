@@ -24,9 +24,7 @@ class CreateEventInteractor
     {
         $this->validateRequest($request);
         $event = $this->createEvent($request);
-        if ($this->isNotificationRequired($request)) {
-            $this->createEventCreatedNotification($request, $event);
-        }
+        $this->createNotificationIfRequired($request, $event);
         $this->dispatchEvent($event);
 
         return new CreateEventResponse([
@@ -55,19 +53,21 @@ class CreateEventInteractor
         return $this->repository->persistEvent($event);
     }
 
+    private function createNotificationIfRequired(CreateEventRequest $request, Event $event)
+    {
+        if ($this->isNotificationRequired($request)) {
+            $notification = new Notification();
+            $notification->userID = $request->userID;
+            $notification->read = false;
+            $notification->entityID = $event->id;
+            $notification->type = 'EVENT_CREATED';
+            $this->notificationRepository->persistNotification($notification);
+        }
+    }
+
     private function isNotificationRequired(CreateEventRequest $request)
     {
         return $request->requesterUserID != $request->userID;
-    }
-
-    private function createEventCreatedNotification(CreateEventRequest $request, Event $event)
-    {
-        $notification = new Notification();
-        $notification->userID = $request->userID;
-        $notification->read = false;
-        $notification->entityID = $event->id;
-        $notification->type = 'EVENT_CREATED';
-        $this->notificationRepository->persistNotification($notification);
     }
 
     private function dispatchEvent(Event $event)

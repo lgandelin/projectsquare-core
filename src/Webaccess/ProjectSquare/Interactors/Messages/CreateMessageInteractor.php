@@ -4,11 +4,13 @@ namespace Webaccess\ProjectSquare\Interactors\Messages;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Message;
+use Webaccess\ProjectSquare\Entities\Notification;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Events\Messages\CreateMessageEvent;
 use Webaccess\ProjectSquare\Exceptions\Messages\MessageReplyNotAuthorizedException;
 use Webaccess\ProjectSquare\Repositories\ConversationRepository;
 use Webaccess\ProjectSquare\Repositories\MessageRepository;
+use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
@@ -21,19 +23,26 @@ class CreateMessageInteractor
     protected $projectRepository;
     protected $userRepository;
 
-    public function __construct(MessageRepository $repository, ConversationRepository $conversationRepository, UserRepository $userRepository, ProjectRepository $projectRepository)
+    public function __construct(
+        MessageRepository $repository,
+        ConversationRepository $conversationRepository,
+        UserRepository $userRepository,
+        ProjectRepository $projectRepository,
+        NotificationRepository $notificationRepository
+    )
     {
         $this->repository = $repository;
         $this->conversationRepository = $conversationRepository;
         $this->userRepository = $userRepository;
         $this->projectRepository = $projectRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function execute(CreateMessageRequest $request)
     {
         $this->validateRequest($request);
         $message = $this->createMessage($request);
-        $this->setReadFlagForProjectUsers($request->requesterUserID, $message);
+        $this->createNotifications($message);
         $this->dispatchEvent($message);
 
         return new CreateMessageResponse([
@@ -72,14 +81,6 @@ class CreateMessageInteractor
         return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
     }
 
-    private function dispatchEvent(Message $message)
-    {
-        Context::get('event_dispatcher')->dispatch(
-            Events::CREATE_MESSAGE,
-            new CreateMessageEvent($message)
-        );
-    }
-
     private function createMessage(CreateMessageRequest $request)
     {
         $message = new Message();
@@ -88,6 +89,27 @@ class CreateMessageInteractor
         $message->conversationID = $request->conversationID;
 
         return $this->repository->persistMessage($message);
+    }
+
+    private function createNotifications(Message $message)
+    {
+        $conversation = $this->conversationRepository->getConversation($message->conversationID);
+        foreach ($this->userRepository->getUsersByProject($conversation->projectID) as $user) {
+            $notification = new Notification();
+            $notification->userID = $user->id;
+            $notification->read = false;
+            $notification->entityID = $message->id;
+            $notification->type = 'MESSAGE_CREATED';
+            $this->notificationRepository->persistNotification($notification);
+        }
+    }
+
+    private function dispatchEvent(Message $message)
+    {
+        Context::get('event_dispatcher')->dispatch(
+            Events::CREATE_MESSAGE,
+            new CreateMessageEvent($message)
+        );
     }
 
     private function getUserInfo($userID)
@@ -106,17 +128,5 @@ class CreateMessageInteractor
     private function getMessageCount($conversationID)
     {
         return count($this->repository->getMessagesByConversation($conversationID));
-    }
-
-    private function setReadFlagForProjectUsers($authorUserID, Message $message)
-    {
-        $conversation = $this->conversationRepository->getConversation($message->conversationID);
-        $projectUsers = $this->userRepository->getUsersByProject($conversation->projectID);
-
-        foreach ($projectUsers as $i => $user) {
-            if ($user->id != $authorUserID) {
-                $this->userRepository->setReadFlagMessage($user->id, $message->id, false);
-            }
-        }
     }
 }

@@ -5,7 +5,7 @@ use Webaccess\ProjectSquare\Requests\Messages\ReadMessageRequest;
 use Webaccess\ProjectSquare\Responses\Messages\ReadMessageResponse;
 use Webaccess\ProjectSquareTests\BaseTestCase;
 
-class ReadMessageInteractorTest extends BaseTestCase
+class ReadMessageInteractorTe extends BaseTestCase
 {
     public function __construct()
     {
@@ -16,7 +16,7 @@ class ReadMessageInteractorTest extends BaseTestCase
     /**
      * @expectedException Exception
      */
-    public function testReadMessageWithNonExistingMessage()
+    public function readMessageWithNonExistingMessage()
     {
         $this->interactor->execute(new ReadMessageRequest([]));
     }
@@ -24,7 +24,7 @@ class ReadMessageInteractorTest extends BaseTestCase
     /**
      * @expectedException Exception
      */
-    public function testReadMessageWithNonExistingUser()
+    public function readMessageWithNonExistingUser()
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
@@ -39,7 +39,7 @@ class ReadMessageInteractorTest extends BaseTestCase
     /**
      * @expectedException Exception
      */
-    public function testReadMessageWithoutPermission()
+    public function readMessageWithoutPermission()
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
@@ -51,7 +51,7 @@ class ReadMessageInteractorTest extends BaseTestCase
         ]));
     }
 
-    public function testReadMessage()
+    public function readMessage()
     {
         $project = $this->createSampleProject();
         $user1 = $this->createSampleUser();
@@ -76,7 +76,7 @@ class ReadMessageInteractorTest extends BaseTestCase
         $this->assertEquals(0, count($this->userRepository->getUnreadMessages($user1->id)));
     }
 
-    public function testCreateMessageAndCheckReadFlag()
+    public function createMessageAndCheckReadFlag()
     {
         $project = $this->createSampleProject();
         $user1 = $this->createSampleUser();
