@@ -25,7 +25,7 @@ class ReadNotificationInteractor
         $this->repository->persistNotification($notification);
 
         return new ReadNotificationResponse([
-            'notificationID' => $notification->id
+            'notificationID' => $notification->id,
         ]);
     }
 
