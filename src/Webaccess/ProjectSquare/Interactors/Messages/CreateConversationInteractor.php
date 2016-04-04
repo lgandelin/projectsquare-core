@@ -24,8 +24,7 @@ class CreateConversationInteractor
         UserRepository $userRepository,
         ProjectRepository $projectRepository,
         NotificationRepository $notificationRepository
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->messageRepository = $messageRepository;
         $this->userRepository = $userRepository;
