@@ -4,13 +4,14 @@ namespace Webaccess\ProjectSquare\Interactors\Calendar;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Event;
-use Webaccess\ProjectSquare\Entities\Notification;
 use Webaccess\ProjectSquare\Events\Calendar\CreateEventEvent;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateEventRequest;
+use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Responses\Calendar\CreateEventResponse;
+use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 
 class CreateEventInteractor
 {
@@ -28,7 +29,7 @@ class CreateEventInteractor
         $this->dispatchEvent($event);
 
         return new CreateEventResponse([
-            'event' => $event
+            'event' => $event,
         ]);
     }
 
@@ -56,12 +57,11 @@ class CreateEventInteractor
     private function createNotificationIfRequired(CreateEventRequest $request, Event $event)
     {
         if ($this->isNotificationRequired($request)) {
-            $notification = new Notification();
-            $notification->userID = $request->userID;
-            $notification->read = false;
-            $notification->entityID = $event->id;
-            $notification->type = 'EVENT_CREATED';
-            $this->notificationRepository->persistNotification($notification);
+            (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
+                'userID' => $request->userID,
+                'entityID' => $event->id,
+                'type' => 'EVENT_CREATED',
+            ]));
         }
     }
 

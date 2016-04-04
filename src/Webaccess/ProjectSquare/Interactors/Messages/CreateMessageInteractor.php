@@ -4,7 +4,6 @@ namespace Webaccess\ProjectSquare\Interactors\Messages;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Message;
-use Webaccess\ProjectSquare\Entities\Notification;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Events\Messages\CreateMessageEvent;
 use Webaccess\ProjectSquare\Exceptions\Messages\MessageReplyNotAuthorizedException;
@@ -14,7 +13,9 @@ use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
+use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Responses\Messages\CreateMessageResponse;
+use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 
 class CreateMessageInteractor
 {
@@ -29,8 +30,7 @@ class CreateMessageInteractor
         UserRepository $userRepository,
         ProjectRepository $projectRepository,
         NotificationRepository $notificationRepository
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->conversationRepository = $conversationRepository;
         $this->userRepository = $userRepository;
@@ -42,7 +42,7 @@ class CreateMessageInteractor
     {
         $this->validateRequest($request);
         $message = $this->createMessage($request);
-        $this->createNotifications($message);
+        $this->createNotifications($request, $message);
         $this->dispatchEvent($message);
 
         return new CreateMessageResponse([
@@ -91,16 +91,17 @@ class CreateMessageInteractor
         return $this->repository->persistMessage($message);
     }
 
-    private function createNotifications(Message $message)
+    private function createNotifications(CreateMessageRequest $request, Message $message)
     {
         $conversation = $this->conversationRepository->getConversation($message->conversationID);
         foreach ($this->userRepository->getUsersByProject($conversation->projectID) as $user) {
-            $notification = new Notification();
-            $notification->userID = $user->id;
-            $notification->read = false;
-            $notification->entityID = $message->id;
-            $notification->type = 'MESSAGE_CREATED';
-            $this->notificationRepository->persistNotification($notification);
+            if ($user->id != $request->requesterUserID) {
+                (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
+                    'userID' => $user->id,
+                    'entityID' => $message->id,
+                    'type' => 'MESSAGE_CREATED',
+                ]));
+            }
         }
     }
 

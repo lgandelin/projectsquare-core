@@ -54,14 +54,16 @@ class CreateMessageInteractorTest extends BaseTestCase
     public function testCreateMessage()
     {
         $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
+        $user1 = $this->createSampleUser();
+        $user2 = $this->createSampleUser();
         $conversation = $this->createSampleConversation($project->id);
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project, $user1, null);
+        $this->projectRepository->addUserToProject($project, $user2, null);
 
         $response = $this->interactor->execute(new CreateMessageRequest([
             'content' => 'Sample message',
             'conversationID' => $conversation->id,
-            'requesterUserID' => $user->id
+            'requesterUserID' => $user2->id
         ]));
 
         //Check response
