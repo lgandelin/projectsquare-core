@@ -13,7 +13,13 @@ class CreateMessageInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateMessageInteractor($this->messageRepository, $this->conversationRepository, $this->userRepository, $this->projectRepository);
+        $this->interactor = new CreateMessageInteractor(
+            $this->messageRepository,
+            $this->conversationRepository,
+            $this->userRepository,
+            $this->projectRepository,
+            $this->notificationRepository
+        );
     }
 
     /**
@@ -48,14 +54,16 @@ class CreateMessageInteractorTest extends BaseTestCase
     public function testCreateMessage()
     {
         $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
+        $user1 = $this->createSampleUser();
+        $user2 = $this->createSampleUser();
         $conversation = $this->createSampleConversation($project->id);
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project, $user1, null);
+        $this->projectRepository->addUserToProject($project, $user2, null);
 
         $response = $this->interactor->execute(new CreateMessageRequest([
             'content' => 'Sample message',
             'conversationID' => $conversation->id,
-            'requesterUserID' => $user->id
+            'requesterUserID' => $user2->id
         ]));
 
         //Check response
@@ -66,6 +74,12 @@ class CreateMessageInteractorTest extends BaseTestCase
 
         //Check insertion
         $this->assertCount(1, $this->messageRepository->objects);
+
+        //Check notification
+        $this->assertCount(1, $this->notificationRepository->objects);
+        $notification = $this->notificationRepository->objects[1];
+        $this->assertEquals('MESSAGE_CREATED', $notification->type);
+        $this->assertEquals($response->message->id, $notification->entityID);
 
         //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(

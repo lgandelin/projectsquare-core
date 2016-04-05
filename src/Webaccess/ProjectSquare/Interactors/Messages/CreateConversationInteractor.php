@@ -9,6 +9,7 @@ use Webaccess\ProjectSquare\Events\Messages\CreateConversationEvent;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Repositories\ConversationRepository;
 use Webaccess\ProjectSquare\Repositories\MessageRepository;
+use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Messages\CreateConversationRequest;
@@ -17,12 +18,18 @@ use Webaccess\ProjectSquare\Responses\Messages\CreateConversationResponse;
 
 class CreateConversationInteractor
 {
-    public function __construct(ConversationRepository $repository, MessageRepository $messageRepository, UserRepository $userRepository, ProjectRepository $projectRepository)
-    {
+    public function __construct(
+        ConversationRepository $repository,
+        MessageRepository $messageRepository,
+        UserRepository $userRepository,
+        ProjectRepository $projectRepository,
+        NotificationRepository $notificationRepository
+    ) {
         $this->repository = $repository;
         $this->messageRepository = $messageRepository;
         $this->userRepository = $userRepository;
         $this->projectRepository = $projectRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function execute(CreateConversationRequest $request)
@@ -68,7 +75,13 @@ class CreateConversationInteractor
 
     private function createMessage($content, $conversationID, $userID)
     {
-        $response = (new CreateMessageInteractor($this->messageRepository, $this->repository, $this->userRepository, $this->projectRepository))->execute(new CreateMessageRequest([
+        $response = (new CreateMessageInteractor(
+            $this->messageRepository,
+            $this->repository,
+            $this->userRepository,
+            $this->projectRepository,
+            $this->notificationRepository)
+        )->execute(new CreateMessageRequest([
             'content' => $content,
             'conversationID' => $conversationID,
             'requesterUserID' => $userID,

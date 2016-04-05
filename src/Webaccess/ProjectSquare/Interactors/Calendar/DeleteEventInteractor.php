@@ -25,7 +25,7 @@ class DeleteEventInteractor
         $this->dispatchEvent($event);
 
         return new DeleteEventResponse([
-            'event' => $event
+            'event' => $event,
         ]);
     }
 

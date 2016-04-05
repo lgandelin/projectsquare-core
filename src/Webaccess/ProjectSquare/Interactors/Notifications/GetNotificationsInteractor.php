@@ -20,7 +20,7 @@ class GetNotificationsInteractor
         $userID = $request->userID;
 
         return new GetUnreadNotificationsResponse([
-            'notifications' => $this->repository->getUnreadNotifications($userID)
+            'notifications' => $this->repository->getUnreadNotifications($userID),
         ]);
     }
 }

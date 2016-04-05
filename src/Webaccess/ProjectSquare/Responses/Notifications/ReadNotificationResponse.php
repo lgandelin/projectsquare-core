@@ -4,7 +4,7 @@ namespace Webaccess\ProjectSquare\Responses\Notifications;
 
 use Webaccess\ProjectSquare\Responses\Response;
 
-class GetUnreadNotificationsResponse extends Response
+class ReadNotificationResponse extends Response
 {
-    public $notifications;
+    public $notificationID;
 }

@@ -4,13 +4,14 @@ namespace Webaccess\ProjectSquare\Interactors\Calendar;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Event;
-use Webaccess\ProjectSquare\Entities\Notification;
 use Webaccess\ProjectSquare\Events\Calendar\CreateEventEvent;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateEventRequest;
+use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Responses\Calendar\CreateEventResponse;
+use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 
 class CreateEventInteractor
 {
@@ -24,13 +25,11 @@ class CreateEventInteractor
     {
         $this->validateRequest($request);
         $event = $this->createEvent($request);
-        if ($this->isNotificationRequired($request)) {
-            $this->createEventCreatedNotification($request, $event);
-        }
+        $this->createNotificationIfRequired($request, $event);
         $this->dispatchEvent($event);
 
         return new CreateEventResponse([
-            'event' => $event
+            'event' => $event,
         ]);
     }
 
@@ -55,19 +54,20 @@ class CreateEventInteractor
         return $this->repository->persistEvent($event);
     }
 
+    private function createNotificationIfRequired(CreateEventRequest $request, Event $event)
+    {
+        if ($this->isNotificationRequired($request)) {
+            (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
+                'userID' => $request->userID,
+                'entityID' => $event->id,
+                'type' => 'EVENT_CREATED',
+            ]));
+        }
+    }
+
     private function isNotificationRequired(CreateEventRequest $request)
     {
         return $request->requesterUserID != $request->userID;
-    }
-
-    private function createEventCreatedNotification(CreateEventRequest $request, Event $event)
-    {
-        $notification = new Notification();
-        $notification->userID = $request->userID;
-        $notification->read = false;
-        $notification->entityID = $event->id;
-        $notification->type = 'EVENT_CREATED';
-        $this->notificationRepository->persistNotification($notification);
     }
 
     private function dispatchEvent(Event $event)

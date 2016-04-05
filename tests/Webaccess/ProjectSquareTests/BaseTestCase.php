@@ -85,7 +85,8 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             $this->messageRepository,
             $this->conversationRepository,
             $this->userRepository,
-            $this->projectRepository
+            $this->projectRepository,
+            $this->notificationRepository
         ))->execute(new CreateMessageRequest([
             'content' => 'Sample message',
             'conversationID' => $conversationID,
