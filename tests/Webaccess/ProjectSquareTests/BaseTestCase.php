@@ -11,8 +11,10 @@ use Webaccess\ProjectSquare\Entities\TicketState;
 use Webaccess\ProjectSquare\Entities\User;
 use Webaccess\ProjectSquare\Interactors\Calendar\CreateEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
+use Webaccess\ProjectSquare\Interactors\Planning\CreateStepInteractor;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
+use Webaccess\ProjectSquare\Requests\Planning\CreateStepRequest;
 use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
@@ -112,5 +114,21 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         ]));
 
         return $response->event;
+    }
+
+    protected function createSampleStep($projectID, $requesterUserID)
+    {
+        $response = (new CreateStepInteractor(
+            $this->stepRepository,
+            $this->projectRepository
+        ))->execute(new CreateStepRequest([
+            'name' => 'Sample step',
+            'startTime' => new \DateTime('2016-03-15 10:30:00'),
+            'endTime' => new \DateTime('2016-03-15 18:30:00'),
+            'projectID' => $projectID,
+            'requesterUserID' => $requesterUserID
+        ]));
+
+        return $response->step;
     }
 }

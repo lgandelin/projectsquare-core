@@ -14,4 +14,5 @@ final class Events
     const UPDATE_EVENT = 'events.update';
     const DELETE_EVENT = 'events.delete';
     const CREATE_STEP = 'steps.create';
+    const DELETE_STEP = 'steps.delete';
 }
