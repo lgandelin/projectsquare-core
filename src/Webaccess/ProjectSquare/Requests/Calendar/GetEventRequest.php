@@ -7,5 +7,4 @@ use Webaccess\ProjectSquare\Requests\Request;
 class GetEventRequest extends Request
 {
     public $eventID;
-    public $requesterEventID;
 }

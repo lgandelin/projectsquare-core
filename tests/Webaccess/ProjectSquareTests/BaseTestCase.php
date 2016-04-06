@@ -11,14 +11,17 @@ use Webaccess\ProjectSquare\Entities\TicketState;
 use Webaccess\ProjectSquare\Entities\User;
 use Webaccess\ProjectSquare\Interactors\Calendar\CreateEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
+use Webaccess\ProjectSquare\Interactors\Planning\CreateStepInteractor;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
+use Webaccess\ProjectSquare\Requests\Planning\CreateStepRequest;
 use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryMessageRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryNotificationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryProjectRepository;
+use Webaccess\ProjectSquareTests\Repositories\InMemoryStepRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryTicketRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryUserRepository;
 
@@ -33,6 +36,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->messageRepository = new InMemoryMessageRepository();
         $this->eventRepository = new InMemoryEventRepository();
         $this->notificationRepository = new InMemoryNotificationRepository();
+        $this->stepRepository = new InMemoryStepRepository();
 
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
@@ -110,5 +114,21 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         ]));
 
         return $response->event;
+    }
+
+    protected function createSampleStep($projectID, $requesterUserID)
+    {
+        $response = (new CreateStepInteractor(
+            $this->stepRepository,
+            $this->projectRepository
+        ))->execute(new CreateStepRequest([
+            'name' => 'Sample step',
+            'startTime' => new \DateTime('2016-03-15 10:30:00'),
+            'endTime' => new \DateTime('2016-03-15 18:30:00'),
+            'projectID' => $projectID,
+            'requesterUserID' => $requesterUserID
+        ]));
+
+        return $response->step;
     }
 }
