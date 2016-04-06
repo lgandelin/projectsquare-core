@@ -2,7 +2,9 @@
 
 namespace Webaccess\ProjectSquare\Requests\Planning;
 
-class GetStepRequest
+use Webaccess\ProjectSquare\Requests\Request;
+
+class GetStepRequest extends Request
 {
     public $stepID;
 }
