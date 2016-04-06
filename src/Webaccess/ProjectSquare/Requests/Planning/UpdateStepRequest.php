@@ -11,5 +11,6 @@ class UpdateStepRequest extends Request
     public $projectID;
     public $startTime;
     public $endTime;
+    public $color;
     public $requesterUserID;
 }

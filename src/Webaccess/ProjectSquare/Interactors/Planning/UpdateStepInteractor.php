@@ -97,6 +97,9 @@ class UpdateStepInteractor
         if ($request->projectID) {
             $step->projectID = $request->projectID;
         }
+        if ($request->color) {
+            $step->color = $request->color;
+        }
 
         $this->repository->persistStep($step);
     }

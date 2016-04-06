@@ -72,6 +72,7 @@ class CreateStepInteractor
         $step->projectID = $request->projectID;
         $step->startTime = $request->startTime;
         $step->endTime = $request->endTime;
+        $step->color = $request->color;
 
         return $this->repository->persistStep($step);
     }

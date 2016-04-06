@@ -9,4 +9,5 @@ class Step
     public $startTime;
     public $endTime;
     public $projectID;
+    public $color;
 }
