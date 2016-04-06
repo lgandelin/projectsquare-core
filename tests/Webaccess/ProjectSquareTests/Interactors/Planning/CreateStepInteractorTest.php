@@ -51,6 +51,24 @@ class CreateStepInteractorTest extends BaseTestCase
         ]));
     }
 
+    /**
+     * @expectedException Exception
+     */
+    public function testCreateStepWithInvalidProject()
+    {
+        $user = $this->createSampleUser();
+        $project = $this->createSampleProject();
+        $this->projectRepository->addUserToProject($project, $user, null);
+
+        $this->interactor->execute(new CreateStepRequest([
+            'name' => 'Sample step',
+            'startTime' => new \DateTime('2016-03-15 10:30:00'),
+            'endTime' => new \DateTime('2016-03-15 18:30:00'),
+            'projectID' => null,
+            'requesterUserID' => $user->id,
+        ]));
+    }
+
     public function testCreateStep()
     {
         $user = $this->createSampleUser();

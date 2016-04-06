@@ -32,15 +32,15 @@ class CreateStepInteractor
 
     private function validateRequest(CreateStepRequest $request)
     {
-        $this->validateRequesterPermissions($request);
-        $this->validateDates($request);
         $this->validateProject($request);
+        $this->validateDates($request);
+        $this->validateRequesterPermissions($request);
     }
 
-    private function validateRequesterPermissions(CreateStepRequest $request)
+    private function validateProject(CreateStepRequest $request)
     {
-        if (!$this->isUserAuthorizedToCreateStep($request)) {
-            throw new \Exception(Context::get('translator')->translate('planning.step_creation_not_allowed'));
+        if (!$project = $this->projectRepository->getProject($request->projectID)) {
+            throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
         }
     }
 
@@ -51,10 +51,10 @@ class CreateStepInteractor
         }
     }
 
-    private function validateProject(CreateStepRequest $request)
+    private function validateRequesterPermissions(CreateStepRequest $request)
     {
-        if (!$project = $this->projectRepository->getProject($request->projectID)) {
-            throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
+        if (!$this->isUserAuthorizedToCreateStep($request)) {
+            throw new \Exception(Context::get('translator')->translate('planning.step_creation_not_allowed'));
         }
     }
 
