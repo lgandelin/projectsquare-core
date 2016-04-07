@@ -16,6 +16,22 @@ class CreateEventInteractorTest extends BaseTestCase
         $this->interactor = new CreateEventInteractor($this->eventRepository, $this->notificationRepository);
     }
 
+    /**
+     * @expectedException Exception
+     */
+    public function testCreateEventWithInvalidDates()
+    {
+        $user = $this->createSampleUser();
+
+        $this->interactor->execute(new CreateEventRequest([
+            'name' => 'Sample event',
+            'startTime' => null,
+            'endTime' => 'invalid',
+            'userID' => $user->id,
+            'requesterUserID' => $user->id,
+        ]));
+    }
+
     public function testCreateEvent()
     {
         $user = $this->createSampleUser();
