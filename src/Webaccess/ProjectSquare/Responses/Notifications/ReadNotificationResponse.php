@@ -6,5 +6,5 @@ use Webaccess\ProjectSquare\Responses\Response;
 
 class ReadNotificationResponse extends Response
 {
-    public $notificationID;
+    public $notification;
 }
