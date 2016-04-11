@@ -32,6 +32,7 @@ class CreateTaskInteractor
         $task = new Task();
         $task->name = $request->name;
         $task->userID = $request->userID;
+        $task->status = $request->status;
 
         return $this->repository->persistTask($task);
     }

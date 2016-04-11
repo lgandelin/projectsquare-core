@@ -23,6 +23,7 @@ class CreateTaskInteractorTest extends BaseTestCase
         $response = $this->interactor->execute(new CreateTaskRequest([
             'name' => 'Sample task',
             'userID' => $user->id,
+            'status' => false,
         ]));
 
         //Check response

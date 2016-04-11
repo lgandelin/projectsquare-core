@@ -12,9 +12,11 @@ use Webaccess\ProjectSquare\Entities\User;
 use Webaccess\ProjectSquare\Interactors\Calendar\CreateEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
 use Webaccess\ProjectSquare\Interactors\Planning\CreateStepInteractor;
+use Webaccess\ProjectSquare\Interactors\Tasks\CreateTaskInteractor;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
 use Webaccess\ProjectSquare\Requests\Planning\CreateStepRequest;
+use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
 use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
@@ -132,5 +134,17 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         ]));
 
         return $response->step;
+    }
+
+    protected function createSampleTask($userID)
+    {
+        $response = (new CreateTaskInteractor(
+            $this->taskRepository
+        ))->execute(new CreateTaskRequest([
+            'name' => 'Sample task',
+            'userID' => $userID
+        ]));
+
+        return $response->task;
     }
 }
