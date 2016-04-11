@@ -18,4 +18,5 @@ final class Events
     const DELETE_STEP = 'steps.delete';
     const CREATE_TASK = 'tasks.create';
     const UPDATE_TASK = 'tasks.update';
+    const DELETE_TASK = 'tasks.delete';
 }
