@@ -10,7 +10,7 @@ interface TaskRepository
 
     public function getTasks($projectID);
 
-    public function persistTask(Task $event);
+    public function persistTask(Task $task);
 
     public function removeTask($eventID);
 }

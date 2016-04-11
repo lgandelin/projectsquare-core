@@ -55,9 +55,7 @@ class UpdateTaskInteractor
         if ($request->name) {
             $task->name = $request->name;
         }
-        if ($request->status) {
-            $task->status = $request->status;
-        }
+        $task->status = $request->status;
 
         $this->repository->persistTask($task);
     }
