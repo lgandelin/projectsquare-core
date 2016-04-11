@@ -37,7 +37,7 @@ class CreateTaskInteractor
         return $this->repository->persistTask($task);
     }
 
-    private function dispatchTask($task)
+    private function dispatchTask(Task $task)
     {
         Context::get('event_dispatcher')->dispatch(
             Events::CREATE_TASK,
