@@ -16,4 +16,5 @@ final class Events
     const CREATE_STEP = 'steps.create';
     const UPDATE_STEP = 'steps.update';
     const DELETE_STEP = 'steps.delete';
+    const CREATE_TASK = 'tasks.create';
 }
