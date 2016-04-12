@@ -6,6 +6,7 @@ use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Event;
 use Webaccess\ProjectSquare\Events\Calendar\UpdateEventEvent;
 use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Exceptions\Events\EventUpdateNotAuthorizedException;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Requests\Calendar\UpdateEventRequest;
 use Webaccess\ProjectSquare\Responses\Calendar\UpdateEventResponse;
@@ -20,7 +21,7 @@ class UpdateEventInteractor
     public function execute(UpdateEventRequest $request)
     {
         $event = $this->getEvent($request->eventID);
-        $this->validateRequest($request);
+        $this->validateRequest($request, $event);
         $this->updateEvent($event, $request);
         $this->dispatchEvent($event);
 
@@ -29,10 +30,31 @@ class UpdateEventInteractor
         ]);
     }
 
-    private function validateRequest(UpdateEventRequest $request)
+    private function validateRequest(UpdateEventRequest $request, Event $event)
     {
-        //TODO : validate user
-        //TODO : validate startTime and endTime
+        //$this->validateRequesterPermissions($request, $event);
+        $this->validateDates($request);
+        //TODO : if ticket, validate ticket
+        //TODO : if project, validate project
+    }
+
+    private function validateRequesterPermissions(UpdateEventRequest $request, Event $event)
+    {
+        if (!$this->isUserAuthorizedToDeleteEvent($request->requesterUserID, $event)) {
+            throw new EventUpdateNotAuthorizedException(Context::get('translator')->translate('events.update_not_allowed'));
+        }
+    }
+
+    private function validateDates(UpdateEventRequest $request)
+    {
+        if (($request->startTime && !$request->startTime instanceof \DateTime) || ($request->endTime && !$request->endTime instanceof \DateTime)) {
+            throw new \Exception(Context::get('translator')->translate('events.invalid_event_dates'));
+        }
+    }
+
+    private function isUserAuthorizedToDeleteEvent($userID, Event $event)
+    {
+        return $userID == $event->userID;
     }
 
     private function dispatchEvent(Event $event)

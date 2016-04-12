@@ -12,9 +12,11 @@ use Webaccess\ProjectSquare\Entities\User;
 use Webaccess\ProjectSquare\Interactors\Calendar\CreateEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
 use Webaccess\ProjectSquare\Interactors\Planning\CreateStepInteractor;
+use Webaccess\ProjectSquare\Interactors\Tasks\CreateTaskInteractor;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
 use Webaccess\ProjectSquare\Requests\Planning\CreateStepRequest;
+use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
 use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
@@ -22,6 +24,7 @@ use Webaccess\ProjectSquareTests\Repositories\InMemoryMessageRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryNotificationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryProjectRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryStepRepository;
+use Webaccess\ProjectSquareTests\Repositories\InMemoryTaskRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryTicketRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryUserRepository;
 
@@ -37,6 +40,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->eventRepository = new InMemoryEventRepository();
         $this->notificationRepository = new InMemoryNotificationRepository();
         $this->stepRepository = new InMemoryStepRepository();
+        $this->taskRepository = new InMemoryTaskRepository();
 
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
@@ -130,5 +134,17 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         ]));
 
         return $response->step;
+    }
+
+    protected function createSampleTask($userID)
+    {
+        $response = (new CreateTaskInteractor(
+            $this->taskRepository
+        ))->execute(new CreateTaskRequest([
+            'name' => 'Sample task',
+            'userID' => $userID
+        ]));
+
+        return $response->task;
     }
 }

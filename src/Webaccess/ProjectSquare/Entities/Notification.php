@@ -9,4 +9,5 @@ class Notification
     public $entityID;
     public $type;
     public $read;
+    public $time;
 }

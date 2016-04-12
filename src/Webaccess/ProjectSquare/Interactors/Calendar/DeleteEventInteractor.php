@@ -31,20 +31,20 @@ class DeleteEventInteractor
 
     private function validateRequest(DeleteEventRequest $request, Event $event)
     {
-        $this->validateRequesterPermissions($request, $event);
+        //$this->validateRequesterPermissions($request, $event);
     }
 
-    private function validateRequesterPermissions(DeleteEventRequest $request, Event $event)
+    /*private function validateRequesterPermissions(DeleteEventRequest $request, Event $event)
     {
         if (!$this->isUserAuthorizedToDeleteEvent($request->requesterUserID, $event)) {
-            throw new \Exception(Context::get('translator')->translate('users.event_deletion_not_allowed'));
+            throw new \Exception(Context::get('translator')->translate('events.event_delete_not_allowed'));
         }
     }
 
     private function isUserAuthorizedToDeleteEvent($userID, Event $event)
     {
         return $userID == $event->userID;
-    }
+    }*/
 
     private function getEvent($eventID)
     {
@@ -55,12 +55,12 @@ class DeleteEventInteractor
         return $event;
     }
 
-    private function deleteEvent($event)
+    private function deleteEvent(Event $event)
     {
         $this->repository->removeEvent($event->id);
     }
 
-    private function dispatchEvent($event)
+    private function dispatchEvent(Event $event)
     {
         Context::get('event_dispatcher')->dispatch(
             Events::DELETE_EVENT,

@@ -35,10 +35,16 @@ class CreateEventInteractor
 
     private function validateRequest(CreateEventRequest $request)
     {
-        //TODO : validate user
-        //TODO : validate startTime and endTime
+        $this->validateDates($request);
         //TODO : if ticket, validate ticket
         //TODO : if project, validate project
+    }
+
+    private function validateDates(CreateEventRequest $request)
+    {
+        if (!$request->startTime instanceof \DateTime || !$request->endTime instanceof \DateTime) {
+            throw new \Exception(Context::get('translator')->translate('events.invalid_event_dates'));
+        }
     }
 
     private function createEvent(CreateEventRequest $request)
