@@ -45,7 +45,7 @@ class DeleteTaskInteractor
     {
         return $userID == $task->userID;
     }
-    
+
     private function getTask($taskID)
     {
         if (!$task = $this->repository->getTask($taskID)) {
