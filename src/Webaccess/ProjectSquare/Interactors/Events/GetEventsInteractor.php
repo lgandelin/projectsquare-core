@@ -16,6 +16,6 @@ class GetEventsInteractor
 
     public function execute(GetEventsRequest $request)
     {
-        return $this->repository->getEvents($request->userID, $request->projectID);
+        return $this->repository->getEvents($request->userID, $request->projectID, $request->ticketID);
     }
 }
