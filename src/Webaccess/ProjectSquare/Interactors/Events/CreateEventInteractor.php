@@ -93,10 +93,12 @@ class CreateEventInteractor
 
     private function allocateTicketIfRequired(CreateEventRequest $request)
     {
-        (new UpdateTicketInteractor($this->ticketRepository, $this->projectRepository))->execute(new UpdateTicketRequest([
-            'ticketID' => $request->ticketID,
-            'allocatedUserID' => $request->userID,
-            'requesterUserID' => $request->userID,
-        ]));
+        if ($request->ticketID) {
+            (new UpdateTicketInteractor($this->ticketRepository, $this->projectRepository))->execute(new UpdateTicketRequest([
+                'ticketID' => $request->ticketID,
+                'allocatedUserID' => $request->userID,
+                'requesterUserID' => $request->userID,
+            ]));
+        }
     }
 }

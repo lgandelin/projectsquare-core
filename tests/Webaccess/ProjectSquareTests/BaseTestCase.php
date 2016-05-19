@@ -108,7 +108,9 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         $response = (new CreateEventInteractor(
             $this->eventRepository,
-            $this->notificationRepository
+            $this->notificationRepository,
+            $this->ticketRepository,
+            $this->projectRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),
