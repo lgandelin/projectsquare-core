@@ -7,14 +7,16 @@ use Webaccess\ProjectSquare\Entities\Event;
 use Webaccess\ProjectSquare\Events\Events\DeleteEventEvent;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
+use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Requests\Events\DeleteEventRequest;
 use Webaccess\ProjectSquare\Responses\Events\DeleteEventResponse;
 
 class DeleteEventInteractor
 {
-    public function __construct(EventRepository $repository)
+    public function __construct(EventRepository $repository, NotificationRepository $notificationRepository)
     {
         $this->repository = $repository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function execute(DeleteEventRequest $request)
@@ -22,6 +24,7 @@ class DeleteEventInteractor
         $event = $this->getEvent($request->eventID);
         $this->validateRequest($request, $event);
         $this->deleteEvent($event);
+        $this->deleteLinkedNotifications($event);
         $this->dispatchEvent($event);
 
         return new DeleteEventResponse([
@@ -66,5 +69,10 @@ class DeleteEventInteractor
             Events::DELETE_EVENT,
             new DeleteEventEvent($event)
         );
+    }
+
+    private function deleteLinkedNotifications($event)
+    {
+        $this->notificationRepository->removeNotificationsByTypeAndEntityID('EVENT_CREATED', $event->id);
     }
 }

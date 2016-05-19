@@ -6,24 +6,31 @@ use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Event;
 use Webaccess\ProjectSquare\Events\Events\CreateEventEvent;
 use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Interactors\Tickets\UpdateTicketInteractor;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
+use Webaccess\ProjectSquare\Repositories\ProjectRepository;
+use Webaccess\ProjectSquare\Repositories\TicketRepository;
 use Webaccess\ProjectSquare\Requests\Events\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
+use Webaccess\ProjectSquare\Requests\Tickets\UpdateTicketRequest;
 use Webaccess\ProjectSquare\Responses\Events\CreateEventResponse;
 use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 
 class CreateEventInteractor
 {
-    public function __construct(EventRepository $repository, NotificationRepository $notificationRepository)
+    public function __construct(EventRepository $repository, NotificationRepository $notificationRepository, TicketRepository $ticketRepository, ProjectRepository $projectRepository)
     {
         $this->repository = $repository;
         $this->notificationRepository = $notificationRepository;
+        $this->ticketRepository = $ticketRepository;
+        $this->projectRepository = $projectRepository;
     }
 
     public function execute(CreateEventRequest $request)
     {
         $this->validateRequest($request);
+        $this->allocateTicketIfRequired($request);
         $event = $this->createEvent($request);
         $this->createNotificationIfRequired($request, $event);
         $this->dispatchEvent($event);
@@ -82,5 +89,16 @@ class CreateEventInteractor
             Events::CREATE_EVENT,
             new CreateEventEvent($event)
         );
+    }
+
+    private function allocateTicketIfRequired(CreateEventRequest $request)
+    {
+        if ($request->ticketID) {
+            (new UpdateTicketInteractor($this->ticketRepository, $this->projectRepository))->execute(new UpdateTicketRequest([
+                'ticketID' => $request->ticketID,
+                'allocatedUserID' => $request->userID,
+                'requesterUserID' => $request->userID,
+            ]));
+        }
     }
 }

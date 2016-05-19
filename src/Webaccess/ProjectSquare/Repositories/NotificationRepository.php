@@ -15,4 +15,6 @@ interface NotificationRepository
     public function persistNotification(Notification $notification);
 
     public function removeNotification($notificationID);
+
+    public function removeNotificationsByTypeAndEntityID($type, $entityID);
 }

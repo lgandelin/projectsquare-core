@@ -57,6 +57,15 @@ class InMemoryNotificationRepository implements NotificationRepository
         }
     }
 
+    public function removeNotificationsByTypeAndEntityID($type, $entityID)
+    {
+        foreach ($this->objects as $notification) {
+            if ($notification->type == $type && $notification->entityID == $entityID) {
+                unset($this->objects[$notification->id]);
+            }
+        }
+    }
+
     public function getUnreadNotifications($userID)
     {
         $result = [];

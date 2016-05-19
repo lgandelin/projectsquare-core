@@ -51,13 +51,6 @@ class InMemoryTicketRepository implements TicketRepository
 
     public function updateTicket($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
     {
-        self::addState($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments);
-
-        return self::getTicket($ticketID);
-    }
-
-    public function addState($ticketID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments)
-    {
         $ticketState = new TicketState();
         $ticketState->id = $this->ticketStateRepository->getNextID();
         $ticketState->ticketID = $ticketID;
@@ -68,6 +61,8 @@ class InMemoryTicketRepository implements TicketRepository
         $ticketState->dueDate = $dueDate;
         $ticketState->comments = $comments;
         $this->ticketStateRepository->objects[$ticketState->id]= $ticketState;
+
+        return self::getTicket($ticketID);
     }
 
     public function deleteTicket($ticketID)
