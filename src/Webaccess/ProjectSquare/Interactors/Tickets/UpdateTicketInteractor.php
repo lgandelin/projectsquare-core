@@ -37,9 +37,6 @@ class UpdateTicketInteractor extends GetTicketInteractor
 
     private function validateRequest(UpdateTicketRequest $request)
     {
-        $this->validateAuthorUser($request);
-        $this->validateAllocatedUser($request);
-        $this->validateStatus($request);
         $this->validateDueDate($request);
         $this->validateRequesterPermissions($request);
     }
@@ -49,21 +46,6 @@ class UpdateTicketInteractor extends GetTicketInteractor
         if ($request->dueDate && $request->dueDate < new \DateTime('now')) {
             throw new \Exception(Context::get('translator')->translate('tickets.due_date_already_passed'));
         }
-    }
-
-    private function validateAuthorUser(UpdateTicketRequest $request)
-    {
-        //TODO
-    }
-
-    private function validateAllocatedUser(UpdateTicketRequest $request)
-    {
-        //TODO
-    }
-
-    private function validateStatus(UpdateTicketRequest $request)
-    {
-        //TODO
     }
 
     private function validateRequesterPermissions(UpdateTicketRequest $request)
