@@ -38,7 +38,7 @@ class UpdateTicketInfosInteractor extends GetTicketInteractor
     private function validateRequest(UpdateTicketInfosRequest $request)
     {
         $this->validateProject($request);
-        $this->validateTypeID($request);
+        $this->validateTitle($request);
         $this->validateRequesterPermissions($request);
     }
 
@@ -49,9 +49,11 @@ class UpdateTicketInfosInteractor extends GetTicketInteractor
         }
     }
 
-    private function validateTypeID(UpdateTicketInfosRequest $request)
+    private function validateTitle(UpdateTicketInfosRequest $request)
     {
-        //TODO
+        if (!$request->title) {
+            throw new \Exception(Context::get('translator')->translate('tickets.title_required'));
+        }
     }
 
     private function validateRequesterPermissions(UpdateTicketInfosRequest $request)

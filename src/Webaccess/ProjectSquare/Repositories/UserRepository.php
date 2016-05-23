@@ -14,9 +14,9 @@ interface UserRepository
 
     public function getUsersPaginatedList($limit);
 
-    public function createUser($firstName, $lastName, $email, $password, $clientID);
+    public function createUser($firstName, $lastName, $email, $password, $clientID, $isAdministrator=false);
 
-    public function updateUser($userID, $firstName, $lastName, $email, $password, $clientID);
+    public function updateUser($userID, $firstName, $lastName, $email, $password, $clientID, $isAdministrator=false);
 
     public function deleteUser($userID);
 

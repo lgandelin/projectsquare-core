@@ -56,6 +56,22 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
         ]));
     }
 
+    /**
+     * @expectedException Exception
+     */
+    public function testUpdateTicketWithoutTitle()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $this->interactor->execute(new UpdateTicketInfosRequest([
+            'ticketID' => $ticketID,
+            'title' => '',
+            'requesterUserID' => $user->id
+        ]));
+    }
+
     public function testUpdateTicket()
     {
         $project = $this->createSampleProject();

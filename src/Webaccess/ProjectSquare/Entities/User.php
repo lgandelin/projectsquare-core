@@ -10,4 +10,5 @@ class User
     public $firstName;
     public $lastName;
     public $clientID;
+    public $isAdministrator;
 }
