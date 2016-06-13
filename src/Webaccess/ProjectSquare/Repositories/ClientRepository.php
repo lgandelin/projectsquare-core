@@ -10,9 +10,9 @@ interface ClientRepository
 
     public static function getClientsPaginatedList($limit = null);
 
-    public static function createClient($name);
+    public static function createClient($name, $address);
 
-    public static function updateClient($clientID, $name);
+    public static function updateClient($clientID, $name, $address);
 
     public static function deleteClient($clientID);
 }
