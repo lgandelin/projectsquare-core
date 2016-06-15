@@ -56,12 +56,12 @@ class InMemoryUserRepository implements UserRepository
         // TODO: Implement getUsersPaginatedList() method.
     }
 
-    public function createUser($firstName, $lastName, $email, $password, $clientID, $isAdministrator=false)
+    public function createUser($firstName, $lastName, $email, $password, $mobile, $phone, $clientID, $clientRole, $isAdministrator=false)
     {
         // TODO: Implement createUser() method.
     }
 
-    public function updateUser($userID, $firstName, $lastName, $email, $password, $clientID, $isAdministrator=false)
+    public function updateUser($userID, $firstName, $lastName, $email, $password, $mobile, $phone, $clientID, $clientRole, $isAdministrator=false)
     {
         // TODO: Implement updateUser() method.
     }
@@ -101,5 +101,15 @@ class InMemoryUserRepository implements UserRepository
     public function setReadFlagMessage($userID, $messageID, $read)
     {
         $this->objects[$userID]->unread_messages[$messageID] = $read;
+    }
+
+    public function getClientUsers($clientID)
+    {
+        // TODO: Implement getClientUsers() method.
+    }
+
+    public function getAgencyUsersPaginatedList($limit)
+    {
+        // TODO: Implement getAgencyUsersPaginatedList() method.
     }
 }

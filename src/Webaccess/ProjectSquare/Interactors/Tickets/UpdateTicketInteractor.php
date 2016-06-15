@@ -39,6 +39,7 @@ class UpdateTicketInteractor extends GetTicketInteractor
     {
         $this->validateDueDate($request);
         $this->validateRequesterPermissions($request);
+        $this->validateAllocatedUser($request);
     }
 
     private function validateDueDate(UpdateTicketRequest $request)
@@ -50,17 +51,27 @@ class UpdateTicketInteractor extends GetTicketInteractor
 
     private function validateRequesterPermissions(UpdateTicketRequest $request)
     {
-        if (!$this->isUserAuthorizedToUpdateTicket($request)) {
+        $ticket = $this->repository->getTicket($request->ticketID);
+
+        if (!$this->isUserInProject($ticket->projectID, $request->requesterUserID)) {
             throw new \Exception(Context::get('translator')->translate('users.ticket_update_not_allowed'));
         }
     }
 
-    private function isUserAuthorizedToUpdateTicket(UpdateTicketRequest $request)
+    private function validateAllocatedUser(UpdateTicketRequest $request)
     {
         $ticket = $this->repository->getTicket($request->ticketID);
-        $project = $this->projectRepository->getProject($ticket->projectID);
 
-        return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
+        if ($request->allocatedUserID && !$this->isUserInProject($ticket->projectID, $request->allocatedUserID)) {
+            throw new \Exception(Context::get('translator')->translate('users.allocated_user_not_in_project'));
+        }
+    }
+
+    private function isUserInProject($projectID, $userID)
+    {
+        $project = $this->projectRepository->getProject($projectID);
+
+        return $this->projectRepository->isUserInProject($project, $userID);
     }
 
     private function createTicketState(UpdateTicketRequest $request)

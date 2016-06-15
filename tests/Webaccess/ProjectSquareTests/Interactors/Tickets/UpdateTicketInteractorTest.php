@@ -60,6 +60,23 @@ class UpdateTicketInteractorTest extends BaseTestCase
         ]));
     }
 
+    /**
+     * @expectedException Exception
+     */
+    public function testUpdateTicketToUnauthorizedAllocatedUser()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+        $allocatedUser = $this->createSampleUser();
+        $ticketID = $this->createSampleTicket('Sample ticket', 1, 'Lorem ipsum dolor sit amet');
+        $this->interactor->execute(new UpdateTicketRequest([
+            'ticketID' => $ticketID,
+            'allocatedUserID' => $allocatedUser->id,
+            'requesterUserID' => $user->id
+        ]));
+    }
+
     public function testUpdateTicket()
     {
         $project = $this->createSampleProject();
