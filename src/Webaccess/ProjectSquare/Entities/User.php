@@ -9,6 +9,9 @@ class User
     public $password;
     public $firstName;
     public $lastName;
+    public $mobile;
+    public $phone;
     public $clientID;
+    public $clientRole;
     public $isAdministrator;
 }

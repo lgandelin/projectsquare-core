@@ -60,6 +60,23 @@ class CreateTicketInteractorTest extends BaseTestCase
         ]));
     }
 
+    /**
+     * @expectedException Exception
+     */
+    public function testCreateTicketWithUnauthorizedAllocatedUser()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+        $allocatedUser = $this->createSampleUser();
+        $this->interactor->execute(new CreateTicketRequest([
+            'title' => 'Sample ticket',
+            'projectID' => $project->id,
+            'allocatedUserID' => $allocatedUser->id,
+            'requesterUserID' => $user->id
+        ]));
+    }
+
     public function testCreateTicket()
     {
         $project = $this->createSampleProject();

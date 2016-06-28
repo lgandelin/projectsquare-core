@@ -40,6 +40,7 @@ class CreateTicketInteractor
     {
         $this->validateProject($request);
         $this->validateTitle($request);
+        $this->validateAllocatedUser($request);
         $this->validateRequesterPermissions($request);
     }
 
@@ -57,6 +58,13 @@ class CreateTicketInteractor
         }
     }
 
+    private function validateAllocatedUser(CreateTicketRequest $request)
+    {
+        if ($request->allocatedUserID && !$this->isUserInProject($request->projectID, $request->allocatedUserID)) {
+            throw new \Exception(Context::get('translator')->translate('users.allocated_user_not_in_project'));
+        }
+    }
+
     private function validateRequesterPermissions(CreateTicketRequest $request)
     {
         if (!$this->isUserAuthorizedToCreateTicket($request)) {
@@ -69,6 +77,13 @@ class CreateTicketInteractor
         $project = $this->projectRepository->getProject($request->projectID);
 
         return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
+    }
+
+    private function isUserInProject($projectID, $userID)
+    {
+        $project = $this->projectRepository->getProject($projectID);
+
+        return $this->projectRepository->isUserInProject($project, $userID);
     }
 
     private function createTicket(CreateTicketRequest $request)
