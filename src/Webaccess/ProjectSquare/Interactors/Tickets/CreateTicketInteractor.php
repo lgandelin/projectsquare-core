@@ -41,6 +41,7 @@ class CreateTicketInteractor
         $this->validateProject($request);
         $this->validateTitle($request);
         $this->validateAllocatedUser($request);
+        $this->validateDueDate($request);
         $this->validateRequesterPermissions($request);
     }
 
@@ -62,6 +63,13 @@ class CreateTicketInteractor
     {
         if ($request->allocatedUserID && !$this->isUserInProject($request->projectID, $request->allocatedUserID)) {
             throw new \Exception(Context::get('translator')->translate('users.allocated_user_not_in_project'));
+        }
+    }
+
+    private function validateDueDate(CreateTicketRequest $request)
+    {
+        if ($request->dueDate && $request->dueDate < new \DateTime('now')) {
+            throw new \Exception(Context::get('translator')->translate('tickets.due_date_already_passed'));
         }
     }
 

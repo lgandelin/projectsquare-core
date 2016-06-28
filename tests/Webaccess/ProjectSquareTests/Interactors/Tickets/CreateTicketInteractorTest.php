@@ -77,6 +77,23 @@ class CreateTicketInteractorTest extends BaseTestCase
         ]));
     }
 
+    /**
+     * @expectedException Exception
+     */
+    public function testCreateTicketWithPassedDueDate()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->interactor->execute(new CreateTicketRequest([
+            'title' => 'Sample ticket',
+            'projectID' => $project->id,
+            'allocatedUserID' => $user->id,
+            'dueDate' => new DateTime('2010-01-01'),
+            'requesterUserID' => $user->id
+        ]));
+    }
+
     public function testCreateTicket()
     {
         $project = $this->createSampleProject();
@@ -86,7 +103,7 @@ class CreateTicketInteractorTest extends BaseTestCase
             'title' => 'Sample ticket',
             'projectID' => $project->id,
             'statusID' => 2,
-            'dueDate' => new \DateTime('2016-02-30'),
+            'dueDate' => new \DateTime('now'),
             'requesterUserID' => $user->id
         ]));
 
@@ -97,7 +114,7 @@ class CreateTicketInteractorTest extends BaseTestCase
         $this->assertEquals('Sample ticket', $response->ticket->title);
         $this->assertEquals($project->id, $response->ticket->projectID);
         $this->assertEquals(2, $response->ticketState->statusID);
-        $this->assertEquals(new \DateTime('2016-02-30'), $response->ticketState->dueDate);
+        $this->assertEquals(new \DateTime('now'), $response->ticketState->dueDate);
         $this->assertEquals($user->id, $response->ticketState->authorUserID);
 
         //Check insertion
