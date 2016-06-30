@@ -76,15 +76,17 @@ class UpdateTicketInteractor extends GetTicketInteractor
 
     private function createTicketState(UpdateTicketRequest $request)
     {
+        $ticket = $this->repository->getTicketWithStates($request->ticketID);
+        $lastState = $ticket->states[0];
         $ticketState = new TicketState();
         $ticketState->ticketID = $request->ticketID;
-        $ticketState->statusID = $request->statusID;
-        $ticketState->authorUserID = $request->authorUserID;
-        $ticketState->allocatedUserID = $request->allocatedUserID;
-        $ticketState->priority = $request->priority;
-        $ticketState->dueDate = $request->dueDate;
-        $ticketState->estimatedTime = $request->estimatedTime;
-        $ticketState->comments = $request->comments;
+        $ticketState->statusID = (isset($request->statusID)) ? $request->statusID : $lastState->status_id;
+        $ticketState->authorUserID = (isset($request->authorUserID)) ? $request->authorUserID : $lastState->author_user_id;
+        $ticketState->allocatedUserID = (isset($request->allocatedUserID)) ? $request->allocatedUserID : $lastState->allocated_user_id;
+        $ticketState->priority = (isset($request->priority)) ? $request->priority : $lastState->priority;
+        $ticketState->dueDate = (isset($request->dueDate)) ? $request->dueDate : \DateTime::createFromFormat('d/m/Y', $lastState->due_date);
+        $ticketState->estimatedTime = (isset($request->estimatedTime)) ? $request->estimatedTime : $lastState->estimated_time;
+        $ticketState->comments = (isset($request->comments)) ? $request->comments : $lastState->comments;
         $ticketState = $this->repository->persistTicketState($ticketState);
 
         return $ticketState;
