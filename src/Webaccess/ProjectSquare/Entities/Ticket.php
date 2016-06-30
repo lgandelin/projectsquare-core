@@ -9,5 +9,5 @@ class Ticket
     public $description;
     public $projectID;
     public $typeID;
-    public $lastTypeID;
+    public $lastStateID;
 }
