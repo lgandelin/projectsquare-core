@@ -15,7 +15,7 @@ class CreateTicketInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateTicketInteractor($this->ticketRepository, $this->projectRepository);
+        $this->interactor = new CreateTicketInteractor($this->ticketRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository);
     }
 
     /**

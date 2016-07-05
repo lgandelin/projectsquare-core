@@ -35,7 +35,7 @@ class InMemoryUserRepository implements UserRepository
 
     public function getAgencyUsers()
     {
-        // TODO: Implement getAgencyUsers() method.
+        return [];
     }
 
     public function getUsersByProject($projectID)
@@ -105,7 +105,7 @@ class InMemoryUserRepository implements UserRepository
 
     public function getClientUsers($clientID)
     {
-        // TODO: Implement getClientUsers() method.
+        return [];
     }
 
     public function getAgencyUsersPaginatedList($limit)

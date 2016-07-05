@@ -7,9 +7,13 @@ use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Entities\TicketState;
 use Webaccess\ProjectSquare\Events\Tickets\CreateTicketEvent;
 use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
+use Webaccess\ProjectSquare\Repositories\UserRepository;
+use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Requests\Tickets\CreateTicketRequest;
+use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Responses\Tickets\CreateTicketResponse;
 
 class CreateTicketInteractor
@@ -17,10 +21,12 @@ class CreateTicketInteractor
     protected $repository;
     protected $projectRepository;
 
-    public function __construct(TicketRepository $repository, ProjectRepository $projectRepository)
+    public function __construct(TicketRepository $repository, ProjectRepository $projectRepository, UserRepository $userRepository, NotificationRepository $notificationRepository)
     {
         $this->repository = $repository;
         $this->projectRepository = $projectRepository;
+        $this->userRepository = $userRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function execute(CreateTicketRequest $request)
@@ -28,6 +34,7 @@ class CreateTicketInteractor
         $this->validateRequest($request);
         $ticket = $this->createTicket($request);
         $ticketState = $this->createTicketState($request, $ticket->id);
+        $this->createNotifications($request, $ticket);
         $this->dispatchEvent($ticket->id);
 
         return new CreateTicketResponse([
@@ -126,5 +133,33 @@ class CreateTicketInteractor
             Events::CREATE_TICKET,
             new CreateTicketEvent($ticketID)
         );
+    }
+
+    private function createNotifications(CreateTicketRequest $request, Ticket $ticket)
+    {
+        $project = $this->projectRepository->getProject($ticket->projectID);
+
+        //Agency users
+        foreach ($this->userRepository->getUsersByProject($ticket->projectID) as $user) {
+            if ($user->id != $request->requesterUserID) {
+                $this->notifyUserIfRequired($ticket, $user);
+            }
+        }
+
+        //Client users
+        foreach ($this->userRepository->getClientUsers($project->client_id) as $user) {
+            if ($user->id != $request->requesterUserID) {
+                $this->notifyUserIfRequired($ticket, $user);
+            }
+        }
+    }
+
+    private function notifyUserIfRequired($ticket, $user)
+    {
+        (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
+            'userID' => $user->id,
+            'entityID' => $ticket->id,
+            'type' => 'TICKET_CREATED',
+        ]));
     }
 }
