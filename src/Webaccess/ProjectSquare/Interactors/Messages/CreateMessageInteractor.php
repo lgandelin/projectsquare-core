@@ -104,7 +104,7 @@ class CreateMessageInteractor
         }
 
         //Client users
-        foreach ($this->userRepository->getClientUsers($project->client_id) as $user) {
+        foreach ($this->userRepository->getClientUsers($project->clientID) as $user) {
             if ($user->id != $request->requesterUserID) {
                 $this->notifyUserIfRequired($message, $user);
             }
