@@ -80,18 +80,24 @@ class DeleteTicketInteractor extends GetTicketInteractor
         $events = (new GetEventsInteractor($this->eventRepository))->execute(new GetEventsRequest([
             'ticketID' => $ticketID
         ]));
-        foreach ($events as $event) {
-            (new DeleteEventInteractor($this->eventRepository, $this->notificationRepository))->execute(new DeleteEventRequest([
-                'eventID' => $event->id
-            ]));
+
+        if (is_array($events) && sizeof($events) > 0) {
+            foreach ($events as $event) {
+                (new DeleteEventInteractor($this->eventRepository, $this->notificationRepository))->execute(new DeleteEventRequest([
+                    'eventID' => $event->id
+                ]));
+            }
         }
     }
 
     private function deleteLinkedNotifications($ticketID)
     {
         $notifications = (new GetNotificationsInteractor($this->notificationRepository))->getNotificationsByTicket($ticketID);
-        foreach ($notifications as $notification) {
-            $this->notificationRepository->removeNotification($notification->id);
+        
+        if (is_array($notifications) && sizeof($notifications) > 0) {
+            foreach ($notifications as $notification) {
+                $this->notificationRepository->removeNotification($notification->id);
+            }
         }
     }
 }
