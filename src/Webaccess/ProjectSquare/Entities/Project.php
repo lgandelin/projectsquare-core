@@ -7,8 +7,11 @@ class Project
     public $id;
     public $name;
     public $clientID;
+    public $color;
     public $status;
     public $websiteFrontURL;
     public $websiteBackURL;
     public $slackChannel;
+    public $createdAt;
+    public $udpatedAt;
 }

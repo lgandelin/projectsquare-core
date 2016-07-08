@@ -68,17 +68,16 @@ class CreateMessageInteractor
 
     private function validateRequesterPermissions(CreateMessageRequest $request)
     {
-        if (!$this->isUserAuthorizedToCreateToMessage($request)) {
+        if (!$this->isUserAuthorizedToCreateMessage($request)) {
             throw new MessageReplyNotAuthorizedException(Context::get('translator')->translate('users.message_reply_not_allowed'));
         }
     }
 
-    private function isUserAuthorizedToCreateToMessage(CreateMessageRequest $request)
+    private function isUserAuthorizedToCreateMessage(CreateMessageRequest $request)
     {
         $conversation = $this->conversationRepository->getConversation($request->conversationID);
-        $project = $this->projectRepository->getProject($conversation->projectID);
 
-        return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
+        return $this->projectRepository->isUserInProject($conversation->projectID, $request->requesterUserID);
     }
 
     private function createMessage(CreateMessageRequest $request)
@@ -104,7 +103,7 @@ class CreateMessageInteractor
         }
 
         //Client users
-        foreach ($this->userRepository->getClientUsers($project->client_id) as $user) {
+        foreach ($this->userRepository->getClientUsers($project->clientID) as $user) {
             if ($user->id != $request->requesterUserID) {
                 $this->notifyUserIfRequired($message, $user);
             }

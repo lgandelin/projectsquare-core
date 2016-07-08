@@ -45,9 +45,7 @@ class DeleteStepInteractor
 
     private function isUserAuthorizedToDeleteStep($userID, Step $step)
     {
-        $project = $this->projectRepository->getProject($step->projectID);
-
-        return $this->projectRepository->isUserInProject($project, $userID);
+        return $this->projectRepository->isUserInProject($step->projectID, $userID);
     }
 
     private function getStep($stepID)

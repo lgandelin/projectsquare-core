@@ -22,7 +22,7 @@ interface ProjectRepository
 
     public function addUserToProject($project, $userID, $roleID);
 
-    public function isUserInProject($project, $userID);
+    public function isUserInProject($projectID, $userID);
 
     public function removeUserFromProject($project, $userID);
 }

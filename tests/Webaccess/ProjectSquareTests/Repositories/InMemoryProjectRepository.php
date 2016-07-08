@@ -85,8 +85,9 @@ class InMemoryProjectRepository implements ProjectRepository
         $user->projects[]= $project->id;
     }
 
-    public function isUserInProject($project, $userID)
+    public function isUserInProject($projectID, $userID)
     {
+        $project = $this->getProject($projectID);
         if (isset($project->users)) {
             return in_array($userID, $project->users);
         }

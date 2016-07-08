@@ -59,9 +59,7 @@ class CreateConversationInteractor
 
     private function isUserAuthorizedToCreateConversation(CreateConversationRequest $request)
     {
-        $project = $this->projectRepository->getProject($request->projectID);
-
-        return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
+        return $this->projectRepository->isUserInProject($request->projectID, $request->requesterUserID);
     }
 
     private function createConversation(CreateConversationRequest $request)

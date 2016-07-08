@@ -69,9 +69,7 @@ class UpdateTicketInteractor extends GetTicketInteractor
 
     private function isUserInProject($projectID, $userID)
     {
-        $project = $this->projectRepository->getProject($projectID);
-
-        return $this->projectRepository->isUserInProject($project, $userID);
+        return $this->projectRepository->isUserInProject($projectID, $userID);
     }
 
     private function createTicketState(UpdateTicketRequest $request)
