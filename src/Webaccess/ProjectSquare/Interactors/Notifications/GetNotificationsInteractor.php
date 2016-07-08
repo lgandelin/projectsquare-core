@@ -23,4 +23,9 @@ class GetNotificationsInteractor
             'notifications' => $this->repository->getUnreadNotifications($userID),
         ]);
     }
+
+    public function getNotificationsByTicket($ticketID)
+    {
+        return $this->repository->getNotificationsByTicket($ticketID);
+    }
 }

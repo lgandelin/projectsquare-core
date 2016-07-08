@@ -6,6 +6,7 @@ use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Events\Tickets\DeleteTicketEvent;
 use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Interactors\Notifications\GetNotificationsInteractor;
 use Webaccess\ProjectSquare\Interactors\Planning\DeleteEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Planning\GetEventsInteractor;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
@@ -34,6 +35,7 @@ class DeleteTicketInteractor extends GetTicketInteractor
     {
         $ticket = $this->getTicket($request->ticketID);
         $this->deleteLinkedEvents($ticket->id);
+        $this->deleteLinkedNotifications($ticket->id);
         $this->validateRequest($request, $ticket);
         $this->dispatchEvent($ticket);
         $this->deleteTicket($ticket);
@@ -82,6 +84,14 @@ class DeleteTicketInteractor extends GetTicketInteractor
             (new DeleteEventInteractor($this->eventRepository, $this->notificationRepository))->execute(new DeleteEventRequest([
                 'eventID' => $event->id
             ]));
+        }
+    }
+
+    private function deleteLinkedNotifications($ticketID)
+    {
+        $notifications = (new GetNotificationsInteractor($this->notificationRepository))->getNotificationsByTicket($ticketID);
+        foreach ($notifications as $notification) {
+            $this->notificationRepository->removeNotification($notification->id);
         }
     }
 }
