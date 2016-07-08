@@ -56,9 +56,7 @@ class UpdateStepInteractor
 
     private function isUserAuthorizedToUpdateStep(UpdateStepRequest $request)
     {
-        $project = $this->projectRepository->getProject($request->projectID);
-
-        return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
+        return $this->projectRepository->isUserInProject($request->projectID, $request->requesterUserID);
     }
 
     private function validateDates(UpdateStepRequest $request)

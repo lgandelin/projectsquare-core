@@ -60,9 +60,7 @@ class CreateStepInteractor
 
     private function isUserAuthorizedToCreateStep(CreateStepRequest $request)
     {
-        $project = $this->projectRepository->getProject($request->projectID);
-
-        return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
+        return $this->projectRepository->isUserInProject($request->projectID, $request->requesterUserID);
     }
 
     private function createStep(CreateStepRequest $request)

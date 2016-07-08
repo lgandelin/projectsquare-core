@@ -57,9 +57,7 @@ class DeleteTicketInteractor extends GetTicketInteractor
 
     private function isUserAuthorizedToDeleteTicket($userID, Ticket $ticket)
     {
-        $project = $this->projectRepository->getProject($ticket->projectID);
-
-        return $this->projectRepository->isUserInProject($project, $userID);
+        return $this->projectRepository->isUserInProject($ticket->projectID, $userID);
     }
 
     private function deleteTicket(Ticket $ticket)

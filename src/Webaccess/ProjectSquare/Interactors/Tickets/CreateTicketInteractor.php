@@ -89,16 +89,12 @@ class CreateTicketInteractor
 
     private function isUserAuthorizedToCreateTicket(CreateTicketRequest $request)
     {
-        $project = $this->projectRepository->getProject($request->projectID);
-
-        return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
+        return $this->projectRepository->isUserInProject($request->projectID, $request->requesterUserID);
     }
 
     private function isUserInProject($projectID, $userID)
     {
-        $project = $this->projectRepository->getProject($projectID);
-
-        return $this->projectRepository->isUserInProject($project, $userID);
+        return $this->projectRepository->isUserInProject($projectID, $userID);
     }
 
     private function createTicket(CreateTicketRequest $request)

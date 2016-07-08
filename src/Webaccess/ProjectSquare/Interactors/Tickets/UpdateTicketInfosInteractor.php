@@ -66,9 +66,8 @@ class UpdateTicketInfosInteractor extends GetTicketInteractor
     private function isUserAuthorizedToUpdateTicket(UpdateTicketInfosRequest $request)
     {
         $ticket = $this->repository->getTicket($request->ticketID);
-        $project = $this->projectRepository->getProject($ticket->projectID);
 
-        return $this->projectRepository->isUserInProject($project, $request->requesterUserID);
+        return $this->projectRepository->isUserInProject($ticket->projectID, $request->requesterUserID);
     }
 
     private function updateTicketInfos(Ticket $ticket, UpdateTicketInfosRequest $request)
