@@ -16,9 +16,9 @@ interface UserRepository
 
     public function getAgencyUsersPaginatedList($limit);
 
-    public function createUser($firstName, $lastName, $email, $password, $password, $mobile, $clientID, $clientRole, $isAdministrator=false);
+    public function createUser($firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $isAdministrator=false);
 
-    public function updateUser($userID, $firstName, $lastName, $email, $password, $password, $mobile, $clientID, $clientRole, $isAdministrator=false);
+    public function updateUser($userID, $firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $isAdministrator=false);
 
     public function deleteUser($userID);
 
