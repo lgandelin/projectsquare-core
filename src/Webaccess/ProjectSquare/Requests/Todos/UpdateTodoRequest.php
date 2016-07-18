@@ -1,12 +1,12 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Requests\Tasks;
+namespace Webaccess\ProjectSquare\Requests\Todos;
 
 use Webaccess\ProjectSquare\Requests\Request;
 
-class UpdateTaskRequest extends Request
+class UpdateTodoRequest extends Request
 {
-    public $taskID;
+    public $todoID;
     public $name;
     public $status;
     public $requesterUserID;

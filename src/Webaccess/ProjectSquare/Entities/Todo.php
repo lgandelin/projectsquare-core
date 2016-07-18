@@ -2,7 +2,7 @@
 
 namespace Webaccess\ProjectSquare\Entities;
 
-class Task
+class Todo
 {
     public $id;
     public $name;

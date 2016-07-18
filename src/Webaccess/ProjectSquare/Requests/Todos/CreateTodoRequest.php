@@ -1,10 +1,10 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Requests\Tasks;
+namespace Webaccess\ProjectSquare\Requests\Todos;
 
 use Webaccess\ProjectSquare\Requests\Request;
 
-class CreateTaskRequest extends Request
+class CreateTodoRequest extends Request
 {
     public $name;
     public $status;

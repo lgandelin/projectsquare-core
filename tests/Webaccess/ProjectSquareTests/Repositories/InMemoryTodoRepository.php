@@ -2,10 +2,10 @@
 
 namespace Webaccess\ProjectSquareTests\Repositories;
 
-use Webaccess\ProjectSquare\Entities\Task;
-use Webaccess\ProjectSquare\Repositories\TaskRepository;
+use Webaccess\ProjectSquare\Entities\Todo;
+use Webaccess\ProjectSquare\Repositories\TodoRepository;
 
-class InMemoryTaskRepository implements TaskRepository
+class InMemoryTodoRepository implements TodoRepository
 {
     public $objects;
 
@@ -19,7 +19,7 @@ class InMemoryTaskRepository implements TaskRepository
         return count($this->objects) + 1;
     }
 
-    public function getTask($eventID)
+    public function getTodo($eventID)
     {
         if (isset($this->objects[$eventID])) {
             return $this->objects[$eventID];
@@ -28,7 +28,7 @@ class InMemoryTaskRepository implements TaskRepository
         return false;
     }
 
-    public function getTasks($projectID)
+    public function getTodos($projectID)
     {
         $result = [];
         foreach ($this->objects as $event) {
@@ -40,7 +40,7 @@ class InMemoryTaskRepository implements TaskRepository
         return $result;
     }
 
-    public function persistTask(Task $event)
+    public function persistTodo(Todo $event)
     {
         if (!isset($event->id)) {
             $event->id = self::getNextID();
@@ -50,7 +50,7 @@ class InMemoryTaskRepository implements TaskRepository
         return $event;
     }
 
-    public function removeTask($eventID)
+    public function removeTodo($eventID)
     {
         if (isset($this->objects[$eventID])) {
             unset($this->objects[$eventID]);
