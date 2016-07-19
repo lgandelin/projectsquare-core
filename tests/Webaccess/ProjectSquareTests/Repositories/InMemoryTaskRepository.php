@@ -19,6 +19,11 @@ class InMemoryTaskRepository implements TaskRepository
         return count($this->objects) + 1;
     }
 
+    public function getTask($taskID)
+    {
+        return $this->objects[$taskID];
+    }
+
     public function getTasks($projectID = null)
     {
         $result = [];

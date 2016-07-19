@@ -7,6 +7,7 @@ use Webaccess\ProjectSquare\Entities\Task;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
+use Webaccess\ProjectSquare\Responses\Tasks\CreateTaskResponse;
 
 class CreateTaskInteractor
 {
@@ -20,7 +21,11 @@ class CreateTaskInteractor
     {
         $this->validateRequest($request);
 
-        return $this->createTicket($request);
+        $task = $this->createTicket($request);
+
+        return new CreateTaskResponse([
+            'task' => $task,
+        ]);
     }
 
     private function createTicket(CreateTaskRequest $request)
