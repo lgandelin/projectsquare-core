@@ -5,7 +5,7 @@ namespace Webaccess\ProjectSquare\Entities;
 class Task
 {
     public $id;
-    public $name;
+    public $title;
     public $status;
     public $projectID;
     public $startDate;

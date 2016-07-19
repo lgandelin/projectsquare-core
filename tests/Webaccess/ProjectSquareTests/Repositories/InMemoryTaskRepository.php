@@ -2,6 +2,7 @@
 
 namespace Webaccess\ProjectSquareTests\Repositories;
 
+use Webaccess\ProjectSquare\Entities\Task;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 
 class InMemoryTaskRepository implements TaskRepository
@@ -11,6 +12,11 @@ class InMemoryTaskRepository implements TaskRepository
     public function __construct()
     {
         $this->objects = [];
+    }
+
+    public function getNextID()
+    {
+        return count($this->objects) + 1;
     }
 
     public function getTasks($projectID = null)
@@ -23,5 +29,15 @@ class InMemoryTaskRepository implements TaskRepository
         }
 
         return $result;
+    }
+
+    public function persistTask(Task $task)
+    {
+        if (!isset($task->id)) {
+            $task->id = self::getNextID();
+        }
+        $this->objects[$task->id]= $task;
+
+        return $task;
     }
 }
