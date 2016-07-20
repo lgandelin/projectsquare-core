@@ -7,8 +7,11 @@ use Webaccess\ProjectSquare\Requests\Request;
 class CreateTaskRequest extends Request
 {
     public $title;
-    public $status;
+    public $statusID;
+    public $description;
+    public $estimatedTime;
     public $projectID;
     public $startDate;
     public $endDate;
+    public $allocatedUserID;
 }

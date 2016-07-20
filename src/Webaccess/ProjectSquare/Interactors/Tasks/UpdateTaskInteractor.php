@@ -18,10 +18,11 @@ class UpdateTaskInteractor
     public function execute(UpdateTaskRequest $request)
     {
         $task = $this->getTask($request->taskID);
-
-        if ($request->title) {
-            $task->title = $request->title;
-        }
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->estimatedTime = $request->estimatedTime;
+        $task->statusID = $request->statusID;
+        $task->allocatedUserID = $request->allocatedUserID;
 
         if ($request->projectID) {
             $this->validateProject($request->projectID);

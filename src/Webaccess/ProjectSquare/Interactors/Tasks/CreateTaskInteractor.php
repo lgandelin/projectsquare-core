@@ -19,8 +19,6 @@ class CreateTaskInteractor
 
     public function execute(CreateTaskRequest $request)
     {
-        $this->validateRequest($request);
-
         $task = $this->createTicket($request);
 
         return new CreateTaskResponse([
@@ -32,22 +30,22 @@ class CreateTaskInteractor
     {
         $task = new Task();
         $task->title = $request->title;
-        $task->status = $request->status;
-        $task->projectID = $request->projectID;
-        $task->startDate = $request->startDate;
-        $task->endDate = $request->endDate;
+        $task->description = $request->description;
+        $task->estimatedTime = $request->estimatedTime;
+        $task->statusID = $request->statusID;
+        $task->allocatedUserID = $request->allocatedUserID;
+
+        if ($request->projectID) {
+            $this->validateProject($request->projectID);
+            $task->projectID = $request->projectID;
+        }
 
         return $this->repository->persistTask($task);
     }
 
-    private function validateRequest(CreateTaskRequest $request)
+    private function validateProject($projectID)
     {
-        $this->validateProject($request);
-    }
-
-    private function validateProject(CreateTaskRequest $request)
-    {
-        if (!$project = $this->projectRepository->getProject($request->projectID)) {
+        if (!$project = $this->projectRepository->getProject($projectID)) {
             throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
         }
     }

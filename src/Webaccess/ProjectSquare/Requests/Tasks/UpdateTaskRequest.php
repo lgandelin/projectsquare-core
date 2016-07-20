@@ -8,8 +8,11 @@ class UpdateTaskRequest extends Request
 {
     public $taskID;
     public $title;
-    public $status;
+    public $statusID;
+    public $description;
+    public $estimatedTime;
     public $projectID;
     public $startDate;
     public $endDate;
+    public $allocatedUserID;
 }

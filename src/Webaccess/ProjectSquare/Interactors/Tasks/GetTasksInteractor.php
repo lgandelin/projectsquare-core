@@ -14,6 +14,6 @@ class GetTasksInteractor
 
     public function execute(GetTasksRequest $request)
     {
-        return $this->repository->getTasks($request->projectID);
+        return $this->repository->getTasks($request->projectID, $request->statusID, $request->allocatedUserID);
     }
 }
