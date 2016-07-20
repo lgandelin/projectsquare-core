@@ -21,7 +21,11 @@ class InMemoryTaskRepository implements TaskRepository
 
     public function getTask($taskID)
     {
-        return $this->objects[$taskID];
+        if (isset($this->objects[$taskID])) {
+            return $this->objects[$taskID];
+        }
+
+        return false;
     }
 
     public function getTasks($projectID = null)
