@@ -45,4 +45,11 @@ class InMemoryTaskRepository implements TaskRepository
 
         return $task;
     }
+
+    public function deleteTask($taskID)
+    {
+        if (isset($this->objects[$taskID])) {
+            unset($this->objects[$taskID]);
+        }
+    }
 }

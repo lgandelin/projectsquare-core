@@ -19,11 +19,11 @@ class UpdateTaskInteractorTest extends BaseTestCase
         $task = $this->createSampleTask($project->id);
 
         $this->interactor->execute(new UpdateTaskRequest([
-            'taskID' => 1,
+            'taskID' => $task->id,
             'title' => 'Tâche modifiée',
         ]));
 
-        $this->assertEquals('Tâche modifiée', $this->taskRepository->objects[1]->title);
+        $this->assertEquals('Tâche modifiée', $this->taskRepository->objects[$task->id]->title);
     }
 
     /**
@@ -35,11 +35,8 @@ class UpdateTaskInteractorTest extends BaseTestCase
         $task = $this->createSampleTask($project->id);
 
         $this->interactor->execute(new UpdateTaskRequest([
-            'taskID' => 1,
-            'title' => 'Tâche modifiée',
+            'taskID' => $task->id,
             'projectID' => 2,
         ]));
-
-        $this->assertEquals('Tâche modifiée', $this->taskRepository->objects[1]->title);
     }
 }
