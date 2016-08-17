@@ -28,11 +28,25 @@ class InMemoryTaskRepository implements TaskRepository
         return false;
     }
 
-    public function getTasks($projectID = null)
+    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null)
     {
         $result = [];
         foreach ($this->objects as $task) {
-            if (!$projectID || $projectID && $task->projectID == $projectID) {
+            $include = true;
+
+            if ($projectID && $task->projectID != $projectID) {
+                $include = false;
+            }
+
+            if ($statusID && $task->statusID != $statusID) {
+                $include = false;
+            }
+
+            if ($allocatedUserID && $task->allocatedUserID == $allocatedUserID) {
+                $include = false;
+            }
+
+            if ($include) {
                 $result[]= $task;
             }
         }
