@@ -9,7 +9,10 @@ class CreateTaskRequest extends Request
     public $title;
     public $statusID;
     public $description;
-    public $estimatedTime;
+    public $estimatedTimeDays;
+    public $estimatedTimeHours;
+    public $spentTimeDays;
+    public $spentTimeHours;
     public $projectID;
     public $startDate;
     public $endDate;

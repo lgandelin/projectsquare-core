@@ -7,7 +7,10 @@ class Task
     public $id;
     public $title;
     public $description;
-    public $estimatedTime;
+    public $estimatedTimeDays;
+    public $estimatedTimeHours;
+    public $spentTimeDays;
+    public $spentTimeHours;
     public $statusID;
     public $projectID;
     public $startDate;

@@ -20,7 +20,10 @@ class UpdateTaskInteractor
         $task = $this->getTask($request->taskID);
         $task->title = $request->title;
         $task->description = $request->description;
-        $task->estimatedTime = $request->estimatedTime;
+        $task->estimatedTimeDays = $request->estimatedTimeDays;
+        $task->estimatedTimeHours = $request->estimatedTimeHours;
+        $task->spentTimeDays = $request->spentTimeDays;
+        $task->spentTimeHours = $request->spentTimeHours;
         $task->statusID = $request->statusID;
         $task->allocatedUserID = $request->allocatedUserID;
 
