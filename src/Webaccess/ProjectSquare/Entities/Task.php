@@ -4,6 +4,10 @@ namespace Webaccess\ProjectSquare\Entities;
 
 class Task
 {
+    const TODO = 1;
+    const IN_PROGRESS = 2;
+    const COMPLETED = 3;
+
     public $id;
     public $title;
     public $description;

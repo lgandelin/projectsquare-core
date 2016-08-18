@@ -9,4 +9,5 @@ class GetTasksRequest extends Request
     public $projectID;
     public $statusID;
     public $allocatedUserID;
+    public $entities;
 }

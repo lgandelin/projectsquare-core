@@ -5,6 +5,7 @@ namespace Webaccess\ProjectSquare\Interactors\Progress;
 use Webaccess\ProjectSquare\Interactors\Tasks\GetTasksInteractor;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Requests\Tasks\GetTasksRequest;
+use Webaccess\ProjectSquare\Responses\Progress\GetTasksTotalTimeResponse;
 
 class GetTasksTotalTimeInteractor
 {
@@ -19,7 +20,8 @@ class GetTasksTotalTimeInteractor
     public function getTasksTotalEstimatedTime($projectID)
     {
         $tasks = $this->getTasksInteractor->execute(new GetTasksRequest([
-            'projectID' => $projectID
+            'projectID' => $projectID,
+            'entities' => true
         ]));
 
         $totalEstimatedTimeDays = 0;
@@ -37,6 +39,31 @@ class GetTasksTotalTimeInteractor
             $totalEstimatedTimeHours = $totalEstimatedTimeHours % self::HOURS_IN_DAY;
         }
 
-        return array($totalEstimatedTimeDays, $totalEstimatedTimeHours);
+        return new GetTasksTotalTimeResponse(['days' => $totalEstimatedTimeDays, 'hours' => $totalEstimatedTimeHours]);
+    }
+
+    public function getTasksTotalSpentTime($projectID)
+    {
+        $tasks = $this->getTasksInteractor->execute(new GetTasksRequest([
+            'projectID' => $projectID,
+            'entities' => true
+        ]));
+
+        $totalSpentTimeDays = 0;
+        $totalSpentTimeHours = 0;
+
+        if (is_array($tasks) && sizeof($tasks) > 0) {
+            foreach ($tasks as $task) {
+                $totalSpentTimeDays += $task->spentTimeDays;
+                $totalSpentTimeHours += $task->spentTimeHours;
+            }
+        }
+
+        if ($totalSpentTimeHours >= self::HOURS_IN_DAY) {
+            $totalSpentTimeDays += floor($totalSpentTimeHours / self::HOURS_IN_DAY);
+            $totalSpentTimeHours = $totalSpentTimeHours % self::HOURS_IN_DAY;
+        }
+
+        return new GetTasksTotalTimeResponse(['days' => $totalSpentTimeDays, 'hours' => $totalSpentTimeHours]);
     }
 }
