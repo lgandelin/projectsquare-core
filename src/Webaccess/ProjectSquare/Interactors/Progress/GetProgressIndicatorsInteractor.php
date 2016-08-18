@@ -44,4 +44,12 @@ class GetProgressIndicatorsInteractor
 
         return ($scheduledTimeInDays > 0) ? -floor(100 * ($spentTimeInDays / $scheduledTimeInDays - 1)) : 0;
     }
+
+    public function getSpentTimePercentage($scheduledTimeInDays, $spentTime)
+    {
+        $spentTimeInDays = $spentTime->days + $spentTime->hours / GetTasksTotalTimeInteractor::HOURS_IN_DAY;
+        $spentTimePercentage = ($scheduledTimeInDays > 0) ? floor($spentTimeInDays * 100 / $scheduledTimeInDays) : 0;
+
+        return ($spentTimePercentage < 100) ? $spentTimePercentage : 100;
+    }
 }
