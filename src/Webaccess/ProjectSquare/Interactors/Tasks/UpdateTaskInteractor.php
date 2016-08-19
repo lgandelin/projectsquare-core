@@ -18,14 +18,14 @@ class UpdateTaskInteractor
     public function execute(UpdateTaskRequest $request)
     {
         $task = $this->getTask($request->taskID);
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->estimatedTimeDays = $request->estimatedTimeDays;
-        $task->estimatedTimeHours = $request->estimatedTimeHours;
-        $task->spentTimeDays = $request->spentTimeDays;
-        $task->spentTimeHours = $request->spentTimeHours;
-        $task->statusID = $request->statusID;
-        $task->allocatedUserID = $request->allocatedUserID;
+        if ($request->title !== null) $task->title = $request->title;
+        if ($request->description !== null) $task->description = $request->description;
+        if ($request->estimatedTimeDays !== null) $task->estimatedTimeDays = $request->estimatedTimeDays;
+        if ($request->estimatedTimeHours !== null) $task->estimatedTimeHours = $request->estimatedTimeHours;
+        if ($request->spentTimeDays !== null) $task->spentTimeDays = $request->spentTimeDays;
+        if ($request->spentTimeHours !== null) $task->spentTimeHours = $request->spentTimeHours;
+        if ($request->statusID !== null) $task->statusID = $request->statusID;
+        if ($request->allocatedUserID !== null) $task->allocatedUserID = $request->allocatedUserID;
 
         if ($request->projectID) {
             $this->validateProject($request->projectID);

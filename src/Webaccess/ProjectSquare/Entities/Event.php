@@ -10,5 +10,6 @@ class Event
     public $startTime;
     public $endTime;
     public $ticketID;
+    public $taskID;
     public $projectID;
 }
