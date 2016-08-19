@@ -12,7 +12,10 @@ class UpdateTicketRequest extends Request
     public $allocatedUserID;
     public $priority;
     public $dueDate;
-    public $estimatedTime;
+    public $estimatedTimeDays;
+    public $estimatedTimeHours;
+    public $spentTimeDays;
+    public $spentTimeHours;
     public $comments;
     public $requesterUserID;
 }
