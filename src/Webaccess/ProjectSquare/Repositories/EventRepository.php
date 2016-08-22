@@ -8,7 +8,7 @@ interface EventRepository
 {
     public function getEvent($eventID);
 
-    public function getEvents($userID, $projectID);
+    public function getEvents($userID, $projectID, $ticketID, $taskID);
 
     public function persistEvent(Event $event);
 

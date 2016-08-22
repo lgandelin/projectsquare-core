@@ -3,30 +3,36 @@
 namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
-use Webaccess\ProjectSquare\Entities\Task;
-use Webaccess\ProjectSquare\Events\Events;
-use Webaccess\ProjectSquare\Events\Tasks\UpdateTaskEvent;
+use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Requests\Tasks\UpdateTaskRequest;
-use Webaccess\ProjectSquare\Responses\Tasks\UpdateTaskResponse;
 
 class UpdateTaskInteractor
 {
-    public function __construct(TaskRepository $repository)
+    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository)
     {
-        $this->repository = $repository;
+        $this->repository = $taskRepository;
+        $this->projectRepository = $projectRepository;
     }
 
     public function execute(UpdateTaskRequest $request)
     {
         $task = $this->getTask($request->taskID);
-        $this->validateRequest($task, $request);
-        $this->updateTask($task, $request);
-        $this->dispatchEvent($task);
+        if ($request->title !== null) $task->title = $request->title;
+        if ($request->description !== null) $task->description = $request->description;
+        if ($request->estimatedTimeDays !== null) $task->estimatedTimeDays = $request->estimatedTimeDays;
+        if ($request->estimatedTimeHours !== null) $task->estimatedTimeHours = $request->estimatedTimeHours;
+        if ($request->spentTimeDays !== null) $task->spentTimeDays = $request->spentTimeDays;
+        if ($request->spentTimeHours !== null) $task->spentTimeHours = $request->spentTimeHours;
+        if ($request->statusID !== null) $task->statusID = $request->statusID;
+        if ($request->allocatedUserID !== null) $task->allocatedUserID = $request->allocatedUserID;
 
-        return new UpdateTaskResponse([
-            'task' => $task,
-        ]);
+        if ($request->projectID) {
+            $this->validateProject($request->projectID);
+            $task->projectID = $request->projectID;
+        }
+
+        $this->repository->persistTask($task);
     }
 
     private function getTask($taskID)
@@ -38,33 +44,10 @@ class UpdateTaskInteractor
         return $task;
     }
 
-    private function validateRequest(Task $task, UpdateTaskRequest $request)
+    private function validateProject($projectID)
     {
-        if (!$this->isUserAuthorizedToUpdateTask($request->requesterUserID, $task)) {
-            throw new \Exception(Context::get('translator')->translate('tasks.update_not_allowed'));
+        if (!$project = $this->projectRepository->getProject($projectID)) {
+            throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
         }
-    }
-
-    private function isUserAuthorizedToUpdateTask($userID, $task)
-    {
-        return $userID == $task->userID;
-    }
-
-    private function updateTask(Task $task, UpdateTaskRequest $request)
-    {
-        if ($request->name) {
-            $task->name = $request->name;
-        }
-        $task->status = $request->status;
-
-        $this->repository->persistTask($task);
-    }
-
-    private function dispatchEvent(Task $task)
-    {
-        Context::get('event_dispatcher')->dispatch(
-            Events::UPDATE_TASK,
-            new UpdateTaskEvent($task)
-        );
     }
 }

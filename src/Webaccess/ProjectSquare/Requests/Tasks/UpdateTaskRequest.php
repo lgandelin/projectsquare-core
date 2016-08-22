@@ -7,7 +7,15 @@ use Webaccess\ProjectSquare\Requests\Request;
 class UpdateTaskRequest extends Request
 {
     public $taskID;
-    public $name;
-    public $status;
-    public $requesterUserID;
+    public $title;
+    public $statusID;
+    public $description;
+    public $estimatedTimeDays;
+    public $estimatedTimeHours;
+    public $spentTimeDays;
+    public $spentTimeHours;
+    public $projectID;
+    public $startDate;
+    public $endDate;
+    public $allocatedUserID;
 }

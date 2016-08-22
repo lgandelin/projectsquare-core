@@ -6,31 +6,36 @@ use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Event;
 use Webaccess\ProjectSquare\Events\Planning\CreateEventEvent;
 use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Interactors\Tasks\UpdateTaskInteractor;
 use Webaccess\ProjectSquare\Interactors\Tickets\UpdateTicketInteractor;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
+use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
 use Webaccess\ProjectSquare\Requests\Planning\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
+use Webaccess\ProjectSquare\Requests\Tasks\UpdateTaskRequest;
 use Webaccess\ProjectSquare\Requests\Tickets\UpdateTicketRequest;
 use Webaccess\ProjectSquare\Responses\Planning\CreateEventResponse;
 use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 
 class CreateEventInteractor
 {
-    public function __construct(EventRepository $repository, NotificationRepository $notificationRepository, TicketRepository $ticketRepository, ProjectRepository $projectRepository)
+    public function __construct(EventRepository $repository, NotificationRepository $notificationRepository, TicketRepository $ticketRepository, ProjectRepository $projectRepository, TaskRepository $taskRepository)
     {
         $this->repository = $repository;
         $this->notificationRepository = $notificationRepository;
         $this->ticketRepository = $ticketRepository;
         $this->projectRepository = $projectRepository;
+        $this->taskRepository = $taskRepository;
     }
 
     public function execute(CreateEventRequest $request)
     {
         $this->validateRequest($request);
         $this->allocateTicketIfRequired($request);
+        $this->allocateTaskIfRequired($request);
         $event = $this->createEvent($request);
         $this->createNotificationIfRequired($request, $event);
         $this->dispatchEvent($event);
@@ -62,6 +67,7 @@ class CreateEventInteractor
         $event->startTime = $request->startTime;
         $event->endTime = $request->endTime;
         $event->ticketID = $request->ticketID;
+        $event->taskID = $request->taskID;
         $event->projectID = $request->projectID;
 
         return $this->repository->persistEvent($event);
@@ -96,6 +102,17 @@ class CreateEventInteractor
         if ($request->ticketID) {
             (new UpdateTicketInteractor($this->ticketRepository, $this->projectRepository))->execute(new UpdateTicketRequest([
                 'ticketID' => $request->ticketID,
+                'allocatedUserID' => $request->userID,
+                'requesterUserID' => $request->userID,
+            ]));
+        }
+    }
+
+    private function allocateTaskIfRequired(CreateEventRequest $request)
+    {
+        if ($request->taskID) {
+            (new UpdateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new UpdateTaskRequest([
+                'taskID' => $request->taskID,
                 'allocatedUserID' => $request->userID,
                 'requesterUserID' => $request->userID,
             ]));

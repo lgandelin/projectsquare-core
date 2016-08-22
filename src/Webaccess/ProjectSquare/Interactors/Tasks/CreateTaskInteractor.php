@@ -4,44 +4,52 @@ namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Task;
-use Webaccess\ProjectSquare\Events\Events;
-use Webaccess\ProjectSquare\Events\Tasks\CreateTaskEvent;
+use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
 use Webaccess\ProjectSquare\Responses\Tasks\CreateTaskResponse;
 
 class CreateTaskInteractor
 {
-    public function __construct(TaskRepository $repository)
+    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository)
     {
-        $this->repository = $repository;
+        $this->repository = $taskRepository;
+        $this->projectRepository = $projectRepository;
     }
 
     public function execute(CreateTaskRequest $request)
     {
-        $task = $this->createTask($request);
-        $this->dispatchTask($task);
+        $task = $this->createTicket($request);
 
         return new CreateTaskResponse([
             'task' => $task,
         ]);
     }
 
-    private function createTask(CreateTaskRequest $request)
+    private function createTicket(CreateTaskRequest $request)
     {
         $task = new Task();
-        $task->name = $request->name;
-        $task->userID = $request->userID;
-        $task->status = $request->status;
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->estimatedTimeDays = $request->estimatedTimeDays;
+        $task->estimatedTimeHours = $request->estimatedTimeHours;
+        $task->spentTimeDays = $request->spentTimeDays;
+        $task->spentTimeHours = $request->spentTimeHours;
+        $task->statusID = $request->statusID;
+        $task->allocatedUserID = $request->allocatedUserID;
+
+        if ($request->projectID) {
+            $this->validateProject($request->projectID);
+            $task->projectID = $request->projectID;
+        }
 
         return $this->repository->persistTask($task);
     }
 
-    private function dispatchTask(Task $task)
+    private function validateProject($projectID)
     {
-        Context::get('event_dispatcher')->dispatch(
-            Events::CREATE_TASK,
-            new CreateTaskEvent($task)
-        );
+        if (!$project = $this->projectRepository->getProject($projectID)) {
+            throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
+        }
     }
 }

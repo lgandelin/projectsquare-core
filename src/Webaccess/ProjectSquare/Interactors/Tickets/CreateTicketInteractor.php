@@ -117,7 +117,10 @@ class CreateTicketInteractor
         $ticketState->allocatedUserID = $request->allocatedUserID;
         $ticketState->priority = $request->priority;
         $ticketState->dueDate = $request->dueDate;
-        $ticketState->estimatedTime = $request->estimatedTime;
+        $ticketState->estimatedTimeDays = $request->estimatedTimeDays;
+        $ticketState->estimatedTimeHours = $request->estimatedTimeHours;
+        $ticketState->spentTimeDays = $request->spentTimeDays;
+        $ticketState->spentTimeHours = $request->spentTimeHours;
         $ticketState->comments = $request->comments;
 
         return $this->repository->persistTicketState($ticketState);

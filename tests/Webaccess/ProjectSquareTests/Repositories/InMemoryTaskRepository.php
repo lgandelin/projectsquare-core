@@ -19,41 +19,55 @@ class InMemoryTaskRepository implements TaskRepository
         return count($this->objects) + 1;
     }
 
-    public function getTask($eventID)
+    public function getTask($taskID)
     {
-        if (isset($this->objects[$eventID])) {
-            return $this->objects[$eventID];
+        if (isset($this->objects[$taskID])) {
+            return $this->objects[$taskID];
         }
 
         return false;
     }
 
-    public function getTasks($projectID)
+    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null)
     {
         $result = [];
-        foreach ($this->objects as $event) {
-            if ($event->projectID == $projectID) {
-                $result[]= $event;
+        foreach ($this->objects as $task) {
+            $include = true;
+
+            if ($projectID && $task->projectID != $projectID) {
+                $include = false;
+            }
+
+            if ($statusID && $task->statusID != $statusID) {
+                $include = false;
+            }
+
+            if ($allocatedUserID && $task->allocatedUserID == $allocatedUserID) {
+                $include = false;
+            }
+
+            if ($include) {
+                $result[]= $task;
             }
         }
 
         return $result;
     }
 
-    public function persistTask(Task $event)
+    public function persistTask(Task $task)
     {
-        if (!isset($event->id)) {
-            $event->id = self::getNextID();
+        if (!isset($task->id)) {
+            $task->id = self::getNextID();
         }
-        $this->objects[$event->id]= $event;
+        $this->objects[$task->id]= $task;
 
-        return $event;
+        return $task;
     }
 
-    public function removeTask($eventID)
+    public function deleteTask($taskID)
     {
-        if (isset($this->objects[$eventID])) {
-            unset($this->objects[$eventID]);
+        if (isset($this->objects[$taskID])) {
+            unset($this->objects[$taskID]);
         }
     }
 }

@@ -13,10 +13,12 @@ use Webaccess\ProjectSquare\Interactors\Planning\CreateEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
 use Webaccess\ProjectSquare\Interactors\Calendar\CreateStepInteractor;
 use Webaccess\ProjectSquare\Interactors\Tasks\CreateTaskInteractor;
+use Webaccess\ProjectSquare\Interactors\Todos\CreateTodoInteractor;
 use Webaccess\ProjectSquare\Requests\Planning\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateStepRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
+use Webaccess\ProjectSquare\Requests\Todos\CreateTodoRequest;
 use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
@@ -25,6 +27,7 @@ use Webaccess\ProjectSquareTests\Repositories\InMemoryNotificationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryProjectRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryStepRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryTaskRepository;
+use Webaccess\ProjectSquareTests\Repositories\InMemoryTodoRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryTicketRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryUserRepository;
 
@@ -40,6 +43,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->eventRepository = new InMemoryEventRepository();
         $this->notificationRepository = new InMemoryNotificationRepository();
         $this->stepRepository = new InMemoryStepRepository();
+        $this->todoRepository = new InMemoryTodoRepository();
         $this->taskRepository = new InMemoryTaskRepository();
 
         Context::set('translator', new DummyTranslator());
@@ -110,7 +114,8 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             $this->eventRepository,
             $this->notificationRepository,
             $this->ticketRepository,
-            $this->projectRepository
+            $this->projectRepository,
+            $this->taskRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),
@@ -138,13 +143,26 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $response->step;
     }
 
-    protected function createSampleTask($userID)
+    protected function createSampleTodo($userID)
+    {
+        $response = (new CreateTodoInteractor(
+            $this->todoRepository
+        ))->execute(new CreateTodoRequest([
+            'name' => 'Sample todo',
+            'userID' => $userID
+        ]));
+
+        return $response->todo;
+    }
+
+    protected function createSampleTask($projectID = null)
     {
         $response = (new CreateTaskInteractor(
-            $this->taskRepository
+            $this->taskRepository,
+            $this->projectRepository
         ))->execute(new CreateTaskRequest([
-            'name' => 'Sample task',
-            'userID' => $userID
+            'title' => 'Sample task',
+            'projectID' => $projectID
         ]));
 
         return $response->task;

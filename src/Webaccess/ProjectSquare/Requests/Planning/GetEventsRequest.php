@@ -9,4 +9,5 @@ class GetEventsRequest extends Request
     public $userID;
     public $projectID;
     public $ticketID;
+    public $taskID;
 }

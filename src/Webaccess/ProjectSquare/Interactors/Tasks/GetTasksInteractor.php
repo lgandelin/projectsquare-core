@@ -7,15 +7,13 @@ use Webaccess\ProjectSquare\Requests\Tasks\GetTasksRequest;
 
 class GetTasksInteractor
 {
-    protected $repository;
-
-    public function __construct(TaskRepository $repository)
+    public function __construct(TaskRepository $taskRepository)
     {
-        $this->repository = $repository;
+        $this->repository = $taskRepository;
     }
 
     public function execute(GetTasksRequest $request)
     {
-        return $this->repository->getTasks($request->userID);
+        return $this->repository->getTasks($request->projectID, $request->statusID, $request->allocatedUserID, $request->entities);
     }
 }

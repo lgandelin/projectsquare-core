@@ -6,11 +6,11 @@ use Webaccess\ProjectSquare\Entities\Task;
 
 interface TaskRepository
 {
-    public function getTask($eventID);
+    public function getTask($taskID);
 
-    public function getTasks($projectID);
+    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null);
 
     public function persistTask(Task $task);
 
-    public function removeTask($eventID);
+    public function deleteTask($taskID);
 }
