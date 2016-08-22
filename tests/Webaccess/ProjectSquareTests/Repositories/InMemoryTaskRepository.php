@@ -70,4 +70,9 @@ class InMemoryTaskRepository implements TaskRepository
             unset($this->objects[$taskID]);
         }
     }
+
+    public function getTasksPaginatedList($limit, $projectID = null, $statusID = null, $allocatedUserID = null)
+    {
+        // TODO: Implement getTasksPaginatedList() method.
+    }
 }
