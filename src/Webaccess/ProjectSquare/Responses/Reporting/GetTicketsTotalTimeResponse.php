@@ -1,6 +1,6 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Responses\Progress;
+namespace Webaccess\ProjectSquare\Responses\Reporting;
 
 use Webaccess\ProjectSquare\Responses\Response;
 

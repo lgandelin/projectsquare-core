@@ -3,27 +3,27 @@
 namespace Webaccess\ProjectSquare\Responses\Progress;
 
 use Webaccess\ProjectSquare\Entities\Task;
-use Webaccess\ProjectSquare\Interactors\Progress\GetProgressIndicatorsInteractor;
+use Webaccess\ProjectSquare\Interactors\Reporting\GetReportingIndicatorsInteractor;
 use Webaccess\ProjectSquare\Interactors\Tasks\CreateTaskInteractor;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
 use Webaccess\ProjectSquareTests\BaseTestCase;
 
-class GetProgressIndicatorsTest extends BaseTestCase
+class GetReportingIndicatorsTest extends BaseTestCase
 {
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new GetProgressIndicatorsInteractor($this->taskRepository);
+        $this->interactor = new GetReportingIndicatorsInteractor($this->taskRepository);
     }
 
-    public function testGetProgressIndicatorWithZeroTasks()
+    public function testGetReportingIndicatorWithZeroTasks()
     {
         $project = $this->createSampleProject();
 
         $this->assertEquals(0, $this->interactor->getProgressPercentage($project->id));
     }
 
-    public function testGetProgressIndicator()
+    public function testGetReportingIndicator()
     {
         $project = $this->createSampleProject();
 

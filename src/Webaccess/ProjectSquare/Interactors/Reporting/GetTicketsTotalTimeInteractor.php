@@ -1,10 +1,10 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Interactors\Progress;
+namespace Webaccess\ProjectSquare\Interactors\Reporting;
 
 use Webaccess\ProjectSquare\Interactors\Tickets\GetTicketInteractor;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
-use Webaccess\ProjectSquare\Responses\Progress\GetTicketsTotalTimeResponse;
+use Webaccess\ProjectSquare\Responses\Reporting\GetTicketsTotalTimeResponse;
 
 class GetTicketsTotalTimeInteractor
 {

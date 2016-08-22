@@ -1,9 +1,9 @@
 <?php
 
-use Webaccess\ProjectSquare\Interactors\Progress\GetTasksTotalTimeInteractor;
+use Webaccess\ProjectSquare\Interactors\Reporting\GetTasksTotalTimeInteractor;
 use Webaccess\ProjectSquare\Interactors\Tasks\CreateTaskInteractor;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
-use Webaccess\ProjectSquare\Responses\Progress\GetTasksTotalTimeResponse;
+use Webaccess\ProjectSquare\Responses\Reporting\GetTasksTotalTimeResponse;
 use Webaccess\ProjectSquareTests\BaseTestCase;
 
 class GetTasksTotalTimeInteractorTest extends BaseTestCase

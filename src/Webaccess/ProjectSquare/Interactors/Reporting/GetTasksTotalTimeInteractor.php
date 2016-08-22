@@ -1,11 +1,11 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Interactors\Progress;
+namespace Webaccess\ProjectSquare\Interactors\Reporting;
 
 use Webaccess\ProjectSquare\Interactors\Tasks\GetTasksInteractor;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Requests\Tasks\GetTasksRequest;
-use Webaccess\ProjectSquare\Responses\Progress\GetTasksTotalTimeResponse;
+use Webaccess\ProjectSquare\Responses\Reporting\GetTasksTotalTimeResponse;
 
 class GetTasksTotalTimeInteractor
 {

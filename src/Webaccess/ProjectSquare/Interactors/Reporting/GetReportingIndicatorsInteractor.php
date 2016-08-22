@@ -1,13 +1,13 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Interactors\Progress;
+namespace Webaccess\ProjectSquare\Interactors\Reporting;
 
 use Webaccess\ProjectSquare\Entities\Task;
 use Webaccess\ProjectSquare\Interactors\Tasks\GetTasksInteractor;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Requests\Tasks\GetTasksRequest;
 
-class GetProgressIndicatorsInteractor
+class GetReportingIndicatorsInteractor
 {
     public function __construct(TaskRepository $taskRepository)
     {
