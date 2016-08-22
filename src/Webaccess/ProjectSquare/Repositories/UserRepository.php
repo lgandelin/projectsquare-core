@@ -6,6 +6,8 @@ interface UserRepository
 {
     public function getUser($userID);
 
+    public function getUserByEmail($userEmail);
+
     public function getUsers();
 
     public function getAgencyUsers();
