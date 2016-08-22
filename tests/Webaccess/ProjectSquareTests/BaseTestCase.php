@@ -159,7 +159,9 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
-            $this->projectRepository
+            $this->projectRepository,
+            $this->userRepository,
+            $this->notificationRepository
         ))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $projectID

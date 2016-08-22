@@ -27,19 +27,19 @@ class GetReportingIndicatorsTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
 
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'statusID' => Task::TODO
         ]));
 
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'statusID' => Task::COMPLETED
         ]));
 
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'statusID' => Task::COMPLETED
