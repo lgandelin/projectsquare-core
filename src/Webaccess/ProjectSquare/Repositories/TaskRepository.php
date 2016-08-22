@@ -8,7 +8,7 @@ interface TaskRepository
 {
     public function getTask($taskID);
 
-    public function getTasks($projectID = null);
+    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null);
 
     public function persistTask(Task $task);
 

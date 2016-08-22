@@ -11,6 +11,9 @@ class TicketState
     public $statusID;
     public $priority;
     public $dueDate;
-    public $estimatedTime;
+    public $estimatedTimeDays;
+    public $estimatedTimeHours;
+    public $spentTimeDays;
+    public $spentTimeHours;
     public $comments;
 }

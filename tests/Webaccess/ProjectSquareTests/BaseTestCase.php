@@ -114,7 +114,8 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             $this->eventRepository,
             $this->notificationRepository,
             $this->ticketRepository,
-            $this->projectRepository
+            $this->projectRepository,
+            $this->taskRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),

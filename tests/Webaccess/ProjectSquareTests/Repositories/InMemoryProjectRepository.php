@@ -33,7 +33,7 @@ class InMemoryProjectRepository implements ProjectRepository
         // TODO: Implement getProjectsPaginatedList() method.
     }
 
-    public function updateProject($projectID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments, $color)
+    public function updateProject($projectID, $statusID, $authorUserID, $allocatedUserID, $priority, $dueDate, $comments, $color, $scheduledTime)
     {
         return self::getProject($projectID);
     }
@@ -74,7 +74,7 @@ class InMemoryProjectRepository implements ProjectRepository
         // TODO: Implement getProjectWithUsers() method.
     }
 
-    public function createProject($name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status, $color)
+    public function createProject($name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status, $color, $scheduledTime)
     {
         // TODO: Implement createProject() method.
     }

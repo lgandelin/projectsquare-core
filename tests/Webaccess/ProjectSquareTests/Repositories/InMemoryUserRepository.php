@@ -112,4 +112,15 @@ class InMemoryUserRepository implements UserRepository
     {
         // TODO: Implement getAgencyUsersPaginatedList() method.
     }
+
+    public function getUserByEmail($userEmail)
+    {
+        foreach ($this->objects as $user) {
+            if ($user->email == $userEmail) {
+                return $user;
+            }
+        }
+
+        return false;
+    }
 }

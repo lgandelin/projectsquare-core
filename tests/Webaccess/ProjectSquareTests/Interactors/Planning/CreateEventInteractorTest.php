@@ -13,7 +13,7 @@ class CreateEventInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateEventInteractor($this->eventRepository, $this->notificationRepository, $this->ticketRepository, $this->projectRepository);
+        $this->interactor = new CreateEventInteractor($this->eventRepository, $this->notificationRepository, $this->ticketRepository, $this->projectRepository, $this->taskRepository);
     }
 
     /**
