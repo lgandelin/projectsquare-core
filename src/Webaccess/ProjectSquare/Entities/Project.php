@@ -8,7 +8,8 @@ class Project
     public $name;
     public $clientID;
     public $color;
-    public $scheduledTime;
+    public $tasksScheduledTime;
+    public $ticketsScheduledTime;
     public $status;
     public $websiteFrontURL;
     public $websiteBackURL;
