@@ -28,7 +28,7 @@ class InMemoryTaskRepository implements TaskRepository
         return false;
     }
 
-    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null)
+    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null, $entities = false)
     {
         $result = [];
         foreach ($this->objects as $task) {
