@@ -34,20 +34,7 @@ class DeleteEventInteractor
 
     private function validateRequest(DeleteEventRequest $request, Event $event)
     {
-        //$this->validateRequesterPermissions($request, $event);
     }
-
-    /*private function validateRequesterPermissions(DeleteEventRequest $request, Event $event)
-    {
-        if (!$this->isUserAuthorizedToDeleteEvent($request->requesterUserID, $event)) {
-            throw new \Exception(Context::get('translator')->translate('events.event_delete_not_allowed'));
-        }
-    }
-
-    private function isUserAuthorizedToDeleteEvent($userID, Event $event)
-    {
-        return $userID == $event->userID;
-    }*/
 
     private function getEvent($eventID)
     {

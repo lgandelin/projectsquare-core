@@ -2,6 +2,8 @@
 
 namespace Webaccess\ProjectSquare\Repositories;
 
+use Webaccess\ProjectSquare\Entities\Project;
+
 interface ProjectRepository
 {
     public function getProject($projectID);
@@ -25,4 +27,6 @@ interface ProjectRepository
     public function isUserInProject($projectID, $userID);
 
     public function removeUserFromProject($project, $userID);
+
+    public function persistProject(Project $project);
 }
