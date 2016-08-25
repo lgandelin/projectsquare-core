@@ -77,9 +77,4 @@ class InMemoryNotificationRepository implements NotificationRepository
 
         return $result;
     }
-
-    public function getNotificationsByTicket($ticketID)
-    {
-        // TODO: Implement getNotificationsByTicket() method.
-    }
 }

@@ -34,9 +34,9 @@ class DeleteTicketInteractor extends GetTicketInteractor
     public function execute(DeleteTicketRequest $request)
     {
         $ticket = $this->getTicket($request->ticketID);
+        $this->validateRequest($request, $ticket);
         $this->deleteLinkedEvents($ticket->id);
         $this->deleteLinkedNotifications($ticket->id);
-        $this->validateRequest($request, $ticket);
         $this->dispatchEvent($ticket);
         $this->deleteTicket($ticket);
 
@@ -92,12 +92,6 @@ class DeleteTicketInteractor extends GetTicketInteractor
 
     private function deleteLinkedNotifications($ticketID)
     {
-        $notifications = (new GetNotificationsInteractor($this->notificationRepository))->getNotificationsByTicket($ticketID);
-        
-        if (is_array($notifications) && sizeof($notifications) > 0) {
-            foreach ($notifications as $notification) {
-                $this->notificationRepository->removeNotification($notification->id);
-            }
-        }
+        $this->notificationRepository->removeNotificationsByTypeAndEntityID('TICKET_CREATED', $ticketID);
     }
 }

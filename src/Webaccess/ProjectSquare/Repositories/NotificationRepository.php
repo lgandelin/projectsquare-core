@@ -17,6 +17,4 @@ interface NotificationRepository
     public function removeNotification($notificationID);
 
     public function removeNotificationsByTypeAndEntityID($type, $entityID);
-
-    public function getNotificationsByTicket($ticketID);
 }
