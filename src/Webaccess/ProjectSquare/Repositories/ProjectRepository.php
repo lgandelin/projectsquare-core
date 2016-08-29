@@ -16,6 +16,8 @@ interface ProjectRepository
 
     public function getProjectsPaginatedList($limit);
 
+    public function getProjectsByClientID($clientID);
+
     public function createProject($name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status, $color, $tasksScheduledTime, $ticketsScheduledTime);
 
     public function updateProject($projectID, $name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status, $color, $tasksScheduledTime, $ticketsScheduledTime);
