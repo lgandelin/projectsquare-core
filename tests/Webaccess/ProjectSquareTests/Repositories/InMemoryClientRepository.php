@@ -28,6 +28,11 @@ class InMemoryClientRepository implements ClientRepository
         return false;
     }
 
+    public function getClients()
+    {
+        return $this->objects;
+    }
+
     public function persistClient(Client $client)
     {
         if (!isset($client->id)) {
