@@ -25,6 +25,7 @@ class CreateTaskInteractor
 
     public function execute(CreateTaskRequest $request)
     {
+        $this->validateRequest($request);
         $task = $this->createTicket($request);
         $this->createNotifications($request, $task);
 
@@ -51,6 +52,19 @@ class CreateTaskInteractor
         }
 
         return $this->repository->persistTask($task);
+    }
+
+    private function validateRequest(CreateTaskRequest $request)
+    {
+        $this->validateTitle($request);
+
+    }
+
+    private function validateTitle(CreateTaskRequest $request)
+    {
+        if (!$request->title) {
+            throw new \Exception(Context::get('translator')->translate('tasks.title_required'));
+        }
     }
 
     private function validateProject($projectID)

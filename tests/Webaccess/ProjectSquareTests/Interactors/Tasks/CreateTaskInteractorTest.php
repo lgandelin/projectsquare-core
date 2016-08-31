@@ -37,4 +37,14 @@ class CreateTaskInteractorTest extends BaseTestCase
             'projectID' => 1,
         ]));
     }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testCreateTaskWithoutTitle()
+    { 
+        $this->interactor->execute(new CreateTaskRequest([
+            'title' => '',
+        ]));
+    }
 }
