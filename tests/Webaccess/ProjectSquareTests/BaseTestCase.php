@@ -85,11 +85,12 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $this->projectRepository->persistProject($project);
     }
 
-    protected function createSampleUser()
+    protected function createSampleUser($isAdministrator = false)
     {
         $user = new User();
         $user->firstName = 'John';
         $user->lastName = 'Doe';
+        $user->isAdministrator = $isAdministrator;
 
         return $this->userRepository->persistUser($user);
     }

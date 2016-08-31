@@ -11,14 +11,13 @@ class DeleteProjectInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeleteProjectInteractor($this->projectRepository, $this->ticketRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new DeleteProjectInteractor($this->projectRepository, $this->ticketRepository, $this->userRepository, $this->eventRepository, $this->notificationRepository);
     }
 
     public function testDeleteProject()
     {
         $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $user = $this->createSampleUser(true);
         $response = $this->interactor->execute(new DeleteProjectRequest([
             'projectID' => $project->id,
             'requesterUserID' => $user->id
@@ -40,7 +39,6 @@ class DeleteProjectInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $project = $this->createSampleProject($project->id);
         $this->interactor->execute(new DeleteProjectRequest([
             'projectID' => $project->id,
             'requesterUserID' => $user->id
@@ -52,22 +50,22 @@ class DeleteProjectInteractorTest extends BaseTestCase
      */
     public function testDeleteNonExistingProject()
     {
+        $user = $this->createSampleUser();
         $this->interactor->execute(new DeleteProjectRequest([
             'projectID' => 2,
-            //'requesterUserID' => $user->id
+            'requesterUserID' => $user->id
         ]));
     }
 
     public function testDeleteProjectAlongWithTickets()
     {
         $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
-        $ticket1ID = $this->createSampleTicket('Sample ticket 1', $project->id, 'Lorem ipsum dolor sit amet');
-        $ticket2ID = $this->createSampleTicket('Sample ticket 2', $project->id, 'Lorem ipsum dolor sit amet');
+        $user = $this->createSampleUser(true);
+        $this->createSampleTicket('Sample ticket 1', $project->id, 'Lorem ipsum dolor sit amet');
+        $this->createSampleTicket('Sample ticket 2', $project->id, 'Lorem ipsum dolor sit amet');
         $this->assertCount(2, $this->ticketRepository->objects);
 
-        $response = $this->interactor->execute(new DeleteProjectRequest([
+        $this->interactor->execute(new DeleteProjectRequest([
             'projectID' => $project->id,
             'requesterUserID' => $user->id
         ]));

@@ -20,7 +20,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeleteTicketInteractor($this->ticketRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new DeleteTicketInteractor($this->ticketRepository, $this->projectRepository, $this->userRepository, $this->eventRepository, $this->notificationRepository);
     }
 
     /**

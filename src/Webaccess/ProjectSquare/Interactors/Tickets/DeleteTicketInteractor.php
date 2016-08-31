@@ -13,6 +13,7 @@ use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
+use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Planning\DeleteEventRequest;
 use Webaccess\ProjectSquare\Requests\Planning\GetEventsRequest;
 use Webaccess\ProjectSquare\Requests\Tickets\DeleteTicketRequest;
@@ -22,11 +23,13 @@ class DeleteTicketInteractor extends GetTicketInteractor
 {
     protected $repository;
     protected $projectRepository;
+    protected $userRepository;
 
-    public function __construct(TicketRepository $repository, ProjectRepository $projectRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository)
+    public function __construct(TicketRepository $repository, ProjectRepository $projectRepository, UserRepository $userRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository)
     {
         parent::__construct($repository);
         $this->projectRepository = $projectRepository;
+        $this->userRepository = $userRepository;
         $this->eventRepository = $eventRepository;
         $this->notificationRepository = $notificationRepository;
     }
@@ -59,7 +62,9 @@ class DeleteTicketInteractor extends GetTicketInteractor
 
     private function isUserAuthorizedToDeleteTicket($userID, Ticket $ticket)
     {
-        return $this->projectRepository->isUserInProject($ticket->projectID, $userID);
+        $user = $this->userRepository->getUser($userID);
+
+        return $this->projectRepository->isUserInProject($ticket->projectID, $userID) || $user->isAdministrator;
     }
 
     private function deleteTicket(Ticket $ticket)

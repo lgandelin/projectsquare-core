@@ -10,16 +10,18 @@ use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
+use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Projects\DeleteProjectRequest;
 use Webaccess\ProjectSquare\Requests\Tickets\DeleteTicketRequest;
 use Webaccess\ProjectSquare\Responses\Projects\DeleteProjectResponse;
 
 class DeleteProjectInteractor
 {
-    public function __construct(ProjectRepository $projectRepository, TicketRepository $ticketRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository)
+    public function __construct(ProjectRepository $projectRepository, TicketRepository $ticketRepository, UserRepository $userRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository)
     {
         $this->repository = $projectRepository;
         $this->ticketRepository = $ticketRepository;
+        $this->userRepository = $userRepository;
         $this->eventRepository = $eventRepository;
         $this->notificationRepository = $notificationRepository;
     }
@@ -27,7 +29,7 @@ class DeleteProjectInteractor
     public function execute(DeleteProjectRequest $request)
     {
         $project = $this->getProject($request->projectID);
-        $this->validateRequest($request, $project);
+        $this->validateRequest($request);
         $this->deleteLinkedTickets($request);
         $this->deleteProject($project);
 
@@ -56,7 +58,7 @@ class DeleteProjectInteractor
 
         if (is_array($tickets) && sizeof($tickets)) {
             foreach ($tickets as $ticket) {
-                (new DeleteTicketInteractor($this->ticketRepository, $this->repository, $this->eventRepository, $this->notificationRepository))->execute(new DeleteTicketRequest([
+                (new DeleteTicketInteractor($this->ticketRepository, $this->repository, $this->userRepository, $this->eventRepository, $this->notificationRepository))->execute(new DeleteTicketRequest([
                     'ticketID' => $ticket->id,
                     'requesterUserID' => $request->requesterUserID
                 ]));
@@ -64,20 +66,22 @@ class DeleteProjectInteractor
         }
     }
 
-    private function validateRequest($request, $project)
+    private function validateRequest($request)
     {
-        $this->validateRequesterPermissions($request, $project);
+        $this->validateRequesterPermissions($request);
     }
 
-    private function validateRequesterPermissions(DeleteProjectRequest $request, Project $project)
+    private function validateRequesterPermissions(DeleteProjectRequest $request)
     {
-        if (!$this->isUserAuthorizedToDeleteProject($request->requesterUserID, $project)) {
+        if (!$this->isUserAuthorizedToDeleteProject($request->requesterUserID)) {
             throw new \Exception(Context::get('translator')->translate('users.project_deletion_not_allowed'));
         }
     }
 
-    private function isUserAuthorizedToDeleteProject($userID, Project $project)
+    private function isUserAuthorizedToDeleteProject($userID)
     {
-        return $this->repository->isUserInProject($project->id, $userID);
+        $user = $this->userRepository->getUser($userID);
+
+        return $user->isAdministrator;
     }
 }

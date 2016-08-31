@@ -11,15 +11,16 @@ class DeleteClientInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeleteClientInteractor($this->clientRepository, $this->projectRepository, $this->ticketRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new DeleteClientInteractor($this->clientRepository, $this->projectRepository, $this->userRepository, $this->ticketRepository, $this->eventRepository, $this->notificationRepository);
     }
 
     public function testDeleteClient()
     {
         $client = $this->createSampleClient();
+        $user = $this->createSampleUser(true);
         $response = $this->interactor->execute(new DeleteClientRequest([
             'clientID' => $client->id,
-            //'requesterUserID' => $user->id
+            'requesterUserID' => $user->id
         ]));
 
         //Check response
@@ -36,16 +37,30 @@ class DeleteClientInteractorTest extends BaseTestCase
      */
     public function testDeleteNonExistingClient()
     {
+        $user = $this->createSampleUser(true);
         $this->interactor->execute(new DeleteClientRequest([
             'clientID' => 2,
-            //'requesterUserID' => $user->id
+            'requesterUserID' => $user->id
+        ]));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testDeleteProjectWithoutPermission()
+    {
+        $client = $this->createSampleClient();
+        $user = $this->createSampleUser();
+        $this->interactor->execute(new DeleteClientRequest([
+            'clientID' => $client->id,
+            'requesterUserID' => $user->id
         ]));
     }
 
     public function testDeleteClientAlongWithProjects()
     {
         $client = $this->createSampleClient();
-        $user = $this->createSampleUser();
+        $user = $this->createSampleUser(true);
         $project1 = $this->createSampleProject($client->id);
         $project2 = $this->createSampleProject($client->id);
         $this->projectRepository->addUserToProject($project1, $user, null);
