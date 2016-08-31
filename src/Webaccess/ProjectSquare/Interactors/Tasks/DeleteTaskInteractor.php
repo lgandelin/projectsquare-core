@@ -10,6 +10,7 @@ use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
+use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Planning\DeleteEventRequest;
 use Webaccess\ProjectSquare\Requests\Planning\GetEventsRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\DeleteTaskRequest;
@@ -17,10 +18,11 @@ use Webaccess\ProjectSquare\Responses\Tasks\DeleteTaskResponse;
 
 class DeleteTaskInteractor
 {
-    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository)
+    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, UserRepository $userRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository)
     {
         $this->repository = $taskRepository;
         $this->projectRepository = $projectRepository;
+        $this->userRepository = $userRepository;
         $this->eventRepository = $eventRepository;
         $this->notificationRepository = $notificationRepository;
     }
@@ -66,7 +68,9 @@ class DeleteTaskInteractor
 
     private function isUserAuthorizedToDeleteTask($userID, Task $task)
     {
-        return $this->projectRepository->isUserInProject($task->projectID, $userID);
+        $user = $this->userRepository->getUser($userID);
+
+        return $this->projectRepository->isUserInProject($task->projectID, $userID) || $user->isAdministrator;
     }
 
     private function deleteLinkedNotifications($taskID)

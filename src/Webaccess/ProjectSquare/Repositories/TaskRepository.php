@@ -15,4 +15,6 @@ interface TaskRepository
     public function persistTask(Task $task);
 
     public function deleteTask($taskID);
+
+    public function getTasksByProjectID($projectID);
 }

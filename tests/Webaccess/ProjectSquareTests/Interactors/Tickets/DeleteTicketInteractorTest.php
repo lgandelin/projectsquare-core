@@ -73,6 +73,25 @@ class DeleteTicketInteractorTest extends BaseTestCase
         );
     }
 
+    public function testDeleteTicketAsAdmin()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser(true);
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $response = $this->interactor->execute(new DeleteTicketRequest([
+            'ticketID' => $ticketID,
+            'requesterUserID' => $user->id
+        ]));
+
+        //Check response
+        $this->assertInstanceOf(DeleteTicketResponse::class, $response);
+        $this->assertInstanceOf(Ticket::class, $response->ticket);
+        $this->assertEquals($ticketID, $response->ticket->id);
+
+        //Check deletion
+        $this->assertCount(0, $this->ticketRepository->objects);
+    }
+
     public function testDeleteTicketAlongWithNotifications()
     {
         $user1 = $this->createSampleUser();

@@ -75,4 +75,16 @@ class InMemoryTaskRepository implements TaskRepository
     {
         // TODO: Implement getTasksPaginatedList() method.
     }
+
+    public function getTasksByProjectID($projectID)
+    {
+        $result = [];
+        foreach ($this->objects as $task) {
+            if ($task->projectID == $projectID) {
+                $result[]= $task;
+            }
+        }
+
+        return $result;
+    }
 }

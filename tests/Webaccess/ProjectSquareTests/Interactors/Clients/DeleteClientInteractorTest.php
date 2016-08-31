@@ -11,7 +11,7 @@ class DeleteClientInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeleteClientInteractor($this->clientRepository, $this->projectRepository, $this->userRepository, $this->ticketRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new DeleteClientInteractor($this->clientRepository, $this->projectRepository, $this->userRepository, $this->ticketRepository, $this->taskRepository, $this->eventRepository, $this->notificationRepository);
     }
 
     public function testDeleteClient()

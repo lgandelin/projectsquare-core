@@ -11,7 +11,7 @@ class DeleteProjectInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeleteProjectInteractor($this->projectRepository, $this->ticketRepository, $this->userRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new DeleteProjectInteractor($this->projectRepository, $this->userRepository, $this->ticketRepository, $this->taskRepository, $this->eventRepository, $this->notificationRepository);
     }
 
     public function testDeleteProject()
@@ -72,5 +72,22 @@ class DeleteProjectInteractorTest extends BaseTestCase
 
         //Check deletion
         $this->assertCount(0, $this->ticketRepository->objects);
+    }
+
+    public function testDeleteProjectAlongWithTasks()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser(true);
+        $this->createSampleTask($project->id);
+        $this->createSampleTask($project->id);
+        $this->assertCount(2, $this->taskRepository->objects);
+
+        $this->interactor->execute(new DeleteProjectRequest([
+            'projectID' => $project->id,
+            'requesterUserID' => $user->id
+        ]));
+
+        //Check deletion
+        $this->assertCount(0, $this->taskRepository->objects);
     }
 }
