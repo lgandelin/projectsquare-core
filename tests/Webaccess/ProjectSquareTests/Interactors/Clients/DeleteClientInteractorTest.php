@@ -11,7 +11,7 @@ class DeleteClientInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeleteClientInteractor($this->clientRepository, $this->projectRepository);
+        $this->interactor = new DeleteClientInteractor($this->clientRepository, $this->projectRepository, $this->ticketRepository, $this->eventRepository, $this->notificationRepository);
     }
 
     public function testDeleteClient()
@@ -45,13 +45,17 @@ class DeleteClientInteractorTest extends BaseTestCase
     public function testDeleteClientAlongWithProjects()
     {
         $client = $this->createSampleClient();
-        $this->createSampleProject($client->id);
-        $this->createSampleProject($client->id);
+        $user = $this->createSampleUser();
+        $project1 = $this->createSampleProject($client->id);
+        $project2 = $this->createSampleProject($client->id);
+        $this->projectRepository->addUserToProject($project1, $user, null);
+        $this->projectRepository->addUserToProject($project2, $user, null);
+
         $this->assertcount(2, $this->projectRepository->objects);
 
-        $response = $this->interactor->execute(new DeleteClientRequest([
+        $this->interactor->execute(new DeleteClientRequest([
             'clientID' => $client->id,
-            //'requesterUserID' => $user->id
+            'requesterUserID' => $user->id
         ]));
 
         //Check that projects have been deleted

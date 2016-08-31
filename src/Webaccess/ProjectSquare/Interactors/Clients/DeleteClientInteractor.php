@@ -3,25 +3,33 @@
 namespace Webaccess\ProjectSquare\Interactors\Clients;
 
 use Webaccess\ProjectSquare\Context;
+use Webaccess\ProjectSquare\Entities\Notification;
 use Webaccess\ProjectSquare\Interactors\Projects\DeleteProjectInteractor;
 use Webaccess\ProjectSquare\Interactors\Projects\GetProjectsInteractor;
 use Webaccess\ProjectSquare\Repositories\ClientRepository;
+use Webaccess\ProjectSquare\Repositories\EventRepository;
+use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
+use Webaccess\ProjectSquare\Repositories\TicketRepository;
+use Webaccess\ProjectSquare\Requests\Clients\DeleteClientRequest;
 use Webaccess\ProjectSquare\Requests\Projects\DeleteProjectRequest;
 use Webaccess\ProjectSquare\Responses\Clients\DeleteClientResponse;
 
 class DeleteClientInteractor
 {
-    public function __construct(ClientRepository $clientRepository, ProjectRepository $projectRepository)
+    public function __construct(ClientRepository $clientRepository, ProjectRepository $projectRepository, TicketRepository $ticketRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository)
     {
         $this->repository = $clientRepository;
         $this->projectRepository = $projectRepository;
+        $this->ticketRepository = $ticketRepository;
+        $this->eventRepository = $eventRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
-    public function execute($request)
+    public function execute(DeleteClientRequest $request)
     {
         $client = $this->getClient($request->clientID);
-        $this->deleteProjectsByClientID($request->clientID);
+        $this->deleteProjectsByClientID($request->clientID, $request->requesterUserID);
         $this->deleteClient($client);
 
         return new DeleteClientResponse([
@@ -43,13 +51,14 @@ class DeleteClientInteractor
         $this->repository->deleteClient($client->id);
     }
 
-    private function deleteProjectsByClientID($clientID)
+    private function deleteProjectsByClientID($clientID, $requesterUserID)
     {
         $projects = (new GetProjectsInteractor($this->projectRepository))->getProjectsByClientID($clientID);
         if (is_array($projects) && sizeof($projects) > 0) {
             foreach ($projects as $project) {
-                (new DeleteProjectInteractor($this->projectRepository))->execute(new DeleteProjectRequest([
-                    'projectID' => $project->id
+                (new DeleteProjectInteractor($this->projectRepository, $this->ticketRepository, $this->eventRepository, $this->notificationRepository))->execute(new DeleteProjectRequest([
+                    'projectID' => $project->id,
+                    'requesterUserID' => $requesterUserID
                 ]));
             }
         }

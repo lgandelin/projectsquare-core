@@ -7,4 +7,5 @@ use Webaccess\ProjectSquare\Requests\Request;
 class DeleteClientRequest extends Request
 {
     public $clientID;
+    public $requesterUserID;
 }
