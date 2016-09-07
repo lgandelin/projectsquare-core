@@ -8,21 +8,21 @@ class GetRemainingTimeInteractor
 {
     const HOURS_IN_DAY = 7;
 
-    public function getRemainingTime($estimatedTime, $spentTime)
+    public function getRemainingTime($scheduledTime, $spentTime)
     {
-        if ($spentTime->days * self::HOURS_IN_DAY + $spentTime->hours > $estimatedTime->days * self::HOURS_IN_DAY + $estimatedTime->hours) {
+        if ($spentTime->days * self::HOURS_IN_DAY + $spentTime->hours > $scheduledTime->days * self::HOURS_IN_DAY + $scheduledTime->hours) {
             $remainingTimeDays = 0;
             $remainingTimeHours = 0;
         } else {
             $spentTimeDays = $spentTime->days;
-            if ($estimatedTime->hours >= $spentTime->hours) {
-                $remainingTimeHours = $estimatedTime->hours - $spentTime->hours;
+            if ($scheduledTime->hours >= $spentTime->hours) {
+                $remainingTimeHours = $scheduledTime->hours - $spentTime->hours;
             } else {
-                $remainingTimeHours = $estimatedTime->hours + self::HOURS_IN_DAY - $spentTime->hours;
+                $remainingTimeHours = $scheduledTime->hours + self::HOURS_IN_DAY - $spentTime->hours;
                 $spentTimeDays++;
             }
 
-            $remainingTimeDays = ($estimatedTime->days - $spentTimeDays > 0) ? $estimatedTime->days - $spentTimeDays : 0;
+            $remainingTimeDays = ($scheduledTime->days - $spentTimeDays > 0) ? $scheduledTime->days - $spentTimeDays : 0;
         }
 
         return new GetRemainingTimeResponse(['days' => $remainingTimeDays, 'hours' => $remainingTimeHours]);
