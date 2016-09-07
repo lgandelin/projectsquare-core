@@ -2,17 +2,12 @@
 
 namespace Webaccess\ProjectSquare\Repositories;
 
+use Webaccess\ProjectSquare\Entities\Client;
+
 interface ClientRepository
 {
-    public static function getClient($clientID);
-
-    public static function getClients();
-
-    public static function getClientsPaginatedList($limit = null);
-
-    public static function createClient($name, $address);
-
-    public static function updateClient($clientID, $name, $address);
-
-    public static function deleteClient($clientID);
+    public function getClient($clientID);
+    public function getClients();
+    public function persistClient(Client $client);
+    public function deleteClient($clientID);
 }

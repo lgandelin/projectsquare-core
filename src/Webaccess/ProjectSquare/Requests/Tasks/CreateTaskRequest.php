@@ -17,4 +17,5 @@ class CreateTaskRequest extends Request
     public $startDate;
     public $endDate;
     public $allocatedUserID;
+    public $requesterUserID;
 }

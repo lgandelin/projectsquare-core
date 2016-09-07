@@ -2,6 +2,8 @@
 
 namespace Webaccess\ProjectSquare\Repositories;
 
+use Webaccess\ProjectSquare\Entities\Project;
+
 interface ProjectRepository
 {
     public function getProject($projectID);
@@ -14,9 +16,11 @@ interface ProjectRepository
 
     public function getProjectsPaginatedList($limit);
 
-    public function createProject($name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status, $color, $scheduledTime);
+    public function getProjectsByClientID($clientID);
 
-    public function updateProject($projectID, $name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status, $color, $scheduledTime);
+    public function createProject($name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status, $color, $tasksScheduledTime, $ticketsScheduledTime);
+
+    public function updateProject($projectID, $name, $clientID, $websiteFrontURL, $websiteBackURL, $refererID, $status, $color, $tasksScheduledTime, $ticketsScheduledTime);
 
     public function deleteProject($projectID);
 
@@ -25,4 +29,6 @@ interface ProjectRepository
     public function isUserInProject($projectID, $userID);
 
     public function removeUserFromProject($project, $userID);
+
+    public function persistProject(Project $project);
 }

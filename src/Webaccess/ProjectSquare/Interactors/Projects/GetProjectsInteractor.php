@@ -17,4 +17,9 @@ class GetProjectsInteractor
     {
         return $this->repository->getUserProjects($projectID);
     }
+
+    public function getProjectsByClientID($clientID)
+    {
+        return $this->repository->getProjectsByClientID($clientID);
+    }
 }

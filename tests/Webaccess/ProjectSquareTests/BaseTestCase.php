@@ -4,6 +4,7 @@ namespace Webaccess\ProjectSquareTests;
 
 use Mockery;
 use Webaccess\ProjectSquare\Context;
+use Webaccess\ProjectSquare\Entities\Client;
 use Webaccess\ProjectSquare\Entities\Conversation;
 use Webaccess\ProjectSquare\Entities\Project;
 use Webaccess\ProjectSquare\Entities\Ticket;
@@ -20,6 +21,7 @@ use Webaccess\ProjectSquare\Requests\Calendar\CreateStepRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
 use Webaccess\ProjectSquare\Requests\Todos\CreateTodoRequest;
 use Webaccess\ProjectSquareTests\Dummies\DummyTranslator;
+use Webaccess\ProjectSquareTests\Repositories\InMemoryClientRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryMessageRepository;
@@ -45,6 +47,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->stepRepository = new InMemoryStepRepository();
         $this->todoRepository = new InMemoryTodoRepository();
         $this->taskRepository = new InMemoryTaskRepository();
+        $this->clientRepository = new InMemoryClientRepository();
 
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
@@ -65,19 +68,29 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $ticket->id;
     }
 
-    protected function createSampleProject()
+    protected function createSampleClient()
+    {
+        $client = new Client();
+        $client->name = 'Sample Client';
+
+        return $this->clientRepository->persistClient($client);
+    }
+
+    protected function createSampleProject($clientID = null)
     {
         $project = new Project();
         $project->name = 'Sample Project';
+        if ($clientID) $project->clientID = $clientID;
 
         return $this->projectRepository->persistProject($project);
     }
 
-    protected function createSampleUser()
+    protected function createSampleUser($isAdministrator = false)
     {
         $user = new User();
         $user->firstName = 'John';
         $user->lastName = 'Doe';
+        $user->isAdministrator = $isAdministrator;
 
         return $this->userRepository->persistUser($user);
     }
@@ -159,7 +172,9 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
-            $this->projectRepository
+            $this->projectRepository,
+            $this->userRepository,
+            $this->notificationRepository
         ))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $projectID

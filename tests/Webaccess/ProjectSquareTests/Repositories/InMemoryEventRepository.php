@@ -32,7 +32,20 @@ class InMemoryEventRepository implements EventRepository
     {
         $result = [];
         foreach ($this->objects as $event) {
-            if ($event->userID == $userID) {
+            $insert = false;
+            if ($userID && $event->userID == $userID) {
+                $insert = true;
+            }
+
+            if ($ticketID && $event->ticketID == $ticketID) {
+                $insert = true;
+            }
+
+            if ($taskID && $event->taskID == $taskID) {
+                $insert = true;
+            }
+
+            if ($insert) {
                 $result[]= $event;
             }
         }

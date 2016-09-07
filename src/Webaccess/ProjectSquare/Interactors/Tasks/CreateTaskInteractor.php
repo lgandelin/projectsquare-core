@@ -4,22 +4,30 @@ namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Task;
+use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
+use Webaccess\ProjectSquare\Repositories\UserRepository;
+use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
+use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Responses\Tasks\CreateTaskResponse;
 
 class CreateTaskInteractor
 {
-    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository)
+    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, UserRepository $userRepository, NotificationRepository $notificationRepository)
     {
         $this->repository = $taskRepository;
         $this->projectRepository = $projectRepository;
+        $this->userRepository = $userRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function execute(CreateTaskRequest $request)
     {
+        $this->validateRequest($request);
         $task = $this->createTicket($request);
+        $this->createNotifications($request, $task);
 
         return new CreateTaskResponse([
             'task' => $task,
@@ -46,10 +54,42 @@ class CreateTaskInteractor
         return $this->repository->persistTask($task);
     }
 
+    private function validateRequest(CreateTaskRequest $request)
+    {
+        $this->validateTitle($request);
+
+    }
+
+    private function validateTitle(CreateTaskRequest $request)
+    {
+        if (!$request->title) {
+            throw new \Exception(Context::get('translator')->translate('tasks.title_required'));
+        }
+    }
+
     private function validateProject($projectID)
     {
         if (!$project = $this->projectRepository->getProject($projectID)) {
             throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
         }
+    }
+
+    private function createNotifications(CreateTaskRequest $request, Task $task)
+    {
+        //Agency users
+        foreach ($this->userRepository->getUsersByProject($task->projectID) as $user) {
+            if ($user->id != $request->requesterUserID) {
+                $this->notifyUserIfRequired($task, $user);
+            }
+        }
+    }
+
+    private function notifyUserIfRequired($task, $user)
+    {
+        (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
+            'userID' => $user->id,
+            'entityID' => $task->id,
+            'type' => 'TASK_CREATED',
+        ]));
     }
 }

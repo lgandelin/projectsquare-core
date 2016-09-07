@@ -28,7 +28,7 @@ class InMemoryTaskRepository implements TaskRepository
         return false;
     }
 
-    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null)
+    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null, $entities = false)
     {
         $result = [];
         foreach ($this->objects as $task) {
@@ -69,5 +69,22 @@ class InMemoryTaskRepository implements TaskRepository
         if (isset($this->objects[$taskID])) {
             unset($this->objects[$taskID]);
         }
+    }
+
+    public function getTasksPaginatedList($limit, $projectID = null, $statusID = null, $allocatedUserID = null)
+    {
+        // TODO: Implement getTasksPaginatedList() method.
+    }
+
+    public function getTasksByProjectID($projectID)
+    {
+        $result = [];
+        foreach ($this->objects as $task) {
+            if ($task->projectID == $projectID) {
+                $result[]= $task;
+            }
+        }
+
+        return $result;
     }
 }

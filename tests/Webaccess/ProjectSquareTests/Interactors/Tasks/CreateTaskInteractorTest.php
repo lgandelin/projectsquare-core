@@ -9,7 +9,7 @@ class CreateTaskInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateTaskInteractor($this->taskRepository, $this->projectRepository);
+        $this->interactor = new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository);
     }
 
     public function testCreateTask()
@@ -35,6 +35,16 @@ class CreateTaskInteractorTest extends BaseTestCase
             'title' => 'Nouvelle tâche',
             'status' => 1,
             'projectID' => 1,
+        ]));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testCreateTaskWithoutTitle()
+    { 
+        $this->interactor->execute(new CreateTaskRequest([
+            'title' => '',
         ]));
     }
 }

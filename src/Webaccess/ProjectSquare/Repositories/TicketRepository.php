@@ -15,6 +15,8 @@ interface TicketRepository
 
     public function getTicketsPaginatedList($userID, $limit, $projectID = null, $allocatedUserID = null, $statusID = null, $typeID = null);
 
+    public function getTicketsByProjectID($projectID);
+
     public function deleteTicket($ticketID);
 
     public function isUserAllowedToSeeTicket($userID, $ticket);

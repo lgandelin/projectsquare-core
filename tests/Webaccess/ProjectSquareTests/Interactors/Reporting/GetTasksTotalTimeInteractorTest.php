@@ -24,11 +24,11 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalEstimatedTimeWithOneTask()
     {
         $project = $this->createSampleProject();
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'estimatedTimeDays' => 2.5
-        ]));
+        ]);
 
         $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 2.5, 'hours' => 0]), $this->interactor->getTasksTotalEstimatedTime($project->id));
     }
@@ -36,12 +36,12 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalEstimatedTimeWithDaysAndHours()
     {
         $project = $this->createSampleProject();
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'estimatedTimeDays' => 3.5,
             'estimatedTimeHours' => 6
-        ]));
+        ]);
 
         $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 3.5, 'hours' => 6]), $this->interactor->getTasksTotalEstimatedTime($project->id));
     }
@@ -49,12 +49,12 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalEstimatedTimeWithHoursModulo()
     {
         $project = $this->createSampleProject();
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'estimatedTimeDays' => 3,
             'estimatedTimeHours' => 7
-        ]));
+        ]);
 
         $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 4, 'hours' => 0]), $this->interactor->getTasksTotalEstimatedTime($project->id));
     }
@@ -62,19 +62,19 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalEstimatedTimeWithTwoTasks()
     {
         $project = $this->createSampleProject();
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'estimatedTimeDays' => 2,
             'estimatedTimeHours' => 4
-        ]));
+        ]);
 
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'estimatedTimeDays' => 3,
             'estimatedTimeHours' => 6
-        ]));
+        ]);
 
         $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 6, 'hours' => 3]), $this->interactor->getTasksTotalEstimatedTime($project->id));
     }
@@ -89,11 +89,11 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalSpentTimeWithOneTask()
     {
         $project = $this->createSampleProject();
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'spentTimeDays' => 2.5
-        ]));
+        ]);
 
         $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 2.5, 'hours' => 0]), $this->interactor->getTasksTotalSpentTime($project->id));
     }
@@ -101,12 +101,12 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalSpentTimeWithDaysAndHours()
     {
         $project = $this->createSampleProject();
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'spentTimeDays' => 3.5,
             'spentTimeHours' => 6
-        ]));
+        ]);
 
         $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 3.5, 'hours' => 6]), $this->interactor->getTasksTotalSpentTime($project->id));
     }
@@ -114,12 +114,12 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalSpentTimeWithHoursModulo()
     {
         $project = $this->createSampleProject();
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'spentTimeDays' => 3,
             'spentTimeHours' => 7
-        ]));
+        ]);
 
         $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 4, 'hours' => 0]), $this->interactor->getTasksTotalSpentTime($project->id));
     }
@@ -127,20 +127,25 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalSpentTimeWithTwoTasks()
     {
         $project = $this->createSampleProject();
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'spentTimeDays' => 2,
             'spentTimeHours' => 4
-        ]));
+        ]);
 
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new CreateTaskRequest([
+        $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'spentTimeDays' => 3,
             'spentTimeHours' => 6
-        ]));
+        ]);
 
         $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 6, 'hours' => 3]), $this->interactor->getTasksTotalSpentTime($project->id));
+    }
+
+    private function createTask($parameters)
+    {
+        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest($parameters));
     }
 }

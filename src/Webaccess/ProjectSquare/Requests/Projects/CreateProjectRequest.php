@@ -1,11 +1,11 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Entities;
+namespace Webaccess\ProjectSquare\Requests\Projects;
 
-class Project
+use Webaccess\ProjectSquare\Requests\Request;
+
+class CreateProjectRequest extends Request
 {
-    public $id;
-    public $name;
     public $clientID;
     public $color;
     public $tasksScheduledTime;
@@ -14,6 +14,4 @@ class Project
     public $websiteFrontURL;
     public $websiteBackURL;
     public $slackChannel;
-    public $createdAt;
-    public $udpatedAt;
 }
