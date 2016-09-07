@@ -94,4 +94,16 @@ class InMemoryTicketRepository implements TicketRepository
 
         return $ticketState;
     }
+
+    public function getTicketsByProjectID($projectID)
+    {
+        $result = [];
+        foreach ($this->objects as $ticket) {
+            if ($ticket->projectID == $projectID) {
+                $result[]= $ticket;
+            }
+        }
+
+        return $result;
+    }
 }

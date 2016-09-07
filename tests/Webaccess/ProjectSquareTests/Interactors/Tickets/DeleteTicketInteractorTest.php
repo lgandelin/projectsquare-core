@@ -20,7 +20,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeleteTicketInteractor($this->ticketRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new DeleteTicketInteractor($this->ticketRepository, $this->projectRepository, $this->userRepository, $this->eventRepository, $this->notificationRepository);
     }
 
     /**
@@ -71,6 +71,25 @@ class DeleteTicketInteractorTest extends BaseTestCase
             Events::DELETE_TICKET,
             Mockery::type(DeleteTicketEvent::class)
         );
+    }
+
+    public function testDeleteTicketAsAdmin()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser(true);
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $response = $this->interactor->execute(new DeleteTicketRequest([
+            'ticketID' => $ticketID,
+            'requesterUserID' => $user->id
+        ]));
+
+        //Check response
+        $this->assertInstanceOf(DeleteTicketResponse::class, $response);
+        $this->assertInstanceOf(Ticket::class, $response->ticket);
+        $this->assertEquals($ticketID, $response->ticket->id);
+
+        //Check deletion
+        $this->assertCount(0, $this->ticketRepository->objects);
     }
 
     public function testDeleteTicketAlongWithNotifications()

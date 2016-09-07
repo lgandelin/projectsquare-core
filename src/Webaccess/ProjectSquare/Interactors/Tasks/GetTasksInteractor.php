@@ -21,4 +21,9 @@ class GetTasksInteractor
     {
         return $this->repository->getTasksPaginatedList($limit, $request->projectID, $request->statusID, $request->allocatedUserID);
     }
+
+    public function getTasksByProjectID($projectID)
+    {
+        return $this->repository->getTasksByProjectID($projectID);
+    }
 }

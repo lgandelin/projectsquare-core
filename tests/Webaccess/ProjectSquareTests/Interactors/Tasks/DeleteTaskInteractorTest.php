@@ -15,7 +15,7 @@ class DeleteTaskInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeleteTaskInteractor($this->taskRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new DeleteTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->eventRepository, $this->notificationRepository);
     }
 
     /**
