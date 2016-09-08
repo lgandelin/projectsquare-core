@@ -20,11 +20,17 @@ class GetTasksInteractorTest extends BaseTestCase
 
     public function testGetTasks()
     {
+        $project1 = $this->createSampleProject();
+        $project2 = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project1, $user, null);
+        $this->projectRepository->addUserToProject($project2, $user, null);
+
         $task1 = new Task();
-        $task1->projectID = 1;
+        $task1->projectID = $project1->id;
 
         $task2 = new Task();
-        $task2->projectID = 2;
+        $task2->projectID = $project2->id;
 
         $this->taskRepository->objects = [
             $task1,
@@ -32,7 +38,8 @@ class GetTasksInteractorTest extends BaseTestCase
         ];
 
         $this->assertCount(1, $this->interactor->execute(new GetTasksRequest([
-            'projectID' => 1
+            'userID' => $user->id,
+            'projectID' => $project1->id
         ])));
 
         $this->assertCount(2, $this->interactor->execute(new GetTasksRequest()));

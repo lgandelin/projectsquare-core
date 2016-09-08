@@ -17,25 +17,33 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
     public function testGetTotalEstimatedTimeWithoutTask()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 0, 'hours' => 0]), $this->interactor->getTasksTotalEstimatedTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 0, 'hours' => 0]), $this->interactor->getTasksTotalEstimatedTime($user->id, $project->id));
     }
 
     public function testGetTotalEstimatedTimeWithOneTask()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+
         $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'estimatedTimeDays' => 2.5
         ]);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 2.5, 'hours' => 0]), $this->interactor->getTasksTotalEstimatedTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 2.5, 'hours' => 0]), $this->interactor->getTasksTotalEstimatedTime($user->id, $project->id));
     }
 
     public function testGetTotalEstimatedTimeWithDaysAndHours()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+
         $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
@@ -43,12 +51,15 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
             'estimatedTimeHours' => 6
         ]);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 3.5, 'hours' => 6]), $this->interactor->getTasksTotalEstimatedTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 3.5, 'hours' => 6]), $this->interactor->getTasksTotalEstimatedTime($user->id, $project->id));
     }
 
     public function testGetTotalEstimatedTimeWithHoursModulo()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+        
         $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
@@ -56,12 +67,15 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
             'estimatedTimeHours' => 7
         ]);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 4, 'hours' => 0]), $this->interactor->getTasksTotalEstimatedTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 4, 'hours' => 0]), $this->interactor->getTasksTotalEstimatedTime($user->id, $project->id));
     }
 
     public function testGetTotalEstimatedTimeWithTwoTasks()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+        
         $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
@@ -76,31 +90,39 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
             'estimatedTimeHours' => 6
         ]);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 6, 'hours' => 3]), $this->interactor->getTasksTotalEstimatedTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 6, 'hours' => 3]), $this->interactor->getTasksTotalEstimatedTime($user->id, $project->id));
     }
 
     public function testGetTotalSpentTimeWithoutTask()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 0, 'hours' => 0]), $this->interactor->getTasksTotalSpentTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 0, 'hours' => 0]), $this->interactor->getTasksTotalSpentTime($user->id, $project->id));
     }
 
     public function testGetTotalSpentTimeWithOneTask()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+
         $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'spentTimeDays' => 2.5
         ]);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 2.5, 'hours' => 0]), $this->interactor->getTasksTotalSpentTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 2.5, 'hours' => 0]), $this->interactor->getTasksTotalSpentTime($user->id, $project->id));
     }
 
     public function testGetTotalSpentTimeWithDaysAndHours()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+
         $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
@@ -108,12 +130,15 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
             'spentTimeHours' => 6
         ]);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 3.5, 'hours' => 6]), $this->interactor->getTasksTotalSpentTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 3.5, 'hours' => 6]), $this->interactor->getTasksTotalSpentTime($user->id, $project->id));
     }
 
     public function testGetTotalSpentTimeWithHoursModulo()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+
         $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
@@ -121,12 +146,15 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
             'spentTimeHours' => 7
         ]);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 4, 'hours' => 0]), $this->interactor->getTasksTotalSpentTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 4, 'hours' => 0]), $this->interactor->getTasksTotalSpentTime($user->id, $project->id));
     }
 
     public function testGetTotalSpentTimeWithTwoTasks()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+
         $this->createTask([
             'title' => 'Sample task',
             'projectID' => $project->id,
@@ -141,7 +169,7 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
             'spentTimeHours' => 6
         ]);
 
-        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 6, 'hours' => 3]), $this->interactor->getTasksTotalSpentTime($project->id));
+        $this->assertEquals(new GetTasksTotalTimeResponse(['days' => 6, 'hours' => 3]), $this->interactor->getTasksTotalSpentTime($user->id, $project->id));
     }
 
     private function createTask($parameters)

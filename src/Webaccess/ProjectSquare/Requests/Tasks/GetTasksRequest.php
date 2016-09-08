@@ -6,6 +6,7 @@ use Webaccess\ProjectSquare\Requests\Request;
 
 class GetTasksRequest extends Request
 {
+    public $userID;
     public $projectID;
     public $statusID;
     public $allocatedUserID;

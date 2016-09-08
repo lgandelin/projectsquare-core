@@ -17,9 +17,10 @@ class GetTasksTotalTimeInteractor
         $this->getTasksInteractor = new GetTasksInteractor($taskRepository);
     }
 
-    public function getTasksTotalEstimatedTime($projectID)
+    public function getTasksTotalEstimatedTime($userID, $projectID)
     {
         $tasks = $this->getTasksInteractor->execute(new GetTasksRequest([
+            'userID' => $userID,
             'projectID' => $projectID,
             'entities' => true
         ]));
@@ -42,9 +43,10 @@ class GetTasksTotalTimeInteractor
         return new GetTasksTotalTimeResponse(['days' => $totalEstimatedTimeDays, 'hours' => $totalEstimatedTimeHours]);
     }
 
-    public function getTasksTotalSpentTime($projectID)
+    public function getTasksTotalSpentTime($userID, $projectID)
     {
         $tasks = $this->getTasksInteractor->execute(new GetTasksRequest([
+            'userID' => $userID,
             'projectID' => $projectID,
             'entities' => true
         ]));

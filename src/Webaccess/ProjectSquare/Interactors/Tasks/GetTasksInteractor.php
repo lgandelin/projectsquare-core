@@ -14,12 +14,12 @@ class GetTasksInteractor
 
     public function execute(GetTasksRequest $request)
     {
-        return $this->repository->getTasks($request->projectID, $request->statusID, $request->allocatedUserID, $request->entities);
+        return $this->repository->getTasks($request->userID, $request->projectID, $request->statusID, $request->allocatedUserID, $request->entities);
     }
 
-    public function getTasksPaginatedList($limit, GetTasksRequest $request)
+    public function getTasksPaginatedList($userID, $limit, GetTasksRequest $request)
     {
-        return $this->repository->getTasksPaginatedList($limit, $request->projectID, $request->statusID, $request->allocatedUserID);
+        return $this->repository->getTasksPaginatedList($userID, $limit, $request->projectID, $request->statusID, $request->allocatedUserID);
     }
 
     public function getTasksByProjectID($projectID)
