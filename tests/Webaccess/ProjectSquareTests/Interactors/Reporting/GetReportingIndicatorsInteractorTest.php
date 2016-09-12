@@ -19,13 +19,17 @@ class GetReportingIndicatorsTest extends BaseTestCase
     public function testGetReportingIndicatorWithZeroTasks()
     {
         $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
 
-        $this->assertEquals(0, $this->interactor->getProgressPercentage($project->id));
+        $this->assertEquals(0, $this->interactor->getProgressPercentage($user->id, $project->id));
     }
 
     public function testGetReportingIndicator()
     {
+        $user = $this->createSampleUser();
         $project = $this->createSampleProject();
+        $this->projectRepository->addUserToProject($project, $user, null);
 
         (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
@@ -45,7 +49,7 @@ class GetReportingIndicatorsTest extends BaseTestCase
             'statusID' => Task::COMPLETED
         ]));
 
-        $this->assertEquals(66, $this->interactor->getProgressPercentage($project->id));
+        $this->assertEquals(66, $this->interactor->getProgressPercentage($user->id, $project->id));
     }
 
     public function testGetProfitabilityIndicator()

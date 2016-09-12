@@ -14,25 +14,27 @@ class GetReportingIndicatorsInteractor
         $this->repository = $taskRepository;
     }
 
-    public function getTasksCountByStatus($projectID, $statusID)
+    public function getTasksCountByStatus($userID, $projectID, $statusID)
     {
         return sizeof((new GetTasksInteractor($this->repository))->execute(new GetTasksRequest([
+            'userID' => $userID,
             'projectID' => $projectID,
             'statusID' => $statusID,
         ])));
     }
 
-    public function getProgressPercentage($projectID, $tasks = [])
+    public function getProgressPercentage($userID, $projectID, $tasks = [])
     {
         $result = 0;
         if (!is_array($tasks) || sizeof($tasks) == 0) {
             $tasks = (new GetTasksInteractor($this->repository))->execute(new GetTasksRequest([
+                'userID' => $userID,
                 'projectID' => $projectID,
             ]));
         }
 
         if (sizeof($tasks) > 0) {
-            $result = floor($this->getTasksCountByStatus($projectID, Task::COMPLETED) * 100 / sizeof($tasks));
+            $result = floor($this->getTasksCountByStatus($userID, $projectID, Task::COMPLETED) * 100 / sizeof($tasks));
         }
 
         return $result;
