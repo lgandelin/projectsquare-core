@@ -22,34 +22,37 @@ class GetReportingIndicatorsTest extends BaseTestCase
         $user = $this->createSampleUser();
         $this->projectRepository->addUserToProject($project, $user, null);
 
-        $this->assertEquals(0, $this->interactor->getProgressPercentage($user->id, $project->id));
+        $this->assertEquals(0, $this->interactor->getProgressPercentage($user->id, $project->id, 10));
     }
 
     public function testGetReportingIndicator()
     {
         $user = $this->createSampleUser();
-        $project = $this->createSampleProject();
+        $project = $this->createSampleProject(10);
         $this->projectRepository->addUserToProject($project, $user, null);
 
         (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
-            'statusID' => Task::TODO
+            'statusID' => Task::TODO,
+            'estimatedTimeDays' => 4,
         ]));
 
         (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
-            'statusID' => Task::COMPLETED
+            'statusID' => Task::COMPLETED,
+            'estimatedTimeDays' => 1,
         ]));
 
         (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
-            'statusID' => Task::COMPLETED
+            'statusID' => Task::COMPLETED,
+            'estimatedTimeDays' => 5,
         ]));
 
-        $this->assertEquals(66, $this->interactor->getProgressPercentage($user->id, $project->id));
+        $this->assertEquals(60, $this->interactor->getProgressPercentage($user->id, $project->id, 10));
     }
 
     public function testGetProfitabilityIndicator()
