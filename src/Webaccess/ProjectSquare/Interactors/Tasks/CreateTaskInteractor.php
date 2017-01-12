@@ -4,13 +4,13 @@ namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Task;
+use Webaccess\ProjectSquare\Interactors\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
-use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Responses\Tasks\CreateTaskResponse;
 
 class CreateTaskInteractor

@@ -7,6 +7,7 @@ use Webaccess\ProjectSquare\Entities\Message;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Events\Messages\CreateMessageEvent;
 use Webaccess\ProjectSquare\Exceptions\Messages\MessageReplyNotAuthorizedException;
+use Webaccess\ProjectSquare\Interactors\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Repositories\ConversationRepository;
 use Webaccess\ProjectSquare\Repositories\MessageRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
@@ -15,7 +16,6 @@ use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
 use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Responses\Messages\CreateMessageResponse;
-use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 
 class CreateMessageInteractor
 {

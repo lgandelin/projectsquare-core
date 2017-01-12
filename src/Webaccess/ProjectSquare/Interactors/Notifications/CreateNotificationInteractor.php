@@ -1,6 +1,6 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Responses\Notifications;
+namespace Webaccess\ProjectSquare\Interactors\Notifications;
 
 use Webaccess\ProjectSquare\Entities\Notification;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;

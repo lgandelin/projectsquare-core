@@ -6,6 +6,7 @@ use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Event;
 use Webaccess\ProjectSquare\Events\Planning\CreateEventEvent;
 use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Interactors\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Interactors\Tasks\UpdateTaskInteractor;
 use Webaccess\ProjectSquare\Interactors\Tickets\UpdateTicketInteractor;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
@@ -18,7 +19,6 @@ use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\UpdateTaskRequest;
 use Webaccess\ProjectSquare\Requests\Tickets\UpdateTicketRequest;
 use Webaccess\ProjectSquare\Responses\Planning\CreateEventResponse;
-use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 
 class CreateEventInteractor
 {
