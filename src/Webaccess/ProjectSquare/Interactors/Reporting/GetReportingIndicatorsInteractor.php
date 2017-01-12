@@ -14,28 +14,30 @@ class GetReportingIndicatorsInteractor
         $this->repository = $taskRepository;
     }
 
-    public function getTasksCountByStatus($projectID, $statusID)
+    public function getTasksCountByStatus($userID, $projectID, $statusID)
     {
         return sizeof((new GetTasksInteractor($this->repository))->execute(new GetTasksRequest([
+            'userID' => $userID,
             'projectID' => $projectID,
             'statusID' => $statusID,
         ])));
     }
 
-    public function getProgressPercentage($projectID, $tasks = [])
+    public function getProgressPercentage($userID, $projectID, $tasksScheduledTime)
     {
-        $result = 0;
-        if (!is_array($tasks) || sizeof($tasks) == 0) {
-            $tasks = (new GetTasksInteractor($this->repository))->execute(new GetTasksRequest([
-                'projectID' => $projectID,
-            ]));
+        $totalEstimatedTime = 0;
+        $completedTasks = (new GetTasksInteractor($this->repository))->execute(new GetTasksRequest([
+            'userID' => $userID,
+            'projectID' => $projectID,
+            'statusID' => Task::COMPLETED,
+            'entities' => true
+        ]));
+
+        foreach ($completedTasks as $task) {
+            $totalEstimatedTime += $task->estimatedTimeDays + $task->estimatedTimeHours * GetTasksTotalTimeInteractor::HOURS_IN_DAY;
         }
 
-        if (sizeof($tasks) > 0) {
-            $result = floor($this->getTasksCountByStatus($projectID, Task::COMPLETED) * 100 / sizeof($tasks));
-        }
-
-        return $result;
+        return $tasksScheduledTime > 0 ? floor(($totalEstimatedTime / $tasksScheduledTime) * 100) : 0;
     }
 
     public function getProfitabilityPercentage($scheduledTimeInDays, $spentTime)

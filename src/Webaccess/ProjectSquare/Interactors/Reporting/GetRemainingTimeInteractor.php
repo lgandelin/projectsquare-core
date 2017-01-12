@@ -10,19 +10,16 @@ class GetRemainingTimeInteractor
 
     public function getRemainingTime($scheduledTime, $spentTime)
     {
-        if ($spentTime->days * self::HOURS_IN_DAY + $spentTime->hours > $scheduledTime->days * self::HOURS_IN_DAY + $scheduledTime->hours) {
+        $spentTimeInHours = $spentTime->days * self::HOURS_IN_DAY + $spentTime->hours;
+        $scheduledTimeInHours = $scheduledTime->days * self::HOURS_IN_DAY + $scheduledTime->hours;
+
+        if ($spentTimeInHours > $scheduledTimeInHours) {
             $remainingTimeDays = 0;
             $remainingTimeHours = 0;
         } else {
-            $spentTimeDays = $spentTime->days;
-            if ($scheduledTime->hours >= $spentTime->hours) {
-                $remainingTimeHours = $scheduledTime->hours - $spentTime->hours;
-            } else {
-                $remainingTimeHours = $scheduledTime->hours + self::HOURS_IN_DAY - $spentTime->hours;
-                $spentTimeDays++;
-            }
-
-            $remainingTimeDays = ($scheduledTime->days - $spentTimeDays > 0) ? $scheduledTime->days - $spentTimeDays : 0;
+            $remainingTimeInHours = $scheduledTimeInHours - $spentTimeInHours;
+            $remainingTimeDays = floor($remainingTimeInHours / self::HOURS_IN_DAY);
+            $remainingTimeHours = floor($remainingTimeInHours - $remainingTimeDays * self::HOURS_IN_DAY);
         }
 
         return new GetRemainingTimeResponse(['days' => $remainingTimeDays, 'hours' => $remainingTimeHours]);

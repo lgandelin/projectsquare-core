@@ -76,10 +76,11 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $this->clientRepository->persistClient($client);
     }
 
-    protected function createSampleProject($clientID = null)
+    protected function createSampleProject($clientID = null, $tasksScheduledTime = null)
     {
         $project = new Project();
         $project->name = 'Sample Project';
+        $project->tasksScheduledTime = $tasksScheduledTime;
         if ($clientID) $project->clientID = $clientID;
 
         return $this->projectRepository->persistProject($project);

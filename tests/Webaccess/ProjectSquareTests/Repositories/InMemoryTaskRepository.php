@@ -28,7 +28,7 @@ class InMemoryTaskRepository implements TaskRepository
         return false;
     }
 
-    public function getTasks($projectID = null, $statusID = null, $allocatedUserID = null, $entities = false)
+    public function getTasks($userID, $projectID = null, $statusID = null, $allocatedUserID = null, $entities = false)
     {
         $result = [];
         foreach ($this->objects as $task) {
@@ -71,7 +71,7 @@ class InMemoryTaskRepository implements TaskRepository
         }
     }
 
-    public function getTasksPaginatedList($limit, $projectID = null, $statusID = null, $allocatedUserID = null)
+    public function getTasksPaginatedList($userID, $limit, $projectID = null, $statusID = null, $allocatedUserID = null)
     {
         // TODO: Implement getTasksPaginatedList() method.
     }
