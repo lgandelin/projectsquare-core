@@ -4,6 +4,8 @@ namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Task;
+use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Events\Tasks\CreateTaskEvent;
 use Webaccess\ProjectSquare\Interactors\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
@@ -28,6 +30,7 @@ class CreateTaskInteractor
         $this->validateRequest($request);
         $task = $this->createTicket($request);
         $this->createNotifications($request, $task);
+        $this->dispatchEvent($task->id);
 
         return new CreateTaskResponse([
             'task' => $task,
@@ -91,5 +94,13 @@ class CreateTaskInteractor
             'entityID' => $task->id,
             'type' => 'TASK_CREATED',
         ]));
+    }
+
+    private function dispatchEvent($taskID)
+    {
+        Context::get('event_dispatcher')->dispatch(
+            Events::CREATE_TASK,
+            new CreateTaskEvent($taskID)
+        );
     }
 }

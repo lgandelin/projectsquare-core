@@ -1,5 +1,8 @@
 <?php
 
+use Webaccess\ProjectSquare\Context;
+use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Events\Tasks\CreateTaskEvent;
 use Webaccess\ProjectSquare\Interactors\Tasks\CreateTaskInteractor;
 use Webaccess\ProjectSquare\Requests\Tasks\CreateTaskRequest;
 use Webaccess\ProjectSquareTests\BaseTestCase;
@@ -24,6 +27,12 @@ class CreateTaskInteractorTest extends BaseTestCase
         ]));
 
         $this->assertCount(1, $this->taskRepository->objects);
+
+        //Check event
+        Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
+            Events::CREATE_TASK,
+            Mockery::type(CreateTaskEvent::class)
+        );
     }
 
     /**
