@@ -3,6 +3,8 @@
 namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
+use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Events\Tasks\UpdateTaskEvent;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Requests\Tasks\UpdateTaskRequest;
@@ -33,6 +35,8 @@ class UpdateTaskInteractor
         }
 
         $this->repository->persistTask($task);
+
+        $this->dispatchEvent($task->id);
     }
 
     private function getTask($taskID)
@@ -49,5 +53,13 @@ class UpdateTaskInteractor
         if (!$project = $this->projectRepository->getProject($projectID)) {
             throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
         }
+    }
+
+    private function dispatchEvent($taskID)
+    {
+        Context::get('event_dispatcher')->dispatch(
+            Events::UPDATE_TASK,
+            new UpdateTaskEvent($taskID)
+        );
     }
 }

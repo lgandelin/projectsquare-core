@@ -4,6 +4,8 @@ namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Task;
+use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Events\Tasks\DeleteTaskEvent;
 use Webaccess\ProjectSquare\Interactors\Planning\DeleteEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Planning\GetEventsInteractor;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
@@ -33,6 +35,7 @@ class DeleteTaskInteractor
         $this->validateRequest($request, $task);
         $this->deleteLinkedNotifications($task->id);
         $this->deleteLinkedEvents($task->id);
+        $this->dispatchEvent($task);
         $this->deleteTask($task);
 
         return new DeleteTaskResponse([
@@ -57,6 +60,14 @@ class DeleteTaskInteractor
     private function deleteTask(Task $task)
     {
         $this->repository->deleteTask($task->id);
+    }
+
+    private function dispatchEvent(Task $task)
+    {
+        Context::get('event_dispatcher')->dispatch(
+            Events::DELETE_TASK,
+            new DeleteTaskEvent($task)
+        );
     }
 
     private function validateRequesterPermissions(DeleteTaskRequest $request, Task $task)
