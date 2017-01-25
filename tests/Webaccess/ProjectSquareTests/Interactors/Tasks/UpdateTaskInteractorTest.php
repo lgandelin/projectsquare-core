@@ -1,6 +1,9 @@
 <?php
 
 
+use Webaccess\ProjectSquare\Context;
+use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Events\Tasks\UpdateTaskEvent;
 use Webaccess\ProjectSquare\Interactors\Tasks\UpdateTaskInteractor;
 use Webaccess\ProjectSquare\Requests\Tasks\UpdateTaskRequest;
 use Webaccess\ProjectSquareTests\BaseTestCase;
@@ -24,6 +27,12 @@ class UpdateTaskInteractorTest extends BaseTestCase
         ]));
 
         $this->assertEquals('Tâche modifiée', $this->taskRepository->objects[$task->id]->title);
+
+        //Check event
+        Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
+            Events::UPDATE_TASK,
+            Mockery::type(UpdateTaskEvent::class)
+        );
     }
 
     /**

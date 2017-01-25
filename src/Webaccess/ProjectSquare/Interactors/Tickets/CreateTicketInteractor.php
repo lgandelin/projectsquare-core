@@ -7,13 +7,13 @@ use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Entities\TicketState;
 use Webaccess\ProjectSquare\Events\Tickets\CreateTicketEvent;
 use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Interactors\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Requests\Tickets\CreateTicketRequest;
-use Webaccess\ProjectSquare\Responses\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Responses\Tickets\CreateTicketResponse;
 
 class CreateTicketInteractor

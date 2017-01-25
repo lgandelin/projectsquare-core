@@ -19,4 +19,7 @@ final class Events
     const CREATE_TODO = 'todos.create';
     const UPDATE_TODO = 'todos.update';
     const DELETE_TODO = 'todos.delete';
+    const CREATE_TASK = 'tasks.create';
+    const UPDATE_TASK = 'tasks.update';
+    const DELETE_TASK = 'tasks.delete';
 }

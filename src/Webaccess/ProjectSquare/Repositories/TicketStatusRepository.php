@@ -10,9 +10,9 @@ interface TicketStatusRepository
 
     public static function getTicketStatusesPaginatedList($limit);
 
-    public static function createTicketStatus($name);
+    public static function createTicketStatus($name, $include_in_planning);
 
-    public static function updateTicketStatus($ticketStatusID, $name);
+    public static function updateTicketStatus($ticketStatusID, $name, $include_in_planning);
 
     public static function deleteTicketStatus($ticketStatusID);
 }

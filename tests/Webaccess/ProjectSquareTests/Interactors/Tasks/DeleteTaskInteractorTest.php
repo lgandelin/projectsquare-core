@@ -1,6 +1,9 @@
 <?php
 
+use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Task;
+use Webaccess\ProjectSquare\Events\Events;
+use Webaccess\ProjectSquare\Events\Tasks\DeleteTaskEvent;
 use Webaccess\ProjectSquare\Interactors\Planning\CreateEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Tasks\CreateTaskInteractor;
 use Webaccess\ProjectSquare\Interactors\Tasks\DeleteTaskInteractor;
@@ -60,6 +63,12 @@ class DeleteTaskInteractorTest extends BaseTestCase
 
         //Check deletion
         $this->assertCount(0, $this->taskRepository->objects);
+
+        //Check event
+        Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(
+            Events::DELETE_TASK,
+            Mockery::type(DeleteTaskEvent::class)
+        );
     }
 
     public function testDeleteTaskAlongWithNotifications()
