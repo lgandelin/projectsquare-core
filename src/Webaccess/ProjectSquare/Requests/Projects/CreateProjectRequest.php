@@ -10,7 +10,6 @@ class CreateProjectRequest extends Request
     public $color;
     public $tasksScheduledTime;
     public $ticketsScheduledTime;
-    public $status;
     public $websiteFrontURL;
     public $websiteBackURL;
     public $slackChannel;

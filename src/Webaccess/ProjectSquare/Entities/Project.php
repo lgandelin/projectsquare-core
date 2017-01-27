@@ -10,7 +10,6 @@ class Project
     public $color;
     public $tasksScheduledTime;
     public $ticketsScheduledTime;
-    public $status;
     public $websiteFrontURL;
     public $websiteBackURL;
     public $slackChannel;

@@ -29,7 +29,6 @@ class CreateProjectInteractor
         $project->color = $request->color;
         $project->tasksScheduledTime = $request->tasksScheduledTime;
         $project->ticketsScheduledTime = $request->ticketsScheduledTime;
-        $project->status = $request->status;
         $project->websiteFrontURL = $request->websiteFrontURL;
         $project->websiteBackURL = $request->websiteBackURL;
         $project->slackChannel = $request->slackChannel;
