@@ -6,5 +6,7 @@ interface SettingRepository
 {
     public static function getSettingByKeyAndProject($key, $projectID);
 
-    public static function createOrUpdateSetting($projectID, $key, $value);
+    public static function getSettingByKeyAndUser($key, $userID);
+
+    public static function createOrUpdateProjectSetting($projectID, $key, $value);
 }

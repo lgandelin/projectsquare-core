@@ -68,7 +68,6 @@ class CreateMessageInteractorTest extends BaseTestCase
 
         //Check response
         $this->assertInstanceOf(CreateMessageResponse::class, $response);
-        $this->assertEquals(new \DateTime(), $response->createdAt);
         $this->assertEquals('John Doe', $response->user->firstName . ' ' . $response->user->lastName);
         $this->assertEquals(1, $response->count);
 

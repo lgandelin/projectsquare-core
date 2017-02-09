@@ -87,7 +87,7 @@ class UpdateTicketInteractor extends GetTicketInteractor
         $ticketState->estimatedTimeHours = (isset($request->estimatedTimeHours)) ? $request->estimatedTimeHours : $lastState->estimatedTimeHours;
         $ticketState->spentTimeDays = (isset($request->spentTimeDays)) ? $request->spentTimeDays : $lastState->spentTimeDays;
         $ticketState->spentTimeHours = (isset($request->spentTimeHours)) ? $request->spentTimeHours : $lastState->spentTimeHours;
-        $ticketState->comments = (isset($request->comments)) ? $request->comments : $lastState->comments;
+        $ticketState->comments = $request->comments;
         $ticketState = $this->repository->persistTicketState($ticketState);
 
         return $ticketState;
