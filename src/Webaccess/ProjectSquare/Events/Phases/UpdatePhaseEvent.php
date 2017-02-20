@@ -1,6 +1,6 @@
 <?php
 
-namespace Webaccess\Projectsquare\Events\Phases;
+namespace Webaccess\ProjectSquare\Events\Phases;
 
 use Webaccess\ProjectSquare\Entities\Event;
 
