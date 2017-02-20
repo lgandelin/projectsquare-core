@@ -22,4 +22,6 @@ final class Events
     const CREATE_TASK = 'tasks.create';
     const UPDATE_TASK = 'tasks.update';
     const DELETE_TASK = 'tasks.delete';
+    const CREATE_PROJECT = 'projects.create';
+    const UPDATE_PROJECT = 'projects.update';
 }

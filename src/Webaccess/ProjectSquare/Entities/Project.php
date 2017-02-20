@@ -12,7 +12,6 @@ class Project
     public $ticketsScheduledTime;
     public $websiteFrontURL;
     public $websiteBackURL;
-    public $slackChannel;
     public $createdAt;
     public $udpatedAt;
 }
