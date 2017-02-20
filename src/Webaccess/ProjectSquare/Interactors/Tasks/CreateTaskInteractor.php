@@ -28,7 +28,7 @@ class CreateTaskInteractor
     public function execute(CreateTaskRequest $request)
     {
         $this->validateRequest($request);
-        $task = $this->createTicket($request);
+        $task = $this->createTask($request);
         $this->createNotifications($request, $task);
         $this->dispatchEvent($task->id);
 
@@ -37,7 +37,7 @@ class CreateTaskInteractor
         ]);
     }
 
-    private function createTicket(CreateTaskRequest $request)
+    private function createTask(CreateTaskRequest $request)
     {
         $task = new Task();
         $task->title = $request->title;

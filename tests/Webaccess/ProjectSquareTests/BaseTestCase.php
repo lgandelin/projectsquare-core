@@ -26,6 +26,7 @@ use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryMessageRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryNotificationRepository;
+use Webaccess\ProjectSquareTests\Repositories\InMemoryPhaseRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryProjectRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryStepRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryTaskRepository;
@@ -48,6 +49,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->todoRepository = new InMemoryTodoRepository();
         $this->taskRepository = new InMemoryTaskRepository();
         $this->clientRepository = new InMemoryClientRepository();
+        $this->phaseRepository = new InMemoryPhaseRepository();
 
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
