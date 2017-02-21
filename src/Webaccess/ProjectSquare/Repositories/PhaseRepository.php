@@ -7,9 +7,9 @@ interface PhaseRepository
 {
     public function getPhase($phaseID);
 
-    public function getPhases($projectID, $entities = false);
+    public function getPhases($projectID);
 
     public function persistPhase(Phase $phase);
 
-    public function deletePhase($phaseID);
+    public function removePhase($phaseID);
 }

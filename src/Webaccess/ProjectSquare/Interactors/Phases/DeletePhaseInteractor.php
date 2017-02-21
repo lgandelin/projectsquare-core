@@ -57,7 +57,7 @@ class DeletePhaseInteractor
 
     private function deletePhase($phase)
     {
-        $this->repository->deletePhase($phase->id);
+        $this->repository->removePhase($phase->id);
     }
 
     private function dispatchEvent($projectID)

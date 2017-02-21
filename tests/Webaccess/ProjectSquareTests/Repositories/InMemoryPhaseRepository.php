@@ -28,7 +28,7 @@ class InMemoryPhaseRepository implements PhaseRepository
         return false;
     }
 
-    public function getPhases($projectID, $entities = false)
+    public function getPhases($projectID)
     {
         $result = [];
         foreach ($this->objects as $phase) {
@@ -56,7 +56,7 @@ class InMemoryPhaseRepository implements PhaseRepository
         return $phase;
     }
 
-    public function deletePhase($phaseID)
+    public function removePhase($phaseID)
     {
         if (isset($this->objects[$phaseID])) {
             unset($this->objects[$phaseID]);
