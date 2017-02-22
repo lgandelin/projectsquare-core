@@ -6,22 +6,25 @@ use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Events\Phases\DeletePhaseEvent;
 use Webaccess\ProjectSquare\Repositories\PhaseRepository;
+use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Phases\DeletePhaseRequest;
 use Webaccess\ProjectSquare\Responses\Phases\DeletePhaseResponse;
 
 class DeletePhaseInteractor
 {
-    public function __construct(PhaseRepository $phaseRepository, UserRepository $userRepository)
+    public function __construct(PhaseRepository $phaseRepository, UserRepository $userRepository, TaskRepository $taskRepository)
     {
         $this->repository = $phaseRepository;
         $this->userRepository = $userRepository;
+        $this->taskRepository = $taskRepository;
     }
 
     public function execute(DeletePhaseRequest $request)
     {
         $phase = $this->getPhase($request->phaseID);
         $this->validateRequest($request);
+        $this->deleteTasksByPhase($request->phaseID);
         $this->deletePhase($phase);
         $this->dispatchEvent($phase->id);
 
@@ -66,5 +69,10 @@ class DeletePhaseInteractor
             Events::DELETE_PHASE,
             new DeletePhaseEvent($projectID)
         );
+    }
+
+    private function deleteTasksByPhase($phaseID)
+    {
+        $this->taskRepository->deleteTasksByPhaseID($phaseID);
     }
 }

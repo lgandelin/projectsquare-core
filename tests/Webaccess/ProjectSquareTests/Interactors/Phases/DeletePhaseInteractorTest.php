@@ -13,7 +13,7 @@ class DeletePhaseInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new DeletePhaseInteractor($this->phaseRepository, $this->userRepository);
+        $this->interactor = new DeletePhaseInteractor($this->phaseRepository, $this->userRepository, $this->taskRepository);
     }
 
     /**
@@ -64,4 +64,22 @@ class DeletePhaseInteractorTest extends BaseTestCase
         );
     }
 
+    public function testDeletePhaseAlongWithTasks()
+    {
+        $project = $this->createSampleProject();
+        $phase = $this->createSamplePhase($project->id);
+        $this->createSampleTask($project->id, $phase->id);
+        $this->createSampleTask($project->id, $phase->id);
+
+        $this->assertCount(2, $this->taskRepository->objects);
+
+        $user = $this->createSampleUser(true);
+        $this->interactor->execute(new DeletePhaseRequest([
+            'phaseID' => $phase->id,
+            'requesterUserID' => $user->id
+        ]));
+
+        //Check deletion
+        $this->assertCount(0, $this->taskRepository->objects);
+    }
 }
