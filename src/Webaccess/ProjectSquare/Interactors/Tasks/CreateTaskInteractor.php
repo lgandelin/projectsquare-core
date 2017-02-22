@@ -8,6 +8,7 @@ use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Events\Tasks\CreateTaskEvent;
 use Webaccess\ProjectSquare\Interactors\Notifications\CreateNotificationInteractor;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
+use Webaccess\ProjectSquare\Repositories\PhaseRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
@@ -17,10 +18,11 @@ use Webaccess\ProjectSquare\Responses\Tasks\CreateTaskResponse;
 
 class CreateTaskInteractor
 {
-    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, UserRepository $userRepository, NotificationRepository $notificationRepository)
+    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, PhaseRepository $phaseRepository, UserRepository $userRepository, NotificationRepository $notificationRepository)
     {
         $this->repository = $taskRepository;
         $this->projectRepository = $projectRepository;
+        $this->phaseRepository = $phaseRepository;
         $this->userRepository = $userRepository;
         $this->notificationRepository = $notificationRepository;
     }
@@ -54,6 +56,11 @@ class CreateTaskInteractor
             $task->projectID = $request->projectID;
         }
 
+        if ($request->phaseID) {
+            $this->validatePhase($request->phaseID);
+            $task->phaseID = $request->phaseID;
+        }
+
         return $this->repository->persistTask($task);
     }
 
@@ -75,6 +82,13 @@ class CreateTaskInteractor
         if (!$project = $this->projectRepository->getProject($projectID)) {
             throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
         }
+    }
+
+    private function validatePhase($phaseID)
+    {
+        if (!$phase = $this->phaseRepository->getPhase($phaseID)) {
+            throw new \Exception(Context::get('translator')->translate('phases.phase_not_found'));
+        } 
     }
 
     private function createNotifications(CreateTaskRequest $request, Task $task)

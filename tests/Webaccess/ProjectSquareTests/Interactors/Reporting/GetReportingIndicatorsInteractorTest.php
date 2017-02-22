@@ -31,21 +31,21 @@ class GetReportingIndicatorsTest extends BaseTestCase
         $project = $this->createSampleProject(10);
         $this->projectRepository->addUserToProject($project, $user, null);
 
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
+        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->phaseRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'statusID' => Task::TODO,
             'estimatedTimeDays' => 4,
         ]));
 
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
+        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->phaseRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'statusID' => Task::COMPLETED,
             'estimatedTimeDays' => 1,
         ]));
 
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
+        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->phaseRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
             'projectID' => $project->id,
             'statusID' => Task::COMPLETED,

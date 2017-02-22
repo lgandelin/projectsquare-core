@@ -2,7 +2,7 @@
 
 namespace Webaccess\ProjectSquare\Events\Phases;
 
-use Webaccess\ProjectSquare\Entities\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class CreatePhaseEvent extends Event
 {

@@ -87,4 +87,16 @@ class InMemoryTaskRepository implements TaskRepository
 
         return $result;
     }
+
+    public function getTasksByPhaseID($phaseID)
+    {
+        $result = [];
+        foreach ($this->objects as $task) {
+            if ($task->phaseID == $phaseID) {
+                $result[]= $task;
+            }
+        }
+
+        return $result;
+    }
 }
