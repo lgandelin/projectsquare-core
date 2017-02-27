@@ -33,6 +33,7 @@ class UpdateTaskInteractor
             $this->validateProject($request->projectID);
             $task->projectID = $request->projectID;
         }
+        if ($request->order !== null) $task->order = $request->order;
 
         $this->repository->persistTask($task);
 

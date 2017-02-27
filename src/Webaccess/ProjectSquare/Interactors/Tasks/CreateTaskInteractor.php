@@ -60,6 +60,7 @@ class CreateTaskInteractor
             $this->validatePhase($request->phaseID);
             $task->phaseID = $request->phaseID;
         }
+        $task->order = $request->order;
 
         return $this->repository->persistTask($task);
     }

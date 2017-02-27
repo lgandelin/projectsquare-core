@@ -15,6 +15,7 @@ class CreateTaskRequest extends Request
     public $spentTimeHours;
     public $phaseID;
     public $projectID;
+    public $order;
     public $allocatedUserID;
     public $requesterUserID;
 }
