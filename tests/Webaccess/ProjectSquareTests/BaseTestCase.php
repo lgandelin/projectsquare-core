@@ -173,7 +173,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $response->todo;
     }
 
-    protected function createSampleTask($projectID = null, $phaseID = null)
+    protected function createSampleTask($projectID = null, $phaseID = null, $estimatedTimeDays = null)
     {
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
@@ -185,6 +185,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             'title' => 'Sample task',
             'projectID' => $projectID,
             'phaseID' => $phaseID,
+            'estimatedTimeDays' => $estimatedTimeDays,
         ]));
 
         return $response->task;
