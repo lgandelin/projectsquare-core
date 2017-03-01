@@ -9,4 +9,12 @@ class Phase
     public $projectID;
     public $order;
     public $dueDate;
+    public $estimatedDuration;
+    public $tasks;
+
+    public function __construct()
+    {
+        $this->estimatedDuration = 0;
+        $this->tasks = [];
+    }
 }

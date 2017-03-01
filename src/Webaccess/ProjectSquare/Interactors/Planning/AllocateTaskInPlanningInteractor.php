@@ -48,14 +48,14 @@ class AllocateTaskInPlanningInteractor
     		$this->projectRepository,
     		$this->taskRepository)
     	)->execute(new CreateEventRequest([
-                'name' => $task->title,
-                'userID' => $request->userID,
-                'startTime' => $startTime,
-                'endTime' => $endTime,
-                'projectID' => $task->projectID,
-                'taskID' => $task->id,
-                'requesterUserID' => $request->requesterUserID
-            ]));
+            'name' => $task->title,
+            'userID' => $request->userID,
+            'startTime' => $startTime,
+            'endTime' => $endTime,
+            'projectID' => $task->projectID,
+            'taskID' => $task->id,
+            'requesterUserID' => $request->requesterUserID
+        ]));
 
         return new AllocateTaskInPlanningResponse([
             'event' => $response->event,
