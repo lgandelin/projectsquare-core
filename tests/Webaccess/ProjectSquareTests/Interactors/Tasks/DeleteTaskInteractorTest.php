@@ -82,6 +82,7 @@ class DeleteTaskInteractorTest extends BaseTestCase
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
             $this->projectRepository,
+            $this->phaseRepository,
             $this->userRepository,
             $this->notificationRepository
         ))->execute(new CreateTaskRequest([
@@ -114,6 +115,7 @@ class DeleteTaskInteractorTest extends BaseTestCase
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
             $this->projectRepository,
+            $this->phaseRepository,
             $this->userRepository,
             $this->notificationRepository
         ))->execute(new CreateTaskRequest([

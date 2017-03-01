@@ -99,11 +99,13 @@ class CreateTicketInteractorTest extends BaseTestCase
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
         $this->projectRepository->addUserToProject($project, $user, null);
+        $dateTime = new \DateTime('2029-01-01');
+
         $response = $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
             'projectID' => $project->id,
             'statusID' => 2,
-            'dueDate' => new \DateTime('now'),
+            'dueDate' => $dateTime,
             'requesterUserID' => $user->id
         ]));
 
@@ -114,7 +116,7 @@ class CreateTicketInteractorTest extends BaseTestCase
         $this->assertEquals('Sample ticket', $response->ticket->title);
         $this->assertEquals($project->id, $response->ticket->projectID);
         $this->assertEquals(2, $response->ticketState->statusID);
-        $this->assertEquals(new \DateTime('now'), $response->ticketState->dueDate);
+        $this->assertEquals($dateTime, $response->ticketState->dueDate);
         $this->assertEquals($user->id, $response->ticketState->authorUserID);
 
         //Check insertion

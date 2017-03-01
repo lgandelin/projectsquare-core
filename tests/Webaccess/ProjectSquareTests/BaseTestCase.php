@@ -10,11 +10,13 @@ use Webaccess\ProjectSquare\Entities\Project;
 use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Entities\TicketState;
 use Webaccess\ProjectSquare\Entities\User;
+use Webaccess\ProjectSquare\Interactors\Phases\CreatePhaseInteractor;
 use Webaccess\ProjectSquare\Interactors\Planning\CreateEventInteractor;
 use Webaccess\ProjectSquare\Interactors\Messages\CreateMessageInteractor;
 use Webaccess\ProjectSquare\Interactors\Calendar\CreateStepInteractor;
 use Webaccess\ProjectSquare\Interactors\Tasks\CreateTaskInteractor;
 use Webaccess\ProjectSquare\Interactors\Todos\CreateTodoInteractor;
+use Webaccess\ProjectSquare\Requests\Phases\CreatePhaseRequest;
 use Webaccess\ProjectSquare\Requests\Planning\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Messages\CreateMessageRequest;
 use Webaccess\ProjectSquare\Requests\Calendar\CreateStepRequest;
@@ -26,6 +28,7 @@ use Webaccess\ProjectSquareTests\Repositories\InMemoryConversationRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryEventRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryMessageRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryNotificationRepository;
+use Webaccess\ProjectSquareTests\Repositories\InMemoryPhaseRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryProjectRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryStepRepository;
 use Webaccess\ProjectSquareTests\Repositories\InMemoryTaskRepository;
@@ -48,6 +51,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $this->todoRepository = new InMemoryTodoRepository();
         $this->taskRepository = new InMemoryTaskRepository();
         $this->clientRepository = new InMemoryClientRepository();
+        $this->phaseRepository = new InMemoryPhaseRepository();
 
         Context::set('translator', new DummyTranslator());
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
@@ -169,18 +173,35 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $response->todo;
     }
 
-    protected function createSampleTask($projectID = null)
+    protected function createSampleTask($projectID = null, $phaseID = null, $estimatedTimeDays = null)
     {
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
             $this->projectRepository,
+            $this->phaseRepository,
             $this->userRepository,
             $this->notificationRepository
         ))->execute(new CreateTaskRequest([
             'title' => 'Sample task',
-            'projectID' => $projectID
+            'projectID' => $projectID,
+            'phaseID' => $phaseID,
+            'estimatedTimeDays' => $estimatedTimeDays,
         ]));
 
         return $response->task;
+    }
+
+    protected function createSamplePhase($projectID = null)
+    {
+        $response = (new CreatePhaseInteractor(
+            $this->phaseRepository,
+            $this->projectRepository,
+            $this->userRepository
+        ))->execute(new CreatePhaseRequest([
+            'projectID' => $projectID,
+            'name' => 'Sample phase'
+        ]));
+
+        return $response->phase;
     }
 }

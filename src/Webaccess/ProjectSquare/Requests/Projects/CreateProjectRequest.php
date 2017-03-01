@@ -6,12 +6,8 @@ use Webaccess\ProjectSquare\Requests\Request;
 
 class CreateProjectRequest extends Request
 {
-    public $clientID;
+    public $name;
     public $color;
-    public $tasksScheduledTime;
-    public $ticketsScheduledTime;
-    public $status;
-    public $websiteFrontURL;
-    public $websiteBackURL;
-    public $slackChannel;
+    public $clientID;
+    public $requesterUserID;
 }

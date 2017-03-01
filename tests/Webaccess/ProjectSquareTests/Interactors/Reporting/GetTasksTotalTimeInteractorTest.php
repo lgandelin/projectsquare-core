@@ -174,6 +174,6 @@ class GetTasksTotalTimeInteractorTest extends BaseTestCase
 
     private function createTask($parameters)
     {
-        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest($parameters));
+        (new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->phaseRepository, $this->userRepository, $this->notificationRepository))->execute(new CreateTaskRequest($parameters));
     }
 }

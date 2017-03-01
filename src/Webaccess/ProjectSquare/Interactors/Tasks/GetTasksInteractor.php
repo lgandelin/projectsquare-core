@@ -26,4 +26,9 @@ class GetTasksInteractor
     {
         return $this->repository->getTasksByProjectID($projectID);
     }
+
+    public function getTasksByPhaseID($phaseID)
+    {
+        return $this->repository->getTasksByPhaseID($phaseID);
+    }
 }

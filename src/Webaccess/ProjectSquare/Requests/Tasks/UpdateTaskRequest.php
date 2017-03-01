@@ -15,7 +15,6 @@ class UpdateTaskRequest extends Request
     public $spentTimeDays;
     public $spentTimeHours;
     public $projectID;
-    public $startDate;
-    public $endDate;
+    public $order;
     public $allocatedUserID;
 }

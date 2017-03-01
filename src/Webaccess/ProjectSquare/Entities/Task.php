@@ -17,7 +17,7 @@ class Task
     public $spentTimeHours;
     public $statusID;
     public $projectID;
-    public $startDate;
-    public $endDate;
+    public $phaseID;
     public $allocatedUserID;
+    public $order;
 }

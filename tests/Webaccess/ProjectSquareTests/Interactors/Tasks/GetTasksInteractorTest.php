@@ -75,4 +75,30 @@ class GetTasksInteractorTest extends BaseTestCase
             'statusID' => 1,
         ])));
     }
+
+    public function testGetTasksByPhase()
+    {
+        $project = $this->createSampleProject();
+        $phase = $this->createSamplePhase($project->id);
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project, $user, null);
+
+        $task1 = new Task();
+        $task1->projectID = $project->id;
+        $task1->phaseID = $phase->id;
+
+        $task2 = new Task();
+        $task2->projectID = $project->id;
+
+        $this->taskRepository->objects = [
+            $task1,
+            $task2
+        ];
+
+        $this->assertCount(1, $this->interactor->getTasksByPhaseID(new GetTasksRequest([
+            'userID' => $user->id,
+            'projectID' => $project->id,
+            'phaseID' => $phase->id
+        ])));
+    }
 }

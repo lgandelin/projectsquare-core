@@ -71,6 +71,15 @@ class InMemoryTaskRepository implements TaskRepository
         }
     }
 
+    public function deleteTasksByPhaseID($phaseID)
+    {
+        foreach ($this->objects as $task) {
+            if ($task->phaseID == $phaseID) {
+                unset($this->objects[$task->id]);
+            }
+        }
+    }
+
     public function getTasksPaginatedList($userID, $limit, $projectID = null, $statusID = null, $allocatedUserID = null)
     {
         // TODO: Implement getTasksPaginatedList() method.
@@ -81,6 +90,18 @@ class InMemoryTaskRepository implements TaskRepository
         $result = [];
         foreach ($this->objects as $task) {
             if ($task->projectID == $projectID) {
+                $result[]= $task;
+            }
+        }
+
+        return $result;
+    }
+
+    public function getTasksByPhaseID($phaseID)
+    {
+        $result = [];
+        foreach ($this->objects as $task) {
+            if ($task->phaseID == $phaseID) {
                 $result[]= $task;
             }
         }
