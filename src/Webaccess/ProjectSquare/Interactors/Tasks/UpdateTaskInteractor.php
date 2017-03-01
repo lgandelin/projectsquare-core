@@ -27,12 +27,13 @@ class UpdateTaskInteractor
         if ($request->spentTimeDays !== null) $task->spentTimeDays = $request->spentTimeDays;
         if ($request->spentTimeHours !== null) $task->spentTimeHours = $request->spentTimeHours;
         if ($request->statusID !== null) $task->statusID = $request->statusID;
-        if ($request->allocatedUserID !== null) $task->allocatedUserID = $request->allocatedUserID;
+        if ($request->allocatedUserID !== 0) $task->allocatedUserID = $request->allocatedUserID;
 
         if ($request->projectID) {
             $this->validateProject($request->projectID);
             $task->projectID = $request->projectID;
         }
+        if ($request->order !== null) $task->order = $request->order;
 
         $this->repository->persistTask($task);
 

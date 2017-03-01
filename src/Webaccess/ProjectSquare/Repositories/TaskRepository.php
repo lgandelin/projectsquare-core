@@ -14,5 +14,9 @@ interface TaskRepository
 
     public function deleteTask($taskID);
 
+    public function deleteTasksByPhaseID($phaseID);
+
     public function getTasksByProjectID($projectID);
+
+    public function getTasksByPhaseID($phaseID);
 }

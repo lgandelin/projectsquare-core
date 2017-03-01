@@ -13,6 +13,7 @@ final class Events
     const CREATE_EVENT = 'events.create';
     const UPDATE_EVENT = 'events.update';
     const DELETE_EVENT = 'events.delete';
+    const ALLOCATE_TASK_IN_PLANNING = 'planning.allocate_task';
     const CREATE_STEP = 'steps.create';
     const UPDATE_STEP = 'steps.update';
     const DELETE_STEP = 'steps.delete';
@@ -22,4 +23,9 @@ final class Events
     const CREATE_TASK = 'tasks.create';
     const UPDATE_TASK = 'tasks.update';
     const DELETE_TASK = 'tasks.delete';
+    const CREATE_PROJECT = 'projects.create';
+    const UPDATE_PROJECT = 'projects.update';
+    const CREATE_PHASE = 'phases.create';
+    const UPDATE_PHASE = 'phases.update';
+    const DELETE_PHASE = 'phases.delete';
 }

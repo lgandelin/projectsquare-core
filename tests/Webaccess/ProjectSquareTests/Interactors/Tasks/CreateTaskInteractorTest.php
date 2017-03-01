@@ -12,7 +12,7 @@ class CreateTaskInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository);
+        $this->interactor = new CreateTaskInteractor($this->taskRepository, $this->projectRepository, $this->phaseRepository, $this->userRepository, $this->notificationRepository);
     }
 
     public function testCreateTask()
