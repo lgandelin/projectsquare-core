@@ -7,6 +7,7 @@ use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Entities\Client;
 use Webaccess\ProjectSquare\Entities\Conversation;
 use Webaccess\ProjectSquare\Entities\Project;
+use Webaccess\ProjectSquare\Entities\Task;
 use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Entities\TicketState;
 use Webaccess\ProjectSquare\Entities\User;
@@ -173,7 +174,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $response->todo;
     }
 
-    protected function createSampleTask($projectID = null, $phaseID = null, $estimatedTimeDays = null)
+    protected function createSampleTask($projectID = null, $phaseID = null, $estimatedTimeDays = null, $statusID = Task::TODO)
     {
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
@@ -185,6 +186,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             'title' => 'Sample task',
             'projectID' => $projectID,
             'phaseID' => $phaseID,
+            'statusID' => $statusID,
             'estimatedTimeDays' => $estimatedTimeDays,
         ]));
 
