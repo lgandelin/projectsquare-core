@@ -1,6 +1,7 @@
 <?php
 
 use Webaccess\ProjectSquare\Entities\Phase;
+use Webaccess\ProjectSquare\Entities\Task;
 use Webaccess\ProjectSquare\Interactors\Phases\GetPhasesInteractor;
 use Webaccess\ProjectSquare\Requests\Phases\GetPhasesRequest;
 use Webaccess\ProjectSquareTests\BaseTestCase;
@@ -39,7 +40,6 @@ class GetPhasesInteractorTest extends BaseTestCase
 
     public function testGetPhasesWithTasks()
     {
-
         $project = $this->createSampleProject();
         $phase1 = $this->createSamplePhase($project->id);
         $phase2 = $this->createSamplePhase($project->id);
@@ -55,5 +55,17 @@ class GetPhasesInteractorTest extends BaseTestCase
         $this->assertEquals('Sample phase', $phases[0]->name);
         $this->assertCount(2, $phases[0]->tasks);
         $this->assertCount(1, $phases[1]->tasks);
+    }
+
+    public function testGetPhasesWithProgress()
+    {
+        $project = $this->createSampleProject();
+        $phase1 = $this->createSamplePhase($project->id);
+        $this->createSampleTask($project->id, $phase1->id, 8, Task::COMPLETED);
+        $this->createSampleTask($project->id, $phase1->id, 4);
+        $phases = $this->interactor->execute(new GetPhasesRequest([
+            'projectID' => $project->id,
+        ]));
+        $this->assertEquals(67, $phases[0]->progress);
     }
 }
