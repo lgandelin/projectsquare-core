@@ -20,6 +20,5 @@
             "Webaccess\\ProjectSquare\\": "src/Webaccess/ProjectSquare",
             "Webaccess\\ProjectSquareTests\\": "tests/Webaccess/ProjectSquareTests"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
