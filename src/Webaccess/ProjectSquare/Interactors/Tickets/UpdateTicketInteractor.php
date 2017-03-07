@@ -81,6 +81,7 @@ class UpdateTicketInteractor extends GetTicketInteractor
         $ticketState->statusID = (isset($request->statusID)) ? $request->statusID : $lastState->statusID;
         $ticketState->authorUserID = (isset($request->authorUserID)) ? $request->authorUserID : $lastState->authorUserID;
         $ticketState->allocatedUserID = (isset($request->allocatedUserID)) ? $request->allocatedUserID : $lastState->allocatedUserID;
+        if (isset($request->allocatedUserID) && $request->allocatedUserID === 0) $ticketState->allocatedUserID = null;
         $ticketState->priority = (isset($request->priority)) ? $request->priority : $lastState->priority;
         $ticketState->dueDate = (isset($request->dueDate)) ? $request->dueDate : \DateTime::createFromFormat('d/m/Y', $lastState->dueDate);
         $ticketState->estimatedTimeDays = (isset($request->estimatedTimeDays)) ? $request->estimatedTimeDays : $lastState->estimatedTimeDays;

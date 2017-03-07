@@ -69,6 +69,14 @@ class CreateEventInteractor
         $event->ticketID = $request->ticketID;
         $event->taskID = $request->taskID;
         $event->projectID = $request->projectID;
+        if ($request->ticketID != null) {
+            $ticket = $this->ticketRepository->getTicket($request->ticketID);
+            $event->projectID = $ticket->projectID;
+        }
+        if ($request->taskID != null) {
+            $task = $this->taskRepository->getTask($request->taskID);
+            $event->projectID = $task->projectID;
+        }
 
         return $this->repository->persistEvent($event);
     }
