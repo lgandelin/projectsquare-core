@@ -1,6 +1,6 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Interactors\Planning;
+namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Interactors\Planning\CreateEventInteractor;
@@ -11,10 +11,10 @@ use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Requests\Planning\CreateEventRequest;
-use Webaccess\ProjectSquare\Requests\Planning\AllocateTaskInPlanningRequest;
-use Webaccess\ProjectSquare\Responses\Planning\AllocateTaskInPlanningResponse;
+use Webaccess\ProjectSquare\Requests\Tasks\AllocateAndScheduleTaskRequest;
+use Webaccess\ProjectSquare\Responses\Tasks\AllocateAndScheduleTaskResponse;
 
-class AllocateTaskInPlanningInteractor
+class AllocateAndScheduleTaskInteractor
 {
     const HOURS_IN_DAY = 8;
 
@@ -35,7 +35,7 @@ class AllocateTaskInPlanningInteractor
         $this->projectRepository = $projectRepository;
     }
 
-    public function execute(AllocateTaskInPlanningRequest $request)
+    public function execute(AllocateAndScheduleTaskRequest $request)
     {
     	$this->validateRequest($request);
     	$task = $this->taskRepository->getTask($request->taskID);
@@ -57,25 +57,25 @@ class AllocateTaskInPlanningInteractor
             'requesterUserID' => $request->requesterUserID
         ]));
 
-        return new AllocateTaskInPlanningResponse([
+        return new AllocateAndScheduleTaskResponse([
             'event' => $response->event,
         ]);
     }
 
-    private function validateRequest(AllocateTaskInPlanningRequest $request)
+    private function validateRequest(AllocateAndScheduleTaskRequest $request)
     {
         $this->validateUser($request);
         $this->validateTask($request);
     }
 
-    private function validateTask(AllocateTaskInPlanningRequest $request)
+    private function validateTask(AllocateAndScheduleTaskRequest $request)
     {
         if (!$task = $this->taskRepository->getTask($request->taskID)) {
             throw new \Exception(Context::get('translator')->translate('tasks.task_not_found'));
         }
     }
 
-    private function validateUser(AllocateTaskInPlanningRequest $request)
+    private function validateUser(AllocateAndScheduleTaskRequest $request)
     {
         if (!$user = $this->userRepository->getUser($request->userID)) {
             throw new \Exception(Context::get('translator')->translate('users.user_not_found'));
