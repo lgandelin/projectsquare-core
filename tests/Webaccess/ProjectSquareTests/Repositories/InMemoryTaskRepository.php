@@ -42,7 +42,7 @@ class InMemoryTaskRepository implements TaskRepository
                 $include = false;
             }
 
-            if ($allocatedUserID && $task->allocatedUserID == $allocatedUserID) {
+            if ($allocatedUserID && $task->allocatedUserID != $allocatedUserID) {
                 $include = false;
             }
 

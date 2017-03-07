@@ -24,7 +24,7 @@ interface ProjectRepository
 
     public function isUserInProject($projectID, $userID);
 
-    public function removeUserFromProject($project, $userID);
+    public function removeUserFromProject($projectID, $userID);
 
     public function persistProject(Project $project);
 }
