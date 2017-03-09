@@ -50,20 +50,16 @@ class UpdateProjectInteractor extends GetProjectInteractor
             $project->clientID = $request->clientID;
         }
 
+        if ($request->statusID) {
+            $project->statusID = $request->statusID;
+        }
+
         if ($request->websiteFrontURL) {
             $project->websiteFrontURL = $request->websiteFrontURL;
         }
 
         if ($request->websiteBackURL) {
             $project->websiteBackURL = $request->websiteBackURL;
-        }
-
-        if ($request->tasksScheduledTime) {
-            $project->tasksScheduledTime = $request->tasksScheduledTime;
-        }
-
-        if ($request->ticketsScheduledTime) {
-            $project->ticketsScheduledTime = $request->ticketsScheduledTime;
         }
 
         $this->repository->persistProject($project);

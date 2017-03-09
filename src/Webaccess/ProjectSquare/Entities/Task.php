@@ -8,6 +8,10 @@ class Task
     const IN_PROGRESS = 2;
     const COMPLETED = 3;
 
+    const SPENT_TIME_EXCEEDED = 1;
+    const SPENT_TIME_NORMAL = 2;
+    const SPENT_TIME_AHEAD = 3;
+
     public $id;
     public $title;
     public $description;

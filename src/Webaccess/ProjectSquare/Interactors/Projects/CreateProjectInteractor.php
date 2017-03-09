@@ -40,6 +40,7 @@ class CreateProjectInteractor
         $project->name = $request->name;
         $project->color = $request->color;
         $project->clientID = $request->clientID;
+        $project->statusID = $request->statusID;
 
         return $this->repository->persistProject($project);
     }

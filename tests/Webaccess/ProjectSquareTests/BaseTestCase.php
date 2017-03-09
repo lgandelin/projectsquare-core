@@ -81,11 +81,10 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $this->clientRepository->persistClient($client);
     }
 
-    protected function createSampleProject($clientID = null, $tasksScheduledTime = null)
+    protected function createSampleProject($clientID = null)
     {
         $project = new Project();
         $project->name = 'Sample Project';
-        $project->tasksScheduledTime = $tasksScheduledTime;
         if ($clientID) $project->clientID = $clientID;
 
         return $this->projectRepository->persistProject($project);
@@ -174,7 +173,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $response->todo;
     }
 
-    protected function createSampleTask($projectID = null, $phaseID = null, $estimatedTimeDays = null, $statusID = Task::TODO)
+    protected function createSampleTask($projectID = null, $phaseID = null, $estimatedTimeDays = null, $statusID = Task::TODO, $allocatedUserID = null)
     {
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
@@ -187,6 +186,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             'projectID' => $projectID,
             'phaseID' => $phaseID,
             'statusID' => $statusID,
+            'allocatedUserID' => $allocatedUserID,
             'estimatedTimeDays' => $estimatedTimeDays,
         ]));
 

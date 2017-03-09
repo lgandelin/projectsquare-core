@@ -3,17 +3,17 @@
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Events\Planning\CreateEventEvent;
-use Webaccess\ProjectSquare\Interactors\Planning\AllocateTaskInPlanningInteractor;
-use Webaccess\ProjectSquare\Requests\Planning\AllocateTaskInPlanningRequest;
-use Webaccess\ProjectSquare\Responses\Planning\AllocateTaskInPlanningResponse;
+use Webaccess\ProjectSquare\Interactors\Tasks\AllocateAndScheduleTaskInteractor;
+use Webaccess\ProjectSquare\Requests\Tasks\AllocateAndScheduleTaskRequest;
+use Webaccess\ProjectSquare\Responses\Tasks\AllocateAndScheduleTaskResponse;
 use Webaccess\ProjectSquareTests\BaseTestCase;
 
-class AllocateTaskInPlanningInteractorTest extends BaseTestCase
+class AllocateAndScheduleTaskInteractorTest extends BaseTestCase
 {
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new AllocateTaskInPlanningInteractor($this->eventRepository, $this->taskRepository, $this->userRepository, $this->notificationRepository, $this->ticketRepository, $this->projectRepository);
+        $this->interactor = new AllocateAndScheduleTaskInteractor($this->eventRepository, $this->taskRepository, $this->userRepository, $this->notificationRepository, $this->ticketRepository, $this->projectRepository);
     }
 
     /**
@@ -23,7 +23,7 @@ class AllocateTaskInPlanningInteractorTest extends BaseTestCase
     {
         $user = $this->createSampleUser();
 
-        $this->interactor->execute(new AllocateTaskInPlanningRequest([
+        $this->interactor->execute(new AllocateAndScheduleTaskRequest([
             'userID' => $user->id,
         	'day' => new \DateTime('2017-03-01'),
         	'taskID' => 5,
@@ -39,7 +39,7 @@ class AllocateTaskInPlanningInteractorTest extends BaseTestCase
         $user = $this->createSampleUser();
     	$task = $this->createSampleTask();
 
-        $this->interactor->execute(new AllocateTaskInPlanningRequest([
+        $this->interactor->execute(new AllocateAndScheduleTaskRequest([
         	'userID' => 8,
         	'day' => new \DateTime('2017-03-01'),
         	'taskID' => $task->id,
@@ -52,7 +52,7 @@ class AllocateTaskInPlanningInteractorTest extends BaseTestCase
     	$user = $this->createSampleUser();
     	$task = $this->createSampleTask(null, null, 2);
 
-    	$response = $this->interactor->execute(new AllocateTaskInPlanningRequest([
+    	$response = $this->interactor->execute(new AllocateAndScheduleTaskRequest([
         	'userID' => $user->id,
         	'day' => new \DateTime('2017-03-01'),
         	'taskID' => $task->id,
@@ -60,7 +60,7 @@ class AllocateTaskInPlanningInteractorTest extends BaseTestCase
         ]));
 
         //Check response
-        $this->assertInstanceOf(AllocateTaskInPlanningResponse::class, $response);
+        $this->assertInstanceOf(AllocateAndScheduleTaskResponse::class, $response);
         $this->assertEquals('Sample task', $response->event->name);
         $this->assertEquals(new DateTime('2017-03-01 09:00:00'), $response->event->startTime);
         $this->assertEquals(new DateTime('2017-03-02 17:00:00'), $response->event->endTime);

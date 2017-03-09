@@ -45,11 +45,6 @@ class InMemoryProjectRepository implements ProjectRepository
         return $result;
     }
 
-    public function updateProject($projectID, $name, $clientID, $websiteFrontURL, $websiteBackURL, $color, $tasksScheduledTime, $ticketsScheduledTime)
-    {
-        return self::getProject($projectID);
-    }
-
     public function deleteProject($projectID)
     {
         unset($this->objects[$projectID]);

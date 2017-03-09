@@ -48,11 +48,13 @@ class CreateProjectInteractorTest extends BaseTestCase
         $response = $this->interactor->execute(new CreateProjectRequest([
             'name' => 'Nouveau projet',
             'clientID' => $client->id,
+            'statusID' => 2,
         ]));
 
         $this->assertCount(1, $this->projectRepository->objects);
         $this->assertInstanceOf(Project::class, $response->project);
         $this->assertEquals('Nouveau projet', $response->project->name);
+        $this->assertEquals(2, $response->project->statusID);
 
         //Check event
         Context::get('event_dispatcher')->shouldHaveReceived("dispatch")->with(

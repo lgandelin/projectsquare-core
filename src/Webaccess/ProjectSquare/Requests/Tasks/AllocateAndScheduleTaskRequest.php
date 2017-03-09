@@ -1,10 +1,10 @@
 <?php
 
-namespace Webaccess\ProjectSquare\Requests\Planning;
+namespace Webaccess\ProjectSquare\Requests\Tasks;
 
 use Webaccess\ProjectSquare\Requests\Request;
 
-class AllocateTaskInPlanningRequest extends Request
+class AllocateAndScheduleTaskRequest extends Request
 {
     public $userID;
     public $taskID;
