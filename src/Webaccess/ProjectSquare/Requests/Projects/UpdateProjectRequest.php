@@ -10,9 +10,8 @@ class UpdateProjectRequest extends Request
     public $name;
     public $color;
     public $clientID;
+    public $statusID;
     public $requesterUserID;
     public $websiteFrontURL;
     public $websiteBackURL;
-    public $tasksScheduledTime;
-    public $ticketsScheduledTime;
 }

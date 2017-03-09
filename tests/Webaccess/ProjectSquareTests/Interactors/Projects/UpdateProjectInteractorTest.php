@@ -65,8 +65,7 @@ class UpdateProjectInteractorTest extends BaseTestCase
             'name' => 'New project',
             'websiteFrontURL' => 'front url',
             'websiteBackURL' => 'back url',
-            'tasksScheduledTime' => 12.0,
-            'ticketsScheduledTime' => 3.0,
+            'statusID' => 2,
             'requesterUserID' => $user->id
         ]));
 
@@ -76,8 +75,7 @@ class UpdateProjectInteractorTest extends BaseTestCase
         $this->assertEquals('New project', $response->project->name);
         $this->assertEquals('front url', $response->project->websiteFrontURL);
         $this->assertEquals('back url', $response->project->websiteBackURL);
-        $this->assertEquals(12.0, $response->project->tasksScheduledTime);
-        $this->assertEquals(3.0, $response->project->ticketsScheduledTime);
+        $this->assertEquals(2, $response->project->statusID);
 
         //Check update
         $project = $this->projectRepository->getProject($project->id);
