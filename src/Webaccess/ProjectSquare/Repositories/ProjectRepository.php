@@ -27,4 +27,6 @@ interface ProjectRepository
     public function removeUserFromProject($projectID, $userID);
 
     public function persistProject(Project $project);
+
+    public function getCurrentProjects($userID);
 }

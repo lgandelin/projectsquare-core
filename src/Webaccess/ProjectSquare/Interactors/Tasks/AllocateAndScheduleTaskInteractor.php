@@ -87,6 +87,10 @@ class AllocateAndScheduleTaskInteractor
         $startTime = $date->setTime(9, 0, 0);
         $endTime = clone $startTime;
 
+        if ($taskDurationInDays == 0) {
+            $taskDurationInDays = 1;
+        }
+
         $i = 0;
         while($i < $taskDurationInDays * self::HOURS_IN_DAY) {
             $endTime->add(new \DateInterval ('PT1H'));
