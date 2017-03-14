@@ -23,9 +23,7 @@ class UpdateTaskInteractor
         if ($request->title !== null) $task->title = $request->title;
         if ($request->description !== null) $task->description = $request->description;
         if ($request->estimatedTimeDays !== null) $task->estimatedTimeDays = $request->estimatedTimeDays;
-        if ($request->estimatedTimeHours !== null) $task->estimatedTimeHours = $request->estimatedTimeHours;
         if ($request->spentTimeDays !== null) $task->spentTimeDays = $request->spentTimeDays;
-        if ($request->spentTimeHours !== null) $task->spentTimeHours = $request->spentTimeHours;
         if ($request->statusID !== null) $task->statusID = $request->statusID;
         if ($request->allocatedUserID !== 0) $task->allocatedUserID = $request->allocatedUserID;
 

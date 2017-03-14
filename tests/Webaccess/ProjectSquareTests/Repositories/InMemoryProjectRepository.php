@@ -45,6 +45,11 @@ class InMemoryProjectRepository implements ProjectRepository
         return $result;
     }
 
+    public function getCurrentProjects($userID)
+    {
+
+    }
+
     public function deleteProject($projectID)
     {
         unset($this->objects[$projectID]);
