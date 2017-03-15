@@ -33,6 +33,8 @@ class RemoveUserFromProjectInteractor
     public function execute(RemoveUserFromProjectRequest $request)
     {
         $this->validateRequest($request);
+        $this->unallocateUserTasks($request);
+        $this->projectRepository->removeUserFromProject($request->projectID, $request->userID);
 
         return new RemoveUserFromProjectResponse([
             'success' => true,
@@ -47,8 +49,6 @@ class RemoveUserFromProjectInteractor
     {
         $this->validateUser($request);
         $this->validateProject($request);
-        $this->unallocateUserTasks($request);
-        $this->projectRepository->removeUserFromProject($request->projectID, $request->userID);
     }
 
     /**

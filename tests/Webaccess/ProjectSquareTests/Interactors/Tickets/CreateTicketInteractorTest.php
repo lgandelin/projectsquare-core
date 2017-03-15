@@ -25,7 +25,7 @@ class CreateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $this->interactor->execute(new CreateTicketRequest([
             'title' => '',
             'projectID' => $project->id,
@@ -67,7 +67,7 @@ class CreateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $allocatedUser = $this->createSampleUser();
         $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
@@ -84,7 +84,7 @@ class CreateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
             'projectID' => $project->id,
@@ -98,7 +98,7 @@ class CreateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $dateTime = new \DateTime('2029-01-01');
 
         $response = $this->interactor->execute(new CreateTicketRequest([

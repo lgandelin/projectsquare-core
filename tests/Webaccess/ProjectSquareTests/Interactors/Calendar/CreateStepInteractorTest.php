@@ -40,7 +40,7 @@ class CreateStepInteractorTest extends BaseTestCase
     {
         $user = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
 
         $this->interactor->execute(new CreateStepRequest([
             'name' => 'Sample step',
@@ -58,7 +58,7 @@ class CreateStepInteractorTest extends BaseTestCase
     {
         $user = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
 
         $this->interactor->execute(new CreateStepRequest([
             'name' => 'Sample step',
@@ -73,7 +73,7 @@ class CreateStepInteractorTest extends BaseTestCase
     {
         $user = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
 
         $response = $this->interactor->execute(new CreateStepRequest([
             'name' => 'Sample step',

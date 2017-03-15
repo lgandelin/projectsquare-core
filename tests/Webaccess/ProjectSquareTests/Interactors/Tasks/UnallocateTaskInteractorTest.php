@@ -32,10 +32,11 @@ class UnallocateTaskInteractorTest extends BaseTestCase
 
     public function testUnallocateTask()
     {
+        $project = $this->createSampleProject();
         $user = $this->createSampleUser();
 
         //Create task
-        $task = $this->createSampleTask(null, null, null, Task::TODO, $user->id);
+        $task = $this->createSampleTask($project->id, null, null, Task::TODO, $user->id);
 
         //Create linked event
         (new CreateEventInteractor(

@@ -63,8 +63,8 @@ class DeleteClientInteractorTest extends BaseTestCase
         $user = $this->createSampleUser(true);
         $project1 = $this->createSampleProject($client->id);
         $project2 = $this->createSampleProject($client->id);
-        $this->projectRepository->addUserToProject($project1, $user, null);
-        $this->projectRepository->addUserToProject($project2, $user, null);
+        $this->projectRepository->addUserToProject($project1->id, $user->id, null);
+        $this->projectRepository->addUserToProject($project2->id, $user->id, null);
 
         $this->assertcount(2, $this->projectRepository->objects);
 

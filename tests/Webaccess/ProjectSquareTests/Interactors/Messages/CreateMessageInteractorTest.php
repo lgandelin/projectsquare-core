@@ -57,8 +57,8 @@ class CreateMessageInteractorTest extends BaseTestCase
         $user1 = $this->createSampleUser();
         $user2 = $this->createSampleUser();
         $conversation = $this->createSampleConversation($project->id);
-        $this->projectRepository->addUserToProject($project, $user1, null);
-        $this->projectRepository->addUserToProject($project, $user2, null);
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
 
         $response = $this->interactor->execute(new CreateMessageRequest([
             'content' => 'Sample message',

@@ -51,10 +51,8 @@ class CreateTaskInteractor
         $task->statusID = $request->statusID;
         $task->allocatedUserID = $request->allocatedUserID;
 
-        if ($request->projectID) {
-            $this->validateProject($request->projectID);
-            $task->projectID = $request->projectID;
-        }
+        $this->validateProject($request->projectID);
+        $task->projectID = $request->projectID;
 
         if ($request->phaseID) {
             $this->validatePhase($request->phaseID);

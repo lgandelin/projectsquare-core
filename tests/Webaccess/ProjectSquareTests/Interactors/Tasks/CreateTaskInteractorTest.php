@@ -43,7 +43,6 @@ class CreateTaskInteractorTest extends BaseTestCase
         $this->interactor->execute(new CreateTaskRequest([
             'title' => 'Nouvelle tâche',
             'status' => 1,
-            'projectID' => 1,
         ]));
     }
 

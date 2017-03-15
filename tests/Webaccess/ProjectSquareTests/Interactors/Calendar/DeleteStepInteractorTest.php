@@ -34,7 +34,7 @@ class DeleteStepInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $step = $this->createSampleStep($project->id, $user->id);
         $this->interactor->execute(new DeleteStepRequest([
             'stepID' => $step->id,
@@ -46,7 +46,7 @@ class DeleteStepInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $step = $this->createSampleStep($project->id, $user->id);
         $response = $this->interactor->execute(new DeleteStepRequest([
             'stepID' => $step->id,
