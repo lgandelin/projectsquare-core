@@ -13,7 +13,7 @@ class UpdateTicketInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new UpdateTicketInteractor($this->ticketRepository, $this->projectRepository);
+        $this->interactor = new UpdateTicketInteractor($this->ticketRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository);
     }
 
     /**
@@ -103,5 +103,24 @@ class UpdateTicketInteractorTest extends BaseTestCase
             Events::UPDATE_TICKET,
             Mockery::type(UpdateTicketEvent::class)
         );
+    }
+
+    public function testUpdateTicketCheckNotifications()
+    {
+        $project = $this->createSampleProject();
+        $user1 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
+
+        $response = $this->interactor->execute(new UpdateTicketRequest([
+            'ticketID' => $ticketID,
+            'allocatedUserID' => $user2->id,
+            'requesterUserID' => $user1->id
+        ]));
+
+        $this->assertCount(1, $this->notificationRepository->objects);
     }
 }
