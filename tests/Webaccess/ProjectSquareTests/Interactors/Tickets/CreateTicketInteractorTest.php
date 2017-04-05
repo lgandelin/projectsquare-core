@@ -128,4 +128,44 @@ class CreateTicketInteractorTest extends BaseTestCase
             Mockery::type(CreateTicketEvent::class)
         );
     }
+
+    public function testCreateTicketCheckNotifications()
+    {
+        $project = $this->createSampleProject();
+        $user1 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
+
+        $response = $this->interactor->execute(new CreateTicketRequest([
+            'title' => 'Sample ticket',
+            'projectID' => $project->id,
+            'statusID' => 2,
+            'allocatedUserID' => $user1->id,
+            'requesterUserID' => $user1->id
+        ]));
+
+        $this->assertCount(0, $this->notificationRepository->objects);
+    }
+
+    public function testCreateTicketCheckNotifications2()
+    {
+        $project = $this->createSampleProject();
+        $user1 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
+
+        $response = $this->interactor->execute(new CreateTicketRequest([
+            'title' => 'Sample ticket',
+            'projectID' => $project->id,
+            'statusID' => 2,
+            'allocatedUserID' => $user2->id,
+            'requesterUserID' => $user1->id
+        ]));
+
+        $this->assertCount(1, $this->notificationRepository->objects);
+    }
 }

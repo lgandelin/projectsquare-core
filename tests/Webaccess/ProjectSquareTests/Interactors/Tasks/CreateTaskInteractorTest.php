@@ -55,4 +55,22 @@ class CreateTaskInteractorTest extends BaseTestCase
             'title' => '',
         ]));
     }
+
+    public function testCreateTaskCheckNotifications()
+    {
+        $project = $this->createSampleProject();
+        $user1 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
+
+        $this->interactor->execute(new CreateTaskRequest([
+            'title' => 'Nouvelle tâche',
+            'status' => 1,
+            'projectID' => $project->id,
+            'allocatedUserID' => $user1->id
+        ]));
+
+        $this->assertCount(1, $this->notificationRepository->objects);
+    }
 }
