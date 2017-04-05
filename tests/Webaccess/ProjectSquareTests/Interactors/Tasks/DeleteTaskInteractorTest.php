@@ -132,7 +132,8 @@ class DeleteTaskInteractorTest extends BaseTestCase
             $this->notificationRepository,
             $this->ticketRepository,
             $this->projectRepository,
-            $this->taskRepository
+            $this->taskRepository,
+            $this->userRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),
