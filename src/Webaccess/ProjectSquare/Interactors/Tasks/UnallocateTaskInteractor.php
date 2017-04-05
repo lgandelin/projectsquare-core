@@ -9,6 +9,7 @@ use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
+use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Planning\DeleteEventRequest;
 use Webaccess\ProjectSquare\Requests\Planning\GetEventsRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\UnallocateTaskRequest;
@@ -17,12 +18,13 @@ use Webaccess\ProjectSquare\Responses\Tasks\UnallocateTaskResponse;
 
 class UnallocateTaskInteractor
 {
-    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository)
+    public function __construct(TaskRepository $taskRepository, ProjectRepository $projectRepository, EventRepository $eventRepository, NotificationRepository $notificationRepository, UserRepository $userRepository)
     {
         $this->taskRepository = $taskRepository;
         $this->projectRepository = $projectRepository;
         $this->eventRepository = $eventRepository;
         $this->notificationRepository = $notificationRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -83,7 +85,7 @@ class UnallocateTaskInteractor
      */
     private function unallocateTask(UnallocateTaskRequest $request)
     {
-        (new UpdateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new UpdateTaskRequest([
+        (new UpdateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new UpdateTaskRequest([
             'taskID' => $request->taskID,
             'requesterUserID' => $request->requesterUserID,
             'allocatedUserID' => null

@@ -49,7 +49,8 @@ class AllocateAndScheduleTaskInteractor
     		$this->notificationRepository,
     		$this->ticketRepository,
     		$this->projectRepository,
-    		$this->taskRepository)
+    		$this->taskRepository,
+            $this->userRepository)
     	)->execute(new CreateEventRequest([
             'name' => $task->title,
             'userID' => $request->userID,

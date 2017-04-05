@@ -85,7 +85,7 @@ class RemoveUserFromProjectInteractor
         ]));
 
         foreach ($userTasks as $task) {
-            (new UnallocateTaskInteractor($this->taskRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository))->execute(new UnallocateTaskRequest([
+            (new UnallocateTaskInteractor($this->taskRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository, $this->userRepository))->execute(new UnallocateTaskRequest([
                 'taskID' => $task->id,
                 'requesterUserID' => $request->requesterUserID,
             ]));

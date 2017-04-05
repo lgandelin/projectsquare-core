@@ -14,6 +14,7 @@ use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
+use Webaccess\ProjectSquare\Repositories\UserRepository;
 use Webaccess\ProjectSquare\Requests\Planning\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\UpdateTaskRequest;
@@ -22,13 +23,14 @@ use Webaccess\ProjectSquare\Responses\Planning\CreateEventResponse;
 
 class CreateEventInteractor
 {
-    public function __construct(EventRepository $repository, NotificationRepository $notificationRepository, TicketRepository $ticketRepository, ProjectRepository $projectRepository, TaskRepository $taskRepository)
+    public function __construct(EventRepository $repository, NotificationRepository $notificationRepository, TicketRepository $ticketRepository, ProjectRepository $projectRepository, TaskRepository $taskRepository, UserRepository $userRepository)
     {
         $this->repository = $repository;
         $this->notificationRepository = $notificationRepository;
         $this->ticketRepository = $ticketRepository;
         $this->projectRepository = $projectRepository;
         $this->taskRepository = $taskRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function execute(CreateEventRequest $request)
@@ -119,7 +121,7 @@ class CreateEventInteractor
     private function allocateTaskIfRequired(CreateEventRequest $request)
     {
         if ($request->taskID) {
-            (new UpdateTaskInteractor($this->taskRepository, $this->projectRepository))->execute(new UpdateTaskRequest([
+            (new UpdateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository))->execute(new UpdateTaskRequest([
                 'taskID' => $request->taskID,
                 'allocatedUserID' => $request->userID,
                 'requesterUserID' => $request->userID,
