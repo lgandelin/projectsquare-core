@@ -62,6 +62,7 @@ class CreateTicketInteractor
     private function validateProject(CreateTicketRequest $request)
     {
         if (!$project = $this->projectRepository->getProject($request->projectID)) {
+
             throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
         }
     }
@@ -138,22 +139,21 @@ class CreateTicketInteractor
     {
         $project = $this->projectRepository->getProject($ticket->projectID);
 
-        //Agency users
-        foreach ($this->userRepository->getUsersByProject($ticket->projectID) as $user) {
-            if ($user->id != $request->requesterUserID) {
-                $this->notifyUserIfRequired($ticket, $user);
+        if ($request->allocatedUserID != $request->requesterUserID) {
+            if ($allocatedUser = $this->userRepository->getUser($request->allocatedUserID)) {
+                $this->notifyUser($ticket, $allocatedUser);
             }
         }
 
         //Client users
         foreach ($this->userRepository->getClientUsers($project->clientID) as $user) {
             if ($user->id != $request->requesterUserID) {
-                $this->notifyUserIfRequired($ticket, $user);
+                $this->notifyUser($ticket, $user);
             }
         }
     }
 
-    private function notifyUserIfRequired($ticket, $user)
+    private function notifyUser($ticket, $user)
     {
         (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
             'userID' => $user->id,
