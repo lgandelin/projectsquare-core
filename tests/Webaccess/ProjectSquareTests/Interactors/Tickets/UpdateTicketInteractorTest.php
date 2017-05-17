@@ -32,22 +32,6 @@ class UpdateTicketInteractorTest extends BaseTestCase
     /**
      * @expectedException Exception
      */
-    public function testUpdateTicketWithPassedDueDate()
-    {
-        $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project->id, $user->id, null);
-        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
-        $this->interactor->execute(new UpdateTicketRequest([
-            'ticketID' => $ticketID,
-            'dueDate' => new DateTime('2010-01-01'),
-            'requesterUserID' => $user->id
-        ]));
-    }
-
-    /**
-     * @expectedException Exception
-     */
     public function testUpdateTicketWithoutPermission()
     {
         $project = $this->createSampleProject();
