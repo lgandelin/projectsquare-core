@@ -77,23 +77,6 @@ class CreateTicketInteractorTest extends BaseTestCase
         ]));
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testCreateTicketWithPassedDueDate()
-    {
-        $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project->id, $user->id, null);
-        $this->interactor->execute(new CreateTicketRequest([
-            'title' => 'Sample ticket',
-            'projectID' => $project->id,
-            'allocatedUserID' => $user->id,
-            'dueDate' => new DateTime('2010-01-01'),
-            'requesterUserID' => $user->id
-        ]));
-    }
-
     public function testCreateTicket()
     {
         $project = $this->createSampleProject();
