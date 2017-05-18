@@ -15,8 +15,12 @@ class EventDecorator
 
         if (isset($event->projectID)) {
             $project = Context::get('GetProjectInteractor')->getProject($event->projectID);
-            if ($event->projectID == $project->id && isset($project->color)) {
-                $event->color = $project->color;
+            if ($event->projectID == $project->id) {
+                if (isset($project->color)) {
+                    $event->color = $project->color;
+                }
+                $event->project_client = $project->clientName;
+                $event->project_name = $project->name;
             }
         }
 
