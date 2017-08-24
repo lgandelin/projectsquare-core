@@ -16,11 +16,13 @@ interface UserRepository
 
     public function getUsersByProject($projectID);
 
+    public function getUsersByRole($roleID);
+
     public function getAgencyUsersPaginatedList($limit);
 
-    public function createUser($firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $isAdministrator=false);
+    public function createUser($firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $roleID, $isAdministrator=false);
 
-    public function updateUser($userID, $firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $isAdministrator=false);
+    public function updateUser($userID, $firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $roleID, $isAdministrator=false);
 
     public function deleteUser($userID);
 

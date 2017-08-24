@@ -56,12 +56,12 @@ class InMemoryUserRepository implements UserRepository
         // TODO: Implement getUsersPaginatedList() method.
     }
 
-    public function createUser($firstName, $lastName, $email, $password, $mobile, $phone, $clientID, $clientRole, $isAdministrator=false)
+    public function createUser($firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $roleID, $isAdministrator=false)
     {
         // TODO: Implement createUser() method.
     }
 
-    public function updateUser($userID, $firstName, $lastName, $email, $password, $mobile, $phone, $clientID, $clientRole, $isAdministrator=false)
+    public function updateUser($userID, $firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $roleID, $isAdministrator=false)
     {
         // TODO: Implement updateUser() method.
     }

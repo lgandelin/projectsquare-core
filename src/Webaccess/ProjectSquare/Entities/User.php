@@ -13,5 +13,6 @@ class User
     public $phone;
     public $clientID;
     public $clientRole;
+    public $roleID;
     public $isAdministrator;
 }
