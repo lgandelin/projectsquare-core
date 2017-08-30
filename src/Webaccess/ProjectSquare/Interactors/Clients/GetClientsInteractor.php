@@ -17,8 +17,8 @@ class GetClientsInteractor
         return $this->repository->getClients();
     }
 
-    public function getClientsPaginatedList($limit, GetClientsRequest $request)
+    public function getClientsPaginatedList($limit, $sortColumn = null, $sortOrder = null)
     {
-        return $this->repository->getClientsPaginatedList($limit);
+        return $this->repository->getClientsPaginatedList($limit, $sortColumn, $sortOrder);
     }
 }

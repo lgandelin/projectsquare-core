@@ -45,9 +45,9 @@ class GetTicketInteractor
         return $this->repository->getTicketsList($userID, $projectID, $allocatedUserID, $statusID, $typeID);
     }
 
-    public function getTicketsPaginatedList($userID, $limit, $projectID = null, $allocatedUserID = null, $statusID = null, $typeID = null)
+    public function getTicketsPaginatedList($userID, $limit, $projectID = null, $allocatedUserID = null, $statusID = null, $typeID = null, $sortColumn = null, $sortOrder = null)
     {
-        return $this->repository->getTicketsPaginatedList($userID, $limit, $projectID, $allocatedUserID, $statusID, $typeID);
+        return $this->repository->getTicketsPaginatedList($userID, $limit, $projectID, $allocatedUserID, $statusID, $typeID, $sortColumn, $sortOrder);
     }
 
     public function getTicketStatesPaginatedList($ticketID, $limit)

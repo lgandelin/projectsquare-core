@@ -18,7 +18,7 @@ interface UserRepository
 
     public function getUsersByRole($roleID);
 
-    public function getAgencyUsersPaginatedList($limit);
+    public function getAgencyUsersPaginatedList($limit, $sortColumn = null, $sortOrder = null);
 
     public function createUser($firstName, $lastName, $email, $password, $phone, $mobile, $clientID, $clientRole, $roleID, $isAdministrator=false);
 

@@ -123,4 +123,9 @@ class InMemoryUserRepository implements UserRepository
 
         return false;
     }
+
+    public function getUsersByRole($roleID)
+    {
+        // TODO: Implement getUsersByRole() method.
+    }
 }
