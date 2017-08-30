@@ -108,7 +108,7 @@ class InMemoryUserRepository implements UserRepository
         return [];
     }
 
-    public function getAgencyUsersPaginatedList($limit)
+    public function getAgencyUsersPaginatedList($limit, $sortColumn = null, $sortOrder = null)
     {
         // TODO: Implement getAgencyUsersPaginatedList() method.
     }
