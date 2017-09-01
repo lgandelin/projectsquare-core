@@ -109,7 +109,7 @@ class AllocateAndScheduleTaskInteractor
     private function addUserToProjectIfRequired(AllocateAndScheduleTaskRequest $request, $projectID)
     {
         if ($projectID && !$this->projectRepository->isUserInProject($projectID, $request->userID)) {
-            (new AddUserToProjectInteractor($this->userRepository, $this->projectRepository))->execute(new AddUserToProjectRequest([
+            (new AddUserToProjectInteractor($this->userRepository, $this->projectRepository, $this->notificationRepository))->execute(new AddUserToProjectRequest([
                 'userID' => $request->userID,
                 'projectID' => $projectID,
                 'requesterUserID' => $request->requesterUserID

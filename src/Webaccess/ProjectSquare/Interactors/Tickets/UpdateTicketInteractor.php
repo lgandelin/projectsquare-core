@@ -99,9 +99,10 @@ class UpdateTicketInteractor extends GetTicketInteractor
     {
         $project = $this->projectRepository->getProject($ticket->projectID);
 
-        if ($request->allocatedUserID != $request->requesterUserID) {
-            if ($allocatedUser = $this->userRepository->getUser($request->allocatedUserID)) {
-                $this->notifyUser($ticket, $allocatedUser);
+        //Agency users
+        foreach ($this->userRepository->getUsersByProject($project->id) as $user) {
+            if ($user->id != $request->requesterUserID) {
+                $this->notifyUser($ticket, $user);
             }
         }
 

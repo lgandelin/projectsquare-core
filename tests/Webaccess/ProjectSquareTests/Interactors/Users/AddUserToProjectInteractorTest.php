@@ -10,7 +10,7 @@ class AddUserToProjectInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new AddUserToProjectInteractor($this->userRepository, $this->projectRepository, $this->taskRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new AddUserToProjectInteractor($this->userRepository, $this->projectRepository, $this->notificationRepository);
     }
 
     /**
@@ -48,11 +48,13 @@ class AddUserToProjectInteractorTest extends BaseTestCase
             'userID' => $user->id,
             'projectID' => $project->id,
             'roleID' => 1,
-            'requesterUserID' => $user->id
+            'requesterUserID' => 2
         ]));
 
         $this->assertInstanceOf(AddUserToProjectResponse::class, $response);
         $this->assertTrue($response->success);
+
+        $this->assertCount(1, $this->notificationRepository->objects);
     }
 
     /**
