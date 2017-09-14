@@ -63,7 +63,7 @@ class PhasesAndTasksTextParser
     {
         preg_match('/([^;]*);?(.*)/', $line, $matches);
         $taskName = $matches[1];
-        $taskDuration = (isset($matches[2]) && $matches[2] != "") ? (float) trim($matches[2]) : 0;
+        $taskDuration = (isset($matches[2]) && $matches[2] != "") ? (float) str_replace(',', '.', $matches[2]) : 0;
 
         return array($taskName, $taskDuration);
     }
