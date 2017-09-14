@@ -134,6 +134,10 @@ class CreateTicketInteractor
         if ($request->allocatedUserID != $request->requesterUserID) {
             if ($allocatedUser = $this->userRepository->getUser($request->allocatedUserID)) {
                 $this->notifyUser($ticket, $allocatedUser);
+            } else {
+                foreach ($this->userRepository->getUsersByProject($ticket->projectID) as $user) {
+                    $this->notifyUser($ticket, $user);
+                }
             }
         }
 

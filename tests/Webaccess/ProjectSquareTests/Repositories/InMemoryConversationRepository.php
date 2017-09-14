@@ -28,11 +28,6 @@ class InMemoryConversationRepository implements ConversationRepository
         return false;
     }
 
-    public function getConversations()
-    {
-        // TODO: Implement getConversations() method.
-    }
-
     public function getConversationsPaginatedList($limit)
     {
         // TODO: Implement getConversationsPaginatedList() method.
