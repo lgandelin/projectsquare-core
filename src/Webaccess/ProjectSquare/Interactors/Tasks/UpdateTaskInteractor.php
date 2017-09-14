@@ -28,7 +28,7 @@ class UpdateTaskInteractor
         $task = $this->getTask($request->taskID);
         $this->updateTask($request, $task);
         $this->createNotifications($request, $task);
-        $this->dispatchEvent($task->id);
+        $this->dispatchEvent($task->id, $request->requesterUserID);
     }
 
     private function getTask($taskID)
@@ -95,11 +95,11 @@ class UpdateTaskInteractor
     }
 
 
-    private function dispatchEvent($taskID)
+    private function dispatchEvent($taskID, $requesterUserID)
     {
         Context::get('event_dispatcher')->dispatch(
             Events::UPDATE_TASK,
-            new UpdateTaskEvent($taskID)
+            new UpdateTaskEvent($taskID, $requesterUserID)
         );
     }
 }

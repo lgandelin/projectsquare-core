@@ -37,7 +37,7 @@ class UpdateTicketInteractor extends GetTicketInteractor
         $this->validateRequest($request);
         $ticketState = $this->createTicketState($request);
         $this->createNotifications($request, $ticket);
-        $this->dispatchEvent($ticket->id);
+        $this->dispatchEvent($ticket->id, $request->requesterUserID);
 
         return new UpdateTicketResponse([
             'ticket' => $ticket,
@@ -123,11 +123,11 @@ class UpdateTicketInteractor extends GetTicketInteractor
         ]));
     }
 
-    private function dispatchEvent($ticketID)
+    private function dispatchEvent($ticketID, $requesterUserID)
     {
         Context::get('event_dispatcher')->dispatch(
             Events::UPDATE_TICKET,
-            new UpdateTicketEvent($ticketID)
+            new UpdateTicketEvent($ticketID, $requesterUserID)
         );
     }
 }
