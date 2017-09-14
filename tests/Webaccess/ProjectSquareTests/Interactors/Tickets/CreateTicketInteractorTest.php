@@ -25,7 +25,7 @@ class CreateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $this->interactor->execute(new CreateTicketRequest([
             'title' => '',
             'projectID' => $project->id,
@@ -67,7 +67,7 @@ class CreateTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $allocatedUser = $this->createSampleUser();
         $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
@@ -77,28 +77,11 @@ class CreateTicketInteractorTest extends BaseTestCase
         ]));
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testCreateTicketWithPassedDueDate()
-    {
-        $project = $this->createSampleProject();
-        $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
-        $this->interactor->execute(new CreateTicketRequest([
-            'title' => 'Sample ticket',
-            'projectID' => $project->id,
-            'allocatedUserID' => $user->id,
-            'dueDate' => new DateTime('2010-01-01'),
-            'requesterUserID' => $user->id
-        ]));
-    }
-
     public function testCreateTicket()
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $dateTime = new \DateTime('2029-01-01');
 
         $response = $this->interactor->execute(new CreateTicketRequest([
@@ -127,5 +110,45 @@ class CreateTicketInteractorTest extends BaseTestCase
             Events::CREATE_TICKET,
             Mockery::type(CreateTicketEvent::class)
         );
+    }
+
+    public function testCreateTicketCheckNotifications()
+    {
+        $project = $this->createSampleProject();
+        $user1 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
+
+        $response = $this->interactor->execute(new CreateTicketRequest([
+            'title' => 'Sample ticket',
+            'projectID' => $project->id,
+            'statusID' => 2,
+            'allocatedUserID' => $user1->id,
+            'requesterUserID' => $user1->id
+        ]));
+
+        $this->assertCount(0, $this->notificationRepository->objects);
+    }
+
+    public function testCreateTicketCheckNotifications2()
+    {
+        $project = $this->createSampleProject();
+        $user1 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
+
+        $response = $this->interactor->execute(new CreateTicketRequest([
+            'title' => 'Sample ticket',
+            'projectID' => $project->id,
+            'statusID' => 2,
+            'allocatedUserID' => $user2->id,
+            'requesterUserID' => $user1->id
+        ]));
+
+        $this->assertCount(1, $this->notificationRepository->objects);
     }
 }

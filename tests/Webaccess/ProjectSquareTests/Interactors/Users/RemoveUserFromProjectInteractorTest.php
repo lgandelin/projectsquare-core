@@ -3,6 +3,7 @@
 use Webaccess\ProjectSquare\Entities\Task;
 use Webaccess\ProjectSquare\Interactors\Users\RemoveUserFromProjectInteractor;
 use Webaccess\ProjectSquare\Requests\Users\RemoveUserFromProjectRequest;
+use Webaccess\ProjectSquare\Responses\Users\RemoveUserFromProjectResponse;
 use Webaccess\ProjectSquareTests\BaseTestCase;
 
 class RemoveUserFromProjectInteractorTest extends BaseTestCase
@@ -44,19 +45,21 @@ class RemoveUserFromProjectInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
 
         $this->createSampleTask($project->id, null, null, Task::TODO, $user->id);
         $this->createSampleTask($project->id, null, null, Task::TODO, $user->id);
 
         $this->assertCount(2, $this->taskRepository->getTasks($user->id, $project->id, null, $user->id, null, true));
 
-        $this->interactor->execute(new RemoveUserFromProjectRequest([
+        $response = $this->interactor->execute(new RemoveUserFromProjectRequest([
             'userID' => $user->id,
             'projectID' => $project->id,
             'requesterUserID' => $user->id
         ]));
 
         $this->assertCount(0, $this->taskRepository->getTasks($user->id, $project->id, null, $user->id, null, true));
+        $this->assertInstanceOf(RemoveUserFromProjectResponse::class, $response);
+        $this->assertTrue($response->success);
     }
 }

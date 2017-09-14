@@ -3,11 +3,16 @@
 namespace Webaccess\ProjectSquare\Interactors\Tickets;
 
 use Webaccess\ProjectSquare\Context;
+use Webaccess\ProjectSquare\Entities\Ticket;
 use Webaccess\ProjectSquare\Entities\TicketState;
 use Webaccess\ProjectSquare\Events\Events;
 use Webaccess\ProjectSquare\Events\Tickets\UpdateTicketEvent;
+use Webaccess\ProjectSquare\Interactors\Notifications\CreateNotificationInteractor;
+use Webaccess\ProjectSquare\Repositories\NotificationRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Repositories\TicketRepository;
+use Webaccess\ProjectSquare\Repositories\UserRepository;
+use Webaccess\ProjectSquare\Requests\Notifications\CreateNotificationRequest;
 use Webaccess\ProjectSquare\Requests\Tickets\UpdateTicketRequest;
 use Webaccess\ProjectSquare\Responses\Tickets\UpdateTicketResponse;
 
@@ -15,11 +20,15 @@ class UpdateTicketInteractor extends GetTicketInteractor
 {
     protected $repository;
     protected $projectRepository;
+    protected $userRepository;
+    protected $notificationRepository;
 
-    public function __construct(TicketRepository $repository, ProjectRepository $projectRepository)
+    public function __construct(TicketRepository $repository, ProjectRepository $projectRepository, UserRepository $userRepository, NotificationRepository $notificationRepository)
     {
         parent::__construct($repository);
         $this->projectRepository = $projectRepository;
+        $this->userRepository = $userRepository;
+        $this->notificationRepository = $notificationRepository;
     }
 
     public function execute(UpdateTicketRequest $request)
@@ -27,6 +36,7 @@ class UpdateTicketInteractor extends GetTicketInteractor
         $ticket = $this->getTicket($request->ticketID);
         $this->validateRequest($request);
         $ticketState = $this->createTicketState($request);
+        $this->createNotifications($request, $ticket);
         $this->dispatchEvent($ticket->id);
 
         return new UpdateTicketResponse([
@@ -37,16 +47,8 @@ class UpdateTicketInteractor extends GetTicketInteractor
 
     private function validateRequest(UpdateTicketRequest $request)
     {
-        $this->validateDueDate($request);
         $this->validateRequesterPermissions($request);
         $this->validateAllocatedUser($request);
-    }
-
-    private function validateDueDate(UpdateTicketRequest $request)
-    {
-        if ($request->dueDate && $request->dueDate < new \DateTime('now')) {
-            throw new \Exception(Context::get('translator')->translate('tickets.due_date_already_passed'));
-        }
     }
 
     private function validateRequesterPermissions(UpdateTicketRequest $request)
@@ -90,6 +92,35 @@ class UpdateTicketInteractor extends GetTicketInteractor
         $ticketState = $this->repository->persistTicketState($ticketState);
 
         return $ticketState;
+    }
+
+
+    private function createNotifications(UpdateTicketRequest $request, Ticket $ticket)
+    {
+        $project = $this->projectRepository->getProject($ticket->projectID);
+
+        //Agency users
+        foreach ($this->userRepository->getUsersByProject($project->id) as $user) {
+            if ($user->id != $request->requesterUserID) {
+                $this->notifyUser($ticket, $user);
+            }
+        }
+
+        //Client users
+        foreach ($this->userRepository->getClientUsers($project->clientID) as $user) {
+            if ($user->id != $request->requesterUserID) {
+                $this->notifyUser($ticket, $user);
+            }
+        }
+    }
+
+    private function notifyUser($ticket, $user)
+    {
+        (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
+            'userID' => $user->id,
+            'entityID' => $ticket->id,
+            'type' => 'TICKET_UPDATED',
+        ]));
     }
 
     private function dispatchEvent($ticketID)

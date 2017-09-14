@@ -17,4 +17,5 @@ class UpdateTaskRequest extends Request
     public $projectID;
     public $order;
     public $allocatedUserID;
+    public $requesterUserID;
 }

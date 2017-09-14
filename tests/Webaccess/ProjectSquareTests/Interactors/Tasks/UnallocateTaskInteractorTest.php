@@ -14,7 +14,7 @@ class UnallocateTaskInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new UnallocateTaskInteractor($this->taskRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository);
+        $this->interactor = new UnallocateTaskInteractor($this->taskRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository, $this->userRepository);
     }
 
     /**
@@ -32,10 +32,11 @@ class UnallocateTaskInteractorTest extends BaseTestCase
 
     public function testUnallocateTask()
     {
+        $project = $this->createSampleProject();
         $user = $this->createSampleUser();
 
         //Create task
-        $task = $this->createSampleTask(null, null, null, Task::TODO, $user->id);
+        $task = $this->createSampleTask($project->id, null, null, Task::TODO, $user->id);
 
         //Create linked event
         (new CreateEventInteractor(
@@ -43,7 +44,8 @@ class UnallocateTaskInteractorTest extends BaseTestCase
             $this->notificationRepository,
             $this->ticketRepository,
             $this->projectRepository,
-            $this->taskRepository
+            $this->taskRepository,
+            $this->userRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),

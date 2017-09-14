@@ -33,6 +33,8 @@ class RemoveUserFromProjectInteractor
     public function execute(RemoveUserFromProjectRequest $request)
     {
         $this->validateRequest($request);
+        $this->unallocateUserTasks($request);
+        $this->projectRepository->removeUserFromProject($request->projectID, $request->userID);
 
         return new RemoveUserFromProjectResponse([
             'success' => true,
@@ -47,8 +49,6 @@ class RemoveUserFromProjectInteractor
     {
         $this->validateUser($request);
         $this->validateProject($request);
-        $this->unallocateUserTasks($request);
-        $this->projectRepository->removeUserFromProject($request->projectID, $request->userID);
     }
 
     /**
@@ -85,7 +85,7 @@ class RemoveUserFromProjectInteractor
         ]));
 
         foreach ($userTasks as $task) {
-            (new UnallocateTaskInteractor($this->taskRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository))->execute(new UnallocateTaskRequest([
+            (new UnallocateTaskInteractor($this->taskRepository, $this->projectRepository, $this->eventRepository, $this->notificationRepository, $this->userRepository))->execute(new UnallocateTaskRequest([
                 'taskID' => $task->id,
                 'requesterUserID' => $request->requesterUserID,
             ]));

@@ -80,7 +80,7 @@ class InMemoryTaskRepository implements TaskRepository
         }
     }
 
-    public function getTasksPaginatedList($userID, $limit, $projectID = null, $statusID = null, $phaseID = null, $allocatedUserID = null)
+    public function getTasksPaginatedList($userID, $limit, $projectID = null, $statusID = null, $phaseID = null, $allocatedUserID = null, $sortColumn = null, $sortOrder = null)
     {
         // TODO: Implement getTasksPaginatedList() method.
     }

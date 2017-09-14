@@ -4,6 +4,7 @@ namespace Webaccess\ProjectSquare\Interactors\Tasks;
 
 use Webaccess\ProjectSquare\Context;
 use Webaccess\ProjectSquare\Interactors\Planning\CreateEventInteractor;
+use Webaccess\ProjectSquare\Interactors\Users\AddUserToProjectInteractor;
 use Webaccess\ProjectSquare\Repositories\EventRepository;
 use Webaccess\ProjectSquare\Repositories\TaskRepository;
 use Webaccess\ProjectSquare\Repositories\UserRepository;
@@ -12,6 +13,7 @@ use Webaccess\ProjectSquare\Repositories\TicketRepository;
 use Webaccess\ProjectSquare\Repositories\ProjectRepository;
 use Webaccess\ProjectSquare\Requests\Planning\CreateEventRequest;
 use Webaccess\ProjectSquare\Requests\Tasks\AllocateAndScheduleTaskRequest;
+use Webaccess\ProjectSquare\Requests\Users\AddUserToProjectRequest;
 use Webaccess\ProjectSquare\Responses\Tasks\AllocateAndScheduleTaskResponse;
 
 class AllocateAndScheduleTaskInteractor
@@ -38,15 +40,17 @@ class AllocateAndScheduleTaskInteractor
     public function execute(AllocateAndScheduleTaskRequest $request)
     {
     	$this->validateRequest($request);
-    	$task = $this->taskRepository->getTask($request->taskID);
-    	list($startTime, $endTime) = $this->getStartAndEndDateTimes($request->day, $task->estimatedTimeDays);
+        $task = $this->taskRepository->getTask($request->taskID);
+        $this->addUserToProjectIfRequired($request, $task->projectID);
+        list($startTime, $endTime) = $this->getStartAndEndDateTimes($request->day, $task->estimatedTimeDays);
 
     	$response = (new CreateEventInteractor(
     		$this->repository,
     		$this->notificationRepository,
     		$this->ticketRepository,
     		$this->projectRepository,
-    		$this->taskRepository)
+    		$this->taskRepository,
+            $this->userRepository)
     	)->execute(new CreateEventRequest([
             'name' => $task->title,
             'userID' => $request->userID,
@@ -100,5 +104,16 @@ class AllocateAndScheduleTaskInteractor
         }
 
         return array($startTime, $endTime);
+    }
+
+    private function addUserToProjectIfRequired(AllocateAndScheduleTaskRequest $request, $projectID)
+    {
+        if ($projectID && !$this->projectRepository->isUserInProject($projectID, $request->userID)) {
+            (new AddUserToProjectInteractor($this->userRepository, $this->projectRepository, $this->notificationRepository))->execute(new AddUserToProjectRequest([
+                'userID' => $request->userID,
+                'projectID' => $projectID,
+                'requesterUserID' => $request->requesterUserID
+            ]));
+        }
     }
 }

@@ -13,7 +13,7 @@ class UpdateTaskInteractorTest extends BaseTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->interactor = new UpdateTaskInteractor($this->taskRepository, $this->projectRepository);
+        $this->interactor = new UpdateTaskInteractor($this->taskRepository, $this->projectRepository, $this->userRepository, $this->notificationRepository);
     }
 
     public function testUpdateTask()
@@ -47,5 +47,25 @@ class UpdateTaskInteractorTest extends BaseTestCase
             'taskID' => $task->id,
             'projectID' => 2,
         ]));
+    }
+
+    public function testUpdateTaskCheckNotifications()
+    {
+        $project = $this->createSampleProject();
+        $user1 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $user2 = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
+
+        $task = $this->createSampleTask($project->id);
+
+        $this->interactor->execute(new UpdateTaskRequest([
+            'taskID' => $task->id,
+            'title' => 'Tâche modifiée',
+            'allocatedUserID' => $user2->id,
+            'requesterUserID' => $user1->id,
+        ]));
+
+        $this->assertCount(1, $this->notificationRepository->objects);
     }
 }

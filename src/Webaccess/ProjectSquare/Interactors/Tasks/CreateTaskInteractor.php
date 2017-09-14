@@ -51,10 +51,8 @@ class CreateTaskInteractor
         $task->statusID = $request->statusID;
         $task->allocatedUserID = $request->allocatedUserID;
 
-        if ($request->projectID) {
-            $this->validateProject($request->projectID);
-            $task->projectID = $request->projectID;
-        }
+        $this->validateProject($request->projectID);
+        $task->projectID = $request->projectID;
 
         if ($request->phaseID) {
             $this->validatePhase($request->phaseID);
@@ -94,15 +92,14 @@ class CreateTaskInteractor
 
     private function createNotifications(CreateTaskRequest $request, Task $task)
     {
-        //Agency users
-        foreach ($this->userRepository->getUsersByProject($task->projectID) as $user) {
-            if ($user->id != $request->requesterUserID) {
-                $this->notifyUserIfRequired($task, $user);
+        if ($request->allocatedUserID != $request->requesterUserID) {
+            if ($allocatedUser = $this->userRepository->getUser($request->allocatedUserID)) {
+                $this->notifyUser($task, $allocatedUser);
             }
         }
     }
 
-    private function notifyUserIfRequired($task, $user)
+    private function notifyUser($task, $user)
     {
         (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
             'userID' => $user->id,

@@ -41,9 +41,11 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
     public function __construct()
     {
+        parent::__construct();
+
         $this->ticketRepository = new InMemoryTicketRepository();
-        $this->projectRepository = new InMemoryProjectRepository();
         $this->userRepository = new InMemoryUserRepository();
+        $this->projectRepository = new InMemoryProjectRepository($this->userRepository);
         $this->conversationRepository = new InMemoryConversationRepository();
         $this->messageRepository = new InMemoryMessageRepository();
         $this->eventRepository = new InMemoryEventRepository();
@@ -133,7 +135,8 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             $this->notificationRepository,
             $this->ticketRepository,
             $this->projectRepository,
-            $this->taskRepository
+            $this->taskRepository,
+            $this->userRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),
@@ -173,7 +176,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return $response->todo;
     }
 
-    protected function createSampleTask($projectID = null, $phaseID = null, $estimatedTimeDays = null, $statusID = Task::TODO, $allocatedUserID = null)
+    protected function createSampleTask($projectID, $phaseID = null, $estimatedTimeDays = null, $statusID = Task::TODO, $allocatedUserID = null)
     {
         $response = (new CreateTaskInteractor(
             $this->taskRepository,

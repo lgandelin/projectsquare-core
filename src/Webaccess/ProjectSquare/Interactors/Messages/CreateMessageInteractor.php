@@ -98,14 +98,14 @@ class CreateMessageInteractor
         //Agency users
         foreach ($this->userRepository->getUsersByProject($conversation->projectID) as $user) {
             if ($user->id != $request->requesterUserID) {
-                $this->notifyUserIfRequired($message, $user);
+                $this->notifyUser($message, $user);
             }
         }
 
         //Client users
         foreach ($this->userRepository->getClientUsers($project->clientID) as $user) {
             if ($user->id != $request->requesterUserID) {
-                $this->notifyUserIfRequired($message, $user);
+                $this->notifyUser($message, $user);
             }
         }
     }
@@ -136,7 +136,7 @@ class CreateMessageInteractor
         return count($this->repository->getMessagesByConversation($conversationID));
     }
 
-    private function notifyUserIfRequired(Message $message, $user)
+    private function notifyUser(Message $message, $user)
     {
         (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
             'userID' => $user->id,

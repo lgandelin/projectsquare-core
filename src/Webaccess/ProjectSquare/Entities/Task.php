@@ -22,6 +22,7 @@ class Task
     public $statusID;
     public $projectID;
     public $phaseID;
+    public $authorUserID;
     public $allocatedUserID;
     public $order;
 }

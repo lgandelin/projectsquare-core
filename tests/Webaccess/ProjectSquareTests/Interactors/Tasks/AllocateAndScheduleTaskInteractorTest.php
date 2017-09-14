@@ -36,8 +36,9 @@ class AllocateAndScheduleTaskInteractorTest extends BaseTestCase
      */
     public function testAllocateTaskWithUnknownuser()
     {
+        $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-    	$task = $this->createSampleTask();
+    	$task = $this->createSampleTask($project->id);
 
         $this->interactor->execute(new AllocateAndScheduleTaskRequest([
         	'userID' => 8,
@@ -49,8 +50,9 @@ class AllocateAndScheduleTaskInteractorTest extends BaseTestCase
 
     public function testAllocateTask()
     {
+        $project = $this->createSampleProject();
     	$user = $this->createSampleUser();
-    	$task = $this->createSampleTask(null, null, 2);
+    	$task = $this->createSampleTask($project->id, null, 2);
 
     	$response = $this->interactor->execute(new AllocateAndScheduleTaskRequest([
         	'userID' => $user->id,
@@ -75,5 +77,22 @@ class AllocateAndScheduleTaskInteractorTest extends BaseTestCase
             Events::CREATE_EVENT,
             Mockery::type(CreateEventEvent::class)
         );
+    }
+
+    public function testAllocateTaskToAUserNonBelongingToTheProject()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $task = $this->createSampleTask($project->id, null, 2);
+        $this->assertFalse($this->projectRepository->isUserInProject($project->id, $user->id));
+
+        $this->interactor->execute(new AllocateAndScheduleTaskRequest([
+            'userID' => $user->id,
+            'day' => new \DateTime('2017-03-01'),
+            'taskID' => $task->id,
+            'requesterUserID' => $user->id,
+        ]));
+
+        $this->assertTrue($this->projectRepository->isUserInProject($project->id, $user->id));
     }
 }

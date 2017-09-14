@@ -49,7 +49,7 @@ class DeleteTaskInteractorTest extends BaseTestCase
     {
         $user = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $task = $this->createSampleTask($project->id);
         $response = $this->interactor->execute(new DeleteTaskRequest([
             'taskID' => $task->id,
@@ -76,8 +76,8 @@ class DeleteTaskInteractorTest extends BaseTestCase
         $user1 = $this->createSampleUser();
         $user2 = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user1, null);
-        $this->projectRepository->addUserToProject($project, $user2, null);
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
 
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
@@ -109,8 +109,8 @@ class DeleteTaskInteractorTest extends BaseTestCase
         $user1 = $this->createSampleUser();
         $user2 = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user1, null);
-        $this->projectRepository->addUserToProject($project, $user2, null);
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
 
         $response = (new CreateTaskInteractor(
             $this->taskRepository,
@@ -132,7 +132,8 @@ class DeleteTaskInteractorTest extends BaseTestCase
             $this->notificationRepository,
             $this->ticketRepository,
             $this->projectRepository,
-            $this->taskRepository
+            $this->taskRepository,
+            $this->userRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),

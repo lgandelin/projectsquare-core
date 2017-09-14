@@ -35,7 +35,7 @@ class UpdateStepInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $step = $this->createSampleStep($project->id, $user->id);
 
         $this->interactor->execute(new UpdateStepRequest([
@@ -52,7 +52,7 @@ class UpdateStepInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $step = $this->createSampleStep($project->id, $user->id);
 
         $this->interactor->execute(new UpdateStepRequest([
@@ -69,7 +69,7 @@ class UpdateStepInteractorTest extends BaseTestCase
     {
         $user = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $step = $this->createSampleStep($project->id, $user->id);
 
         $this->interactor->execute(new UpdateStepRequest([
@@ -86,7 +86,7 @@ class UpdateStepInteractorTest extends BaseTestCase
     {
         $user = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $step = $this->createSampleStep($project->id, $user->id);
 
         $response = $this->interactor->execute(new UpdateStepRequest([

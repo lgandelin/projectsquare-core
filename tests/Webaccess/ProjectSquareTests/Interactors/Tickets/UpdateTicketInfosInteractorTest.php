@@ -63,7 +63,7 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
         $this->interactor->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,
@@ -76,7 +76,7 @@ class UpdateTicketInfosInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
         $response = $this->interactor->execute(new UpdateTicketInfosRequest([
             'ticketID' => $ticketID,

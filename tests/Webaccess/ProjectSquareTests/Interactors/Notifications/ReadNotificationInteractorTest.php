@@ -28,8 +28,8 @@ class ReadNotificationInteractorTest extends BaseTestCase
         $project = $this->createSampleProject();
         $user1 = $this->createSampleUser();
         $user2 = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user1, null);
-        $this->projectRepository->addUserToProject($project, $user2, null);
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
         $conversation = $this->createSampleConversation($project->id);
         $this->createSampleMessage($conversation->id, $user1->id);
 

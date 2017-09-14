@@ -9,9 +9,10 @@ class InMemoryProjectRepository implements ProjectRepository
 {
     public $objects;
 
-    public function __construct()
+    public function __construct($userRepository)
     {
         $this->objects = [];
+        $this->userRepository = $userRepository;
     }
 
     public function getNextID()
@@ -91,10 +92,12 @@ class InMemoryProjectRepository implements ProjectRepository
         // TODO: Implement createProject() method.
     }
 
-    public function addUserToProject($project, $user, $roleID)
+    public function addUserToProject($projectID, $userID, $roleID)
     {
-        $project->users[]= $user->id;
-        $user->projects[]= $project->id;
+        if (isset($this->objects[$projectID])) {
+            $this->objects[$projectID]->users[] = $userID;
+            $this->userRepository->objects[$userID]->projects[]= $projectID;
+        }
     }
 
     public function isUserInProject($projectID, $userID)

@@ -51,7 +51,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
         $response = $this->interactor->execute(new DeleteTicketRequest([
             'ticketID' => $ticketID,
@@ -97,8 +97,8 @@ class DeleteTicketInteractorTest extends BaseTestCase
         $user1 = $this->createSampleUser();
         $user2 = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user1, null);
-        $this->projectRepository->addUserToProject($project, $user2, null);
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
 
         $response = (new CreateTicketInteractor(
             $this->ticketRepository,
@@ -129,8 +129,8 @@ class DeleteTicketInteractorTest extends BaseTestCase
         $user1 = $this->createSampleUser();
         $user2 = $this->createSampleUser();
         $project = $this->createSampleProject();
-        $this->projectRepository->addUserToProject($project, $user1, null);
-        $this->projectRepository->addUserToProject($project, $user2, null);
+        $this->projectRepository->addUserToProject($project->id, $user1->id, null);
+        $this->projectRepository->addUserToProject($project->id, $user2->id, null);
 
         $response = (new CreateTicketInteractor(
             $this->ticketRepository,
@@ -151,7 +151,8 @@ class DeleteTicketInteractorTest extends BaseTestCase
             $this->notificationRepository,
             $this->ticketRepository,
             $this->projectRepository,
-            $this->taskRepository
+            $this->taskRepository,
+            $this->userRepository
         ))->execute(new CreateEventRequest([
             'name' => 'Sample event',
             'startTime' => new \DateTime('2016-03-15 10:30:00'),

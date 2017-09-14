@@ -48,7 +48,6 @@ class CreateTicketInteractor
         $this->validateProject($request);
         $this->validateTitle($request);
         $this->validateAllocatedUser($request);
-        $this->validateDueDate($request);
         $this->validateRequesterPermissions($request);
     }
 
@@ -62,6 +61,7 @@ class CreateTicketInteractor
     private function validateProject(CreateTicketRequest $request)
     {
         if (!$project = $this->projectRepository->getProject($request->projectID)) {
+
             throw new \Exception(Context::get('translator')->translate('projects.project_not_found'));
         }
     }
@@ -70,13 +70,6 @@ class CreateTicketInteractor
     {
         if ($request->allocatedUserID && !$this->isUserInProject($request->projectID, $request->allocatedUserID)) {
             throw new \Exception(Context::get('translator')->translate('users.allocated_user_not_in_project'));
-        }
-    }
-
-    private function validateDueDate(CreateTicketRequest $request)
-    {
-        if ($request->dueDate && $request->dueDate < new \DateTime('now')) {
-            throw new \Exception(Context::get('translator')->translate('tickets.due_date_already_passed'));
         }
     }
 
@@ -138,22 +131,25 @@ class CreateTicketInteractor
     {
         $project = $this->projectRepository->getProject($ticket->projectID);
 
-        //Agency users
-        foreach ($this->userRepository->getUsersByProject($ticket->projectID) as $user) {
-            if ($user->id != $request->requesterUserID) {
-                $this->notifyUserIfRequired($ticket, $user);
+        if ($request->allocatedUserID != $request->requesterUserID) {
+            if ($allocatedUser = $this->userRepository->getUser($request->allocatedUserID)) {
+                $this->notifyUser($ticket, $allocatedUser);
+            } else {
+                foreach ($this->userRepository->getUsersByProject($ticket->projectID) as $user) {
+                    $this->notifyUser($ticket, $user);
+                }
             }
         }
 
         //Client users
         foreach ($this->userRepository->getClientUsers($project->clientID) as $user) {
             if ($user->id != $request->requesterUserID) {
-                $this->notifyUserIfRequired($ticket, $user);
+                $this->notifyUser($ticket, $user);
             }
         }
     }
 
-    private function notifyUserIfRequired($ticket, $user)
+    private function notifyUser($ticket, $user)
     {
         (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
             'userID' => $user->id,

@@ -23,8 +23,8 @@ class GetTasksInteractorTest extends BaseTestCase
         $project1 = $this->createSampleProject();
         $project2 = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project1, $user, null);
-        $this->projectRepository->addUserToProject($project2, $user, null);
+        $this->projectRepository->addUserToProject($project1->id, $user->id, null);
+        $this->projectRepository->addUserToProject($project2->id, $user->id, null);
 
         $task1 = new Task();
         $task1->projectID = $project1->id;
@@ -81,7 +81,7 @@ class GetTasksInteractorTest extends BaseTestCase
         $project = $this->createSampleProject();
         $phase = $this->createSamplePhase($project->id);
         $user = $this->createSampleUser();
-        $this->projectRepository->addUserToProject($project, $user, null);
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
 
         $task1 = new Task();
         $task1->projectID = $project->id;
