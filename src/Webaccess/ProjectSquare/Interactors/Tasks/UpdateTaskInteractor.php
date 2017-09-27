@@ -26,9 +26,10 @@ class UpdateTaskInteractor
     public function execute(UpdateTaskRequest $request)
     {
         $task = $this->getTask($request->taskID);
+        $oldAllocatedUserID = $task->allocatedUserID;
         $this->updateTask($request, $task);
         $this->createNotifications($request, $task);
-        $this->dispatchEvent($task->id, $request->requesterUserID);
+        $this->dispatchEvent($task->id, $request->requesterUserID, $oldAllocatedUserID);
     }
 
     private function getTask($taskID)
@@ -90,16 +91,20 @@ class UpdateTaskInteractor
         (new CreateNotificationInteractor($this->notificationRepository))->execute(new CreateNotificationRequest([
             'userID' => $user->id,
             'entityID' => $task->id,
-            'type' => 'TASK_UPDATED',
+            'type' => 'TASK_UPDATED'
         ]));
     }
 
-
-    private function dispatchEvent($taskID, $requesterUserID)
+    /**
+     * @param $taskID
+     * @param $requesterUserID
+     * @param $oldAllocatedUserID
+     */
+    private function dispatchEvent($taskID, $requesterUserID, $oldAllocatedUserID)
     {
         Context::get('event_dispatcher')->dispatch(
             Events::UPDATE_TASK,
-            new UpdateTaskEvent($taskID, $requesterUserID)
+            new UpdateTaskEvent($taskID, $requesterUserID, $oldAllocatedUserID)
         );
     }
 }
