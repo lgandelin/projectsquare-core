@@ -28,4 +28,6 @@ final class Events
     const CREATE_PHASE = 'phases.create';
     const UPDATE_PHASE = 'phases.update';
     const DELETE_PHASE = 'phases.delete';
+    const ALERT_LOADING_TIME = 'alerts.loading_time';
+    const ALERT_STATUS_CODE = 'alerts.status_code';
 }
