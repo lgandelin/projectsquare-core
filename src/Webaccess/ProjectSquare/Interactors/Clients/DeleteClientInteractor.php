@@ -3,8 +3,6 @@
 namespace Webaccess\ProjectSquare\Interactors\Clients;
 
 use Webaccess\ProjectSquare\Context;
-use Webaccess\ProjectSquare\Entities\Client;
-use Webaccess\ProjectSquare\Entities\Notification;
 use Webaccess\ProjectSquare\Interactors\Projects\DeleteProjectInteractor;
 use Webaccess\ProjectSquare\Interactors\Projects\GetProjectsInteractor;
 use Webaccess\ProjectSquare\Repositories\ClientRepository;

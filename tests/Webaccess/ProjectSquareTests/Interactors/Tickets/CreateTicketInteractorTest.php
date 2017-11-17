@@ -28,10 +28,27 @@ class CreateTicketInteractorTest extends BaseTestCase
         $this->projectRepository->addUserToProject($project->id, $user->id, null);
         $this->interactor->execute(new CreateTicketRequest([
             'title' => '',
+            'statusID' => 2,
             'projectID' => $project->id,
             'requesterUserID' => $user->id
         ]));
     }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testCreateTicketWithoutStatus()
+    {
+        $project = $this->createSampleProject();
+        $user = $this->createSampleUser();
+        $this->projectRepository->addUserToProject($project->id, $user->id, null);
+        $this->interactor->execute(new CreateTicketRequest([
+            'title' => 'Sample ticket',
+            'projectID' => $project->id,
+            'requesterUserID' => $user->id
+        ]));
+    }
+
 
     /**
      * @expectedException Exception
@@ -42,6 +59,7 @@ class CreateTicketInteractorTest extends BaseTestCase
         $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
             'projectID' => 1,
+            'statusID' => 2,
             'requesterUserID' => $user->id
         ]));
     }
@@ -56,6 +74,7 @@ class CreateTicketInteractorTest extends BaseTestCase
         $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
             'projectID' => $project->id,
+            'statusID' => 2,
             'requesterUserID' => $user->id
         ]));
     }
@@ -72,6 +91,7 @@ class CreateTicketInteractorTest extends BaseTestCase
         $this->interactor->execute(new CreateTicketRequest([
             'title' => 'Sample ticket',
             'projectID' => $project->id,
+            'statusID' => 2,
             'allocatedUserID' => $allocatedUser->id,
             'requesterUserID' => $user->id
         ]));

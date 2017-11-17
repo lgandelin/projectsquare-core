@@ -60,7 +60,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         Context::set('event_dispatcher', Mockery::spy('EventDispatcherInterface'));
     }
 
-    protected function createSampleTicket($title, $projectID, $description)
+    protected function createSampleTicket($title, $projectID, $description, $statusID = null)
     {
         $ticket = new Ticket();
         $ticket->title = $title;
@@ -70,6 +70,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
         $ticketState = new TicketState();
         $ticketState->ticketID = $ticket->id;
+        $ticketState->statusID = $statusID;
         $this->ticketRepository->persistTicketState($ticketState);
 
         return $ticket->id;

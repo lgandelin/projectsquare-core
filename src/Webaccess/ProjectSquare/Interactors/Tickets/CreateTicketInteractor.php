@@ -47,6 +47,7 @@ class CreateTicketInteractor
     {
         $this->validateProject($request);
         $this->validateTitle($request);
+        $this->validateStatus($request);
         $this->validateAllocatedUser($request);
         $this->validateRequesterPermissions($request);
     }
@@ -77,6 +78,13 @@ class CreateTicketInteractor
     {
         if (!$this->isUserAuthorizedToCreateTicket($request)) {
             throw new \Exception(Context::get('translator')->translate('users.ticket_creation_not_allowed'));
+        }
+    }
+
+    private function validateStatus(CreateTicketRequest $request)
+    {
+        if (!$request->statusID) {
+            throw new \Exception(Context::get('translator')->translate('tickets.status_required'));
         }
     }
 

@@ -40,7 +40,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
-        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet', 2);
         $this->interactor->execute(new DeleteTicketRequest([
             'ticketID' => $ticketID,
             'requesterUserID' => $user->id
@@ -52,7 +52,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
         $project = $this->createSampleProject();
         $user = $this->createSampleUser();
         $this->projectRepository->addUserToProject($project->id, $user->id, null);
-        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet', 2);
         $response = $this->interactor->execute(new DeleteTicketRequest([
             'ticketID' => $ticketID,
             'requesterUserID' => $user->id
@@ -77,7 +77,7 @@ class DeleteTicketInteractorTest extends BaseTestCase
     {
         $project = $this->createSampleProject();
         $user = $this->createSampleUser(true);
-        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet');
+        $ticketID = $this->createSampleTicket('Sample ticket', $project->id, 'Lorem ipsum dolor sit amet', 2);
         $response = $this->interactor->execute(new DeleteTicketRequest([
             'ticketID' => $ticketID,
             'requesterUserID' => $user->id
@@ -109,7 +109,8 @@ class DeleteTicketInteractorTest extends BaseTestCase
             'title' => 'Sample ticket',
             'projectID' => $project->id,
             'allocatedUserID' => $user2->id,
-            'requesterUserID' => $user1->id
+            'requesterUserID' => $user1->id,
+            'statusID' => 2,
         ]));
 
         $ticket = $response->ticket;
@@ -141,7 +142,8 @@ class DeleteTicketInteractorTest extends BaseTestCase
             'title' => 'Sample ticket',
             'projectID' => $project->id,
             'allocatedUserID' => $user2->id,
-            'requesterUserID' => $user1->id
+            'requesterUserID' => $user1->id,
+            'statusID' => 2,
         ]));
 
         $ticket = $response->ticket;
